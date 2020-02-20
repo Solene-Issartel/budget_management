@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>
+           {{ title }}
+        </title>
+    </head>
+    <body>
+        {{!-- {{> navbar}} --}}
+        <div class="container">
+            <br />
+            {{!-- {{#each successes}}
+                {{> alertSuccess success=this}}
+            {{/each}}
+            {{#each errors}}
+                {{> alertError error=this}}
+            {{/each}} --}}
+            {{{body}}}
+        </div>
+    </body>
+    <footer class="main-footer">
+        Code Source: <a href="https://github.com/Solene34/projetweb">Github</a>
+    </footer>
+</html>
