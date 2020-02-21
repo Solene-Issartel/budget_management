@@ -1,26 +1,23 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <title>
-           {{ title }}
-        </title>
-    </head>
-    <body>
-        {{!-- {{> navbar}} --}}
-        <div class="container">
-            <br />
-            {{!-- {{#each successes}}
-                {{> alertSuccess success=this}}
-            {{/each}}
-            {{#each errors}}
-                {{> alertError error=this}}
-            {{/each}} --}}
-            {{{body}}}
-        </div>
-    </body>
-    <footer class="main-footer">
-        Code Source: <a href="https://github.com/Solene34/projetweb">Github</a>
-    </footer>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Catamaran:100,200,300,400,500,600,700,800,900">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i">
+    <link rel="stylesheet" href="/css/styles_forms.css">
+</head>
+
+<body>
+    {{{body}}}
+    <script type="text/javascript" src="/public/js/bootstrap.min.js"></script>
+</body>
+
+<footer class="main-footer">
+    Code Source: <a href="https://github.com/Solene34/projetweb">Github</a>
+</footer>
+
 </html>
