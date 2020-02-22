@@ -1,78 +1,68 @@
-<nav class="navbar navbar-dark navbar-expand-lg fixed-top bg-dark navbar-custom">
-        <div class="container"><a class="navbar-brand" href="#">BUDMAN</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navbarResponsive"><span class="navbar-toggler-icon"></span></button>
-            <div class="collapse navbar-collapse" id="navbarResponsive">
-                <ul class="nav navbar-nav ml-auto">
-                    <li class="nav-item" role="presentation"><a class="nav-link" href="#">Sign Up</a></li>
-                    <li class="nav-item" role="presentation"><a class="nav-link" href="#">Log In</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-    <section>
-        <div class="container"></div>
-    </section>
-    <div class="register-photo">
-        <div class="form-container">
-            <div class="image-holder"></div>
+<section>
+    <div class="container"></div>
+</section>
+<div class="register-photo">
+    <div class="form-container">
+        <div class="image-holder"></div>
 
-            <form action="/register" method="post">
-                <h2 class="text-center"><strong>Créer</strong> un compte.</h2>
-                
-                <div class="form-group">
-                    <input id="firstname_input" class="form-control" type="text" name="firstname" placeholder="Prénom" required>
-                </div>
-                <div class="form-group">
-                    <input id="lastname_input" class="form-control" type="text" name="lastname" placeholder="Nom" required>
-                </div>
-                <div class="form-group">
-                    <input id="email_input" class="form-control" type="email" name="email" placeholder="Email" required>
-                </div>
-                <div class="form-group">
-                    <input id="password_input" class="form-control" type="password" name="password" placeholder="Mot de passe" required>
-                    <small id="password_msg" class="form-text text-danger"></small>
-                </div>
-                <div class="form-group">
-                    <input id="password_confirm_input" class="form-control" type="password" name="passwordConfirm" placeholder="Confirmer le mot de passe" required>
-                    <small id="password_confirm_msg" class="form-text"></small>
-                </div>
-                
-                
-                <div class="form-group"><button id="submit_btn" class="btn btn-primary btn-block" type="submit"disabled>S'inscrire</button></div><a class="already" href="/login">You already have an account? Login here.</a></form>
-        </div>
+        <form action="/register" method="post">
+            <h2 class="text-center"><strong>Créer</strong> un compte.</h2>
+            
+            <div class="form-group">
+                <input id="firstname_input" class="form-control" type="text" name="firstname" placeholder="Prénom" required>
+            </div>
+            <div class="form-group">
+                <input id="lastname_input" class="form-control" type="text" name="lastname" placeholder="Nom" required>
+            </div>
+            <div class="form-group">
+                <input id="email_input" class="form-control" type="email" name="email" placeholder="Email" required>
+            </div>
+            <div class="form-group">
+                <input id="password_input" class="form-control" type="password" name="password" placeholder="Mot de passe" required>
+                <small id="password_msg" class="form-text text-danger"></small>
+            </div>
+            <div class="form-group">
+                <input id="password_confirm_input" class="form-control" type="password" name="passwordConfirm" placeholder="Confirmer le mot de passe" required>
+                <small id="password_confirm_msg" class="form-text"></small>
+            </div>
+            
+            
+            <div class="form-group"><button id="submit_btn" class="btn btn-primary btn-block" type="submit"disabled>S'inscrire</button></div><a class="already" href="/login">You already have an account? Login here.</a></form>
     </div>
-    <script>
-    // Password validation
-    var password_input = document.getElementById("password_input");
-    var passConf_input = document.getElementById("password_confirm_input");
-    var passMsg = document.getElementById("password_msg");
-    var passConfMsg = document.getElementById("password_confirm_msg");
-    var submit_btn = document.getElementById("submit_btn");
-    var cb = function() {
-        if(password_input.value.length < 8 && password_input.value.length > 0) {
-            passMsg.innerHTML = "Votre mot de passe est trop court, il doit faire au moins 8 caratères.";
-        } else {
-            passMsg.innerText = "";
+</div>
+<script>
+// Password validation
+var password_input = document.getElementById("password_input");
+var passConf_input = document.getElementById("password_confirm_input");
+var passMsg = document.getElementById("password_msg");
+var passConfMsg = document.getElementById("password_confirm_msg");
+var submit_btn = document.getElementById("submit_btn");
+var cb = function() {
+    if(password_input.value.length < 8 && password_input.value.length > 0) {
+        passMsg.innerHTML = "Votre mot de passe est trop court, il doit faire au moins 8 caratères.";
+    } else {
+        passMsg.innerText = "";
+    }
+    if(password_input.value.length == 0) {
+        passConfMsg.innerText = "";
+        submit_btn.disabled = true;
+    } else if (password_input.value != passConf_input.value) {
+        submit_btn.disabled = true
+        passConfMsg.innerText = "Les mots de passe ne sont pas identiques"
+        if (!passConfMsg.classList.contains("text-danger")) {
+            passConfMsg.classList.remove("text-success");
+            passConfMsg.classList.add("text-danger");
         }
-        if(password_input.value.length == 0) {
-            passConfMsg.innerText = "";
-            submit_btn.disabled = true;
-        } else if (password_input.value != passConf_input.value) {
-            submit_btn.disabled = true
-            passConfMsg.innerText = "Les mots de passe ne sont pas identiques"
-            if (!passConfMsg.classList.contains("text-danger")) {
-                passConfMsg.classList.remove("text-success");
-                passConfMsg.classList.add("text-danger");
-            }
-        } else {
-            submit_btn.disabled = false
-            passConfMsg.innerText = "Mots de passe correspondants"
-            if (!passConfMsg.classList.contains("text-success")) {
-                passConfMsg.classList.remove("text-danger");
-                passConfMsg.classList.add("text-success");
-            }
+    } else {
+        submit_btn.disabled = false
+        passConfMsg.innerText = "Mots de passe correspondants"
+        if (!passConfMsg.classList.contains("text-success")) {
+            passConfMsg.classList.remove("text-danger");
+            passConfMsg.classList.add("text-success");
         }
-    };
-    password_input.addEventListener("input", cb);
-    passConf_input.addEventListener("input", cb);
-    
+    }
+};
+password_input.addEventListener("input", cb);
+passConf_input.addEventListener("input", cb);
+
 </script>

@@ -34,8 +34,15 @@ class User{
         })
     }
 
-    static update(id,cb){
-        co.query('UPDATE users SET firstname = ?, lastname = ?, email = ?, password = ?, isAdmin = ? WHERE id_user = ?', [firstname,lastname,email,password,isAdmin,id], (err,result) => {
+    static update(id,firstname,lastname,email,cb){
+        co.query('UPDATE users SET firstname = ?, lastname = ?, email = ? WHERE id_user = ?', [firstname,lastname,email,id], (err,result) => {
+            if (err) throw err;
+            cb(result) //cb is callback function
+        })
+    }
+
+    static updateWithPassword(id,firstname,lastname,email,password,cb){
+        co.query('UPDATE users SET firstname = ?, lastname = ?, email = ?, password = ? WHERE id_user = ?', [firstname,lastname,email,password,id], (err,result) => {
             if (err) throw err;
             cb(result) //cb is callback function
         })
@@ -56,10 +63,18 @@ class User{
         });
     }
 
-    static findById(id,cb){
-        co.query('SELECT * FROM users WHERE id_user = ?', [id], (err,result) => {
+    static findAll(cb){
+        co.query('SELECT * FROM users',(err, rows, fields) => {
             if(err) throw err;
-            cb(result);
+            console.log(rows)
+            cb(rows);
+        });
+    }
+
+    static findById(id,cb){
+        co.query('SELECT * FROM users WHERE id_user = ?', [id], (err, rows, fields) => {
+            if(err) throw err;
+            cb(rows);
         });
     }
 

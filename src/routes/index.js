@@ -2,6 +2,7 @@ let register = require('../controllers/auth/register');
 let login = require('../controllers/auth/login');
 let jwt = require('jsonwebtoken');
 let express = require('express');
+let usersRoutes = require('./users');
 
 module.exports.makeRoutes = function (app){
 
@@ -31,6 +32,11 @@ module.exports.makeRoutes = function (app){
       req.logout();
       res.redirect("/login");
   });
+
+  /**
+   * Call other methods to get all the routes
+   */
+  usersRoutes.usersRoutes(app);
 
   return app;
 }

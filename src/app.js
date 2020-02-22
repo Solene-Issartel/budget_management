@@ -2,18 +2,14 @@ let http = require('http');
 let hbs = require('express-handlebars');
 let express = require('express');
 let routes = require('./routes');
+let middlewares = require('../src/middlewares');
+let bodyParser = require('body-parser');
+let cookieParser = require('cookie-parser');
 
 let app = express();
 
 let router = express.Router();
 let server = http.createServer(app);
-
-let bodyParser = require('body-parser');
-   // support parsing of application/json type post data
-app.use(bodyParser.json());
-   //support parsing of application/x-www-form-urlencoded post data
-app.use(bodyParser.urlencoded({ extended: false }));
-
 
 app.engine('handlebars', hbs({
     extname: 'handlebars',
@@ -25,8 +21,19 @@ app.use(express.static('public'));
 app.set('view engine', 'handlebars');
 app.set('views', __dirname + '/../src/views');
 
-routes.makeRoutes(app);
+/**
+ * BODY PARSER : allow to handle body request/response
+ */
+app.use(bodyParser.json());
 
+app.use(bodyParser.urlencoded({ extended: false }));
+
+/**
+ * COOKIE PARSER : allow to handle cookies
+ */
+app.use(cookieParser());
+
+routes.makeRoutes(app);
 
 if(process.env.NODE_ENV == "production"){
    serverhttps.listen(8080);

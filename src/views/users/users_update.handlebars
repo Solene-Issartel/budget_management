@@ -1,0 +1,91 @@
+<div class="register-photo">
+    <div class="form-container">
+        <form action='/users/update' method="post">
+            <h2 class="text-center">Modifier le profil.</h2>
+            <div class="row">
+                <div class="col">
+                    <div class="form-group"><input type="text" class="form-control" name="firstname" value="{{firstname}}" /></div>
+                    <div class="form-group"><input type="text" class="form-control" name="lastname" value="{{lastname}}" /></div>
+                    <div class="form-group"><input type="email" class="form-control" name="email" value="{{email}}" /></div>
+                </div>
+                <div class="col">
+                    <div class="form-group"><input id="password_input" type="password" class="form-control" name="password" placeholder="Mot de passe" /></div>
+                    <small id="password_msg" class="form-text text-danger"></small>
+                    
+                    <div class="form-group"><input id="password_confirm_input" type="password" class="form-control" name="passwordConfirm" placeholder="Confirmer le mot de passe" /></div>
+                    <small id="password_confirm_msg" class="form-text"></small>
+                </div>
+            </div>
+            
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="formCheck-1" />
+                <label class="form-check-label" for="formCheck-1">Administrateur</label>
+            </div>
+            
+            <div class="d-flex">
+                <div class="mr-auto p-2"></div>
+                <div class="p-2 form-group"><button class="btn btn-danger btn-block" type="button" data-toggle="modal" data-target="#exampleModal">Supprimer mon compte</button></div>
+            </div>
+            
+            <div class="form-group"><button class="btn btn-primary btn-block" type="submit">Modifier</button></div>
+        
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Attention</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            Cette action est irréversible. Voulez-vous supprimer votre compte ?
+                        </div>
+                        <div class="modal-footer">
+                            <form class="form-horizontal" method="post" action="/users/update/delete">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                                <button type="button" class="btn btn-danger">Supprimer</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+        </form>
+    </div>
+</div>
+
+<script>
+// Password validation
+var password_input = document.getElementById("password_input");
+var passConf_input = document.getElementById("password_confirm_input");
+var passMsg = document.getElementById("password_msg");
+var passConfMsg = document.getElementById("password_confirm_msg");
+
+var cb = function() {
+    if(password_input.value.length < 8 && password_input.value.length > 0) {
+        passMsg.innerHTML = "Votre mot de passe est trop court, il doit faire au moins 8 caratères.";
+    } else {
+        passMsg.innerText = "";
+    }
+    if(password_input.value.length == 0) {
+        passConfMsg.innerText = "";
+    } else if (password_input.value != passConf_input.value) {
+        passConfMsg.innerText = "Les mots de passe ne sont pas identiques"
+        if (!passConfMsg.classList.contains("text-danger")) {
+            passConfMsg.classList.remove("text-success");
+            passConfMsg.classList.add("text-danger");
+        }
+    } else {
+        passConfMsg.innerText = "Mots de passe correspondants"
+        if (!passConfMsg.classList.contains("text-success")) {
+            passConfMsg.classList.remove("text-danger");
+            passConfMsg.classList.add("text-success");
+        }
+    }
+};
+password_input.addEventListener("input", cb);
+passConf_input.addEventListener("input", cb);
+
+</script>

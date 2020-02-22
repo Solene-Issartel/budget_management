@@ -26,7 +26,13 @@ function post(req, res, next) {
                 if(result){
                     let id = user[0].id_user;
                     let firstname = user[0].firstname;
-                    const token = jwt.sign({id,firstname,email},SECRET_KEY, {
+                    let isAdmin = user[0].isAdmin;
+                    if(isAdmin == 0){
+                        isAdmin = false;
+                    } else {
+                        isAdmin = true;
+                    }
+                    const token = jwt.sign({id,firstname,email,isAdmin},SECRET_KEY, {
                         algorithm: 'HS256',
                     });
                     res.cookie('token', token, { maxAge: jwtExpirySeconds * 1000 });
@@ -43,6 +49,7 @@ function post(req, res, next) {
 //Verify token
 function verifyToken(req, res, next){
     const token = req.cookies.token || '';
+    
     try {
         if (!token) {
             return res.status(401).json('You need to Login')
@@ -51,6 +58,7 @@ function verifyToken(req, res, next){
         req.user = {
             id: decrypt.id,
             firstname: decrypt.firstname,
+            isAdmin: decrypt.isAdmin
         };
         next();
     } catch (err) {
