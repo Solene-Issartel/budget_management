@@ -5,8 +5,10 @@ let routes = require('./routes');
 let middlewares = require('../src/middlewares');
 let bodyParser = require('body-parser');
 let cookieParser = require('cookie-parser');
-
-let app = express();
+var methodOverride = require('method-override')
+var app = express()
+ 
+app.use(methodOverride('_method'));
 
 let router = express.Router();
 let server = http.createServer(app);

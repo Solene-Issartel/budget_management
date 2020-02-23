@@ -67,7 +67,8 @@ function verifyToken(req, res, next){
         req.user = {
             id: decrypt.id,
             firstname: decrypt.firstname,
-            isAdmin: decrypt.isAdmin
+            isAdmin: decrypt.isAdmin,
+            errors : []
         };
         next();
     } catch (err) {

@@ -6,12 +6,64 @@ function post(req, res) {
     
 }
 
+function user_info_post(id_req,req, res) {
+    let isAd = req.body.admin == undefined ? 0 : 1;
+    let id_user = req.user.id; //recover id from token
+    if(id_user){
+        if(req.user.isAdmin){
+            models.User.updateIsAdmin(isAd,id_req,(user) => {
+                req.user.errors='Vous avez bien modifié les droits';
+                
+                res.redirect('/users');
+            })
+        } else {
+            res.render('home', {errors:"Vous n'avez pas les droits pour effectuer cette action."})
+        }
+    } else {
+        return res.status(403).json(err.toString());
+    }
+}
+
+function user_info_get(id_req,req, res) {
+    let id_user = req.user.id; //recover id from token
+    if(id_user){
+        if(req.user.isAdmin){
+            models.User.findById(id_req,(user) => {
+                let isAdmin = user[0].isAdmin==1 ? true : false;
+                res.render('users/users_info', {id: id_req,firstname : user[0].firstname, lastname : user[0].lastname, email: user[0].email, isAdmin: isAdmin});
+            })
+        } else {
+            res.render('home', {errors:"Vous n'avez pas les droits pour effectuer cette action."})
+        }
+    } else {
+        return res.status(403).json(err.toString());
+    }
+}
+
 function get(req, res) {
     let isAdmin = req.user.isAdmin;
     if(isAdmin){
         models.User.findAll((users)=>{
-            console.log(users)
-            res.render('users_list');
+            let letters = [];
+            let persons = [];
+            users.forEach(user => {
+                if(req.user.id != user.id_user){ //current user cannot see him-self
+                    let letter = user.lastname.charAt(0).toUpperCase();
+                    let alreadyIn = letters.includes(letter); 
+                    if(!alreadyIn){
+                        letters.push(letter);
+                    }
+                    var person = {
+                        letter: letter,
+                        id: user.id_user,
+                        firstname: user.firstname,
+                        lastname: user.lastname,
+                        isAdmin: user.isAdmin 
+                    }
+                    persons.push(person);
+                }
+            });
+            res.render("users/users_list", {letters: letters, persons: persons, errors: req.user.errors});
         })
     } else {
         res.redirect('home',403);
@@ -68,7 +120,7 @@ function update_post(req, res) {
              * Errors management
              */
             if (errors.length > 0) {
-                res.render("users/update", { name: "Modification de son profil", errors });
+                res.render("users/users_update", { name: "Modification de son profil", errors });
                 return;
             } else {    
                 bcrypt.genSalt(10, (err, salt) => {
@@ -100,11 +152,16 @@ function update_post(req, res) {
 function delete_account(id_req,req, res) {
     let id_user = req.user.id; //recover id from token
     if(id_user){
-        if(id_user !== id_req){
-            models.User.delete(id,(user) => {
-                req.user = {};
-                req.cookies.token = null;
-                res.redirect('/login');
+        if(id_user == id_req || req.user.isAdmin){
+            models.User.delete(id_req,(user) => {
+                if(req.user.isAdmin){
+                    req.user.errors = 'Compte supprimé avec succès'
+                    res.redirect('/users');
+                } else {
+                    req.user = {};
+                    req.cookies.token = null;
+                    res.redirect('/login');
+                }
             })
         } else {
             res.render('home', {errors:"Vous n'avez pas les droits pour effectuer cette action."})
@@ -136,4 +193,4 @@ function delete_user(req, res) {
     
 }
 
-module.exports = {post, get, update_get, update_post, delete_account, delete_user};
+module.exports = {post, get, user_info_post, user_info_get, update_get, update_post, delete_account, delete_user};

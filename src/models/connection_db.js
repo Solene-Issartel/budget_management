@@ -1,9 +1,10 @@
 const mysql = require('mysql2');
 
-const connection = mysql.createConnection({
+
+  const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    database: 'projetweb'
+    database: 'bm_web'
   });
 
   connection.connect(function (err) {
@@ -13,5 +14,7 @@ const connection = mysql.createConnection({
         console.log("Connection has been established successfully.");
     }
   });
+
+
 
   module.exports = connection;

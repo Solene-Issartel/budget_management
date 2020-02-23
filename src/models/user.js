@@ -48,6 +48,13 @@ class User{
         })
     }
 
+    static updateIsAdmin(isAdmin,id,cb){
+        co.query('UPDATE users SET isAdmin = ? WHERE id_user = ?', [isAdmin,id], (err,result) => {
+            if (err) throw err;
+            cb(result) //cb is callback function
+        })
+    }
+
     //trigger before update, insert dans old_budget
     static updateBudget(budget,id,cb){
         co.query('UPDATE users SET monthly_budget = ? WHERE id_user = ?', [budget,id], (err,result) => {
@@ -64,9 +71,8 @@ class User{
     }
 
     static findAll(cb){
-        co.query('SELECT * FROM users',(err, rows, fields) => {
+        co.query('SELECT * FROM users ORDER BY lastname',(err, rows, fields) => {
             if(err) throw err;
-            console.log(rows)
             cb(rows);
         });
     }
