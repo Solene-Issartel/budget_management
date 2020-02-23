@@ -35,11 +35,11 @@ app.use(cookieParser());
 
 routes.makeRoutes(app);
 
-if(process.env.NODE_ENV == "production"){
-   serverhttps.listen(8080);
-} else {
+// if(process.env.NODE_ENV == "production"){
+//    serverhttps.listen(8080);
+// } else {
    server.listen(8080);
-}
+
 
 
 module.exports = app;
