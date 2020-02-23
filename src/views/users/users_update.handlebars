@@ -27,7 +27,7 @@
                 <div class="p-2 form-group"><button class="btn btn-danger btn-block" type="button" data-toggle="modal" data-target="#exampleModal">Supprimer mon compte</button></div>
             </div>
             
-            <div class="form-group"><button class="btn btn-primary btn-block" type="submit">Modifier</button></div>
+            <div class="form-group"><button name="update" value="update" class="btn btn-primary btn-block" type="submit">Modifier</button></div>
         
             <!-- Modal -->
             <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -40,13 +40,13 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            Cette action est irréversible. Voulez-vous supprimer votre compte ?
+                            Cette action est irréversible. Voulez-vous vraiment supprimer votre compte ?
                         </div>
                         <div class="modal-footer">
-                            <form class="form-horizontal" method="post" action="/users/update/delete">
+                            {{!-- <form id="deleteForm" method="post" action="/user/delete/{{id}}"> --}}
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-                                <button type="button" class="btn btn-danger">Supprimer</button>
-                            </form>
+                                <button id="deleteAccount" name="delete" value="delete" type="submit" class="btn btn-danger">Supprimer</button>
+                            {{!-- </fosrm> --}}
                         </div>
                     </div>
                 </div>

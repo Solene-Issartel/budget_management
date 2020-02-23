@@ -24,7 +24,16 @@ module.exports.usersRoutes = function (app){
   /**
    * DELETE USER (only admin)
    */
-  //app.post("/users/delete", userController.detele);
+  app.post("/users/delete/:id", userController.delete_user);
+
+  /**
+   * DELETE OUR ACCOUNT (all users)
+   */
+  app.post("/user/delete/:id", (req, res) => {
+      var id = req.params.id;
+      console.log(id);
+      userController.delete_account(id,req,res);
+  });
 
   return app;
 }

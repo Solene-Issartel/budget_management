@@ -13,6 +13,11 @@ module.exports.makeRoutes = function (app){
     res.render('index', { title : 'Accueil'});
   })
 
+   /**
+   * HOME PAGE ROUTE
+   */
+  app.get('/home', login.verifyToken, login.home);
+
   /**
    * REGISTER ROUTES
    */
@@ -26,10 +31,11 @@ module.exports.makeRoutes = function (app){
   app.post('/login', login.post);
 
   /**
-   * This route will logout the user if this one is connected.
+   * This route will "logout" the user (impossible with jsonwebtoken because it's stateless)
    */
   app.get('/logout', (req, res) => {
-      req.logout();
+      req.user = {};
+      req.cookies.token = null;
       res.redirect("/login");
   });
 

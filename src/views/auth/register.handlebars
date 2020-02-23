@@ -6,8 +6,12 @@
         <div class="image-holder"></div>
 
         <form action="/register" method="post">
-            <h2 class="text-center"><strong>Créer</strong> un compte.</h2>
-            
+            <h2 class="text-center">Créer un compte.</h2>
+            {{#if errors}}
+                <div class="alert alert-danger">
+                    {{errors}}
+                </div>
+            {{/if}}
             <div class="form-group">
                 <input id="firstname_input" class="form-control" type="text" name="firstname" placeholder="Prénom" required>
             </div>

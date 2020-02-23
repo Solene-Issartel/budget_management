@@ -47,7 +47,7 @@ function post(req, res) {
                 if (user.length != 0){
                     res.render("auth/register", { 
                         name: "S'inscrire",  
-                        errors: ["Un utilisateur avec cet email existe déjà. Si cet email est le vôtre, contactez un administrateur."] 
+                        errors: ["Cet email est déjà utilisé."] 
                     });
                     return;
               } else {     
@@ -56,7 +56,7 @@ function post(req, res) {
                     if (err) throw err;
                     q.password = hash;
                     models.User.create(q.firstname, q.lastname, q.email, q.password, false, function(err,result){
-                        res.redirect("/login?fromRegister");
+                        res.redirect("/login");
                     });
                 });
               });

@@ -14,8 +14,7 @@ function get(req, res) {
             res.render('users_list');
         })
     } else {
-        res.status(403);
-        res.render('index');
+        res.redirect('home',403);
         return;
     }
     
@@ -31,6 +30,7 @@ function update_get(req, res) {
             res.render('users/users_update', 
             { 
                 name: "Modification du profil", 
+                id: id,
                 firstname: user[0].firstname,
                 lastname: user[0].lastname,
                 email: user[0].email
@@ -84,35 +84,56 @@ function update_post(req, res) {
         //the user doesn't want to change his password
         } else {
             models.User.update(id,q.firstname,q.lastname,q.email,(user) => {
-                res.render('index');
+                req.user.firstname=q.firstname;
+                res.render('home', {firstname: req.user.firstname});
             })
         }
 
     } else {
         return res.status(403).json(err.toString());
     }
-
-    /**
-     * UPDATE user profile (admin cannot update users)
-     */
-    // function update_delete(req, res) {
-    //     let id = req.user.id; //recover id from token
-    //     if(id){
-    //         models.User.findById(id,(user) => {
-    //             res.render('users/users_update', 
-    //             { 
-    //                 name: "Modification du profil", 
-    //                 firstname: user[0].firstname,
-    //                 lastname: user[0].lastname,
-    //                 email: user[0].email
-    //             });
-    //         })
-    //     } else {
-    //         return res.status(403).json(err.toString());
-    //     }
-        
-    // }
-
 }
 
-module.exports = {post, get, update_get, update_post};
+/**
+ * UPDATE user profile (admin cannot update users)
+ */
+function delete_account(id_req,req, res) {
+    let id_user = req.user.id; //recover id from token
+    if(id_user){
+        if(id_user !== id_req){
+            models.User.delete(id,(user) => {
+                req.user = {};
+                req.cookies.token = null;
+                res.redirect('/login');
+            })
+        } else {
+            res.render('home', {errors:"Vous n'avez pas les droits pour effectuer cette action."})
+        }
+    } else {
+        return res.status(403).json(err.toString());
+    }
+}
+
+/**
+ * UPDATE user profile (admin cannot update users)
+ */
+function delete_user(req, res) {
+    let id_req = req.params.id;
+    let id_user = req.user.id; //recover id from token
+    if(id_user){
+        if(id_user !== id_req){
+            models.User.delete(id,(user) => {
+                req.user = {};
+                req.cookies.token = null;
+                res.redirect('/login');
+            })
+        } else {
+            res.render('home', {errors:"Vous n'avez pas les droits pour effectuer cette action."})
+        }
+    } else {
+        return res.status(403).json(err.toString());
+    }
+    
+}
+
+module.exports = {post, get, update_get, update_post, delete_account, delete_user};

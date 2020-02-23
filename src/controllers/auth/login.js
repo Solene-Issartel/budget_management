@@ -4,11 +4,16 @@ let jwtExpirySeconds = 300;
 let models = require('../../models');
 let bcrypt = require ('bcrypt'); 
 
+function home(req, res) {
+    res.render('home', { 
+        name: "Accueil", 
+        firstname: req.user.firstname,
+    });
+}
+
 function get(req, res) {
     res.render('auth/login', { 
-        name: "Se connecter", 
-        successes: req.query.fromRegister !== undefined ? ["Vous êtes inscrit. Vous pouvez maintenant vous connecter."] : [],
-        errors: req.query.error !== undefined ? ["Mauvaise combinaison email/mot de passe. Ré-essayez."] : [],
+        name: "Se connecter"
     });
 }
 
@@ -36,12 +41,16 @@ function post(req, res, next) {
                         algorithm: 'HS256',
                     });
                     res.cookie('token', token, { maxAge: jwtExpirySeconds * 1000 });
-                    res.end();
+                    res.redirect("/home");
                 }
             });
             return;
         } else {     
-            res.redirect("/");   
+            res.render("auth/login", { 
+                name: "Se connecter",  
+                errors: ["Mauvais email ou mot de passe."] 
+            });
+            return;   
         }
     })
 }
@@ -52,7 +61,7 @@ function verifyToken(req, res, next){
     
     try {
         if (!token) {
-            return res.status(401).json('You need to Login')
+            return res.render("auth/login", {errors: 'Vous devez vous identifier.'});  
         }
         const decrypt = jwt.verify(token, SECRET_KEY);
         req.user = {
@@ -66,4 +75,4 @@ function verifyToken(req, res, next){
     }
 }
 
-module.exports = {post, get, verifyToken, SECRET_KEY};
+module.exports = {home,post, get, verifyToken, SECRET_KEY};
