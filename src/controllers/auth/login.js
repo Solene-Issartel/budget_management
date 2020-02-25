@@ -5,16 +5,20 @@ let models = require('../../models');
 let bcrypt = require ('bcrypt'); 
 
 function home(req, res) {
-    res.render('home', { 
-        name: "Accueil", 
+    let token = req.cookies.token;
+    const flash = models.getFlash(req);
+    models.destroyFlash(res);
+    res.render('home', {
         firstname: req.user.firstname,
+        errors: flash,
+        userAdmin: req.user.isAdmin == 1? true : false
     });
 }
 
 function get(req, res) {
-    res.render('auth/login', { 
-        name: "Se connecter"
-    });
+    const flash = models.getFlash(req);
+    models.destroyFlash(res);
+    res.render('auth/login',{layout: 'layhome',errors : flash})
 }
 
 // Login
@@ -42,15 +46,25 @@ function post(req, res, next) {
                     });
                     res.cookie('token', token, { maxAge: jwtExpirySeconds * 1000 });
                     res.redirect("/home");
+                } else {
+                    const flash = {
+                        msg:"Mauvais email ou mot de passe.",
+                        //type : alert-danger {errors}, alert-succes {{success}}
+                        alert:"alert-danger"
+                    };
+                    models.setFlash(flash, res);
+                    res.redirect('/login');
                 }
             });
             return;
         } else {     
-            res.render("auth/login", { 
-                name: "Se connecter",  
-                errors: ["Mauvais email ou mot de passe."] 
-            });
-            return;   
+            const flash = {
+                msg:"Mauvais email ou mot de passe.",
+                //type : alert-danger {errors}, alert-succes {{success}}
+                alert:"alert-danger"
+            };
+            models.setFlash(flash, res);
+            res.redirect('/login');   
         }
     })
 }
@@ -61,13 +75,20 @@ function verifyToken(req, res, next){
     
     try {
         if (!token) {
-            return res.render("auth/login", {errors: 'Vous devez vous identifier.'});  
+            const flash = {
+                msg:"Vous devez vous identifier.",
+                //type : alert-danger {errors}, alert-succes {{success}}
+                alert:"alert-danger"
+            };
+            models.setFlash(flash, res);
+            res.redirect('/login');   
         }
         const decrypt = jwt.verify(token, SECRET_KEY);
         req.user = {
             id: decrypt.id,
             firstname: decrypt.firstname,
             isAdmin: decrypt.isAdmin,
+            userAdmin: decrypt.isAdmin,
             errors : []
         };
         next();

@@ -28,12 +28,15 @@ class Categorie {
         })
     }
 
-    // static findOne(id,cb){
-    //     co.query('SELECT * FROM categories WHERE id_categorie = ?', [id], (err,result) => {
-    //         if(err) throw err;
-    //         cb(result);
-    //     });
-    // }
+    static findAll(){
+        return new Promise( ( resolve, reject ) => {
+            co.query('SELECT * FROM categories', ( err, rows ) => {
+                if ( err )
+                    return reject( err );
+                resolve( rows );
+            } );
+        } );
+    }
 
     static findById(id,cb){
         co.query('SELECT * FROM categories WHERE id_categorie = ?', [id], (err,result) => {

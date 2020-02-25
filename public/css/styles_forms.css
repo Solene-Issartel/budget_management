@@ -1,5 +1,4 @@
 .register-photo {
-  background: #dde0e4;
   padding: 80px 0;
 }
 
@@ -14,6 +13,18 @@
   display: table;
   max-width: 900px;
   width: 90%;
+  margin: 0 auto;
+  box-shadow: 1px 1px 5px rgba(0,0,0,0.1);
+}
+
+#changePass{
+  font-size: 15px;;
+}
+
+.form_login {
+  display: table;
+  max-width: 900px;
+  width: 40%;
   margin: 0 auto;
   box-shadow: 1px 1px 5px rgba(0,0,0,0.1);
 }
@@ -82,4 +93,17 @@
   opacity: 0.9;
   text-decoration: none;
 }
+
+.navbar-brand {
+  display: inline-block;
+  padding-top: 0.3125rem;
+  padding-bottom: 0.3125rem;
+  margin-right: 1rem;
+  font-size: 1.25rem;
+  line-height: inherit;
+  white-space: nowrap; }
+
+  .navbar-brand:hover, .navbar-brand:focus {
+    text-decoration: none; }
+
 

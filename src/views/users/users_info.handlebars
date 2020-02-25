@@ -2,6 +2,13 @@
     <div class="form-container">
         <form action='/users/{{id}}' method="post">
             <h2 class="text-center">Informations sur le profil.</h2>
+
+            {{#if errors}}
+                <div class="alert {{errors.alert}}">
+                    {{errors.msg}}
+                </div>
+            {{/if}}
+
             <h6 class="text-muted card-subtitle mb-2">Nom :</h6>
             <p>{{lastname}}</p>
             <h6 class="text-muted card-subtitle mb-2">Prénom :</h6>
@@ -24,7 +31,8 @@
             <input type="hidden" name="_method" value="PUT">
             <div class="form-group"><button name="update" value="update" class="btn btn-primary btn-block" type="submit">Modifier les droits</button></div>
         </form>
-            <!-- Modal -->
+</div>
+<!-- Modal -->
             <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -38,7 +46,7 @@
                             Cette action est irréversible. Voulez-vous vraiment supprimer ce compte ?
                         </div>
                         <div class="modal-footer">
-                            <form id="deleteForm" method="post" action="/user/delete/{{id}}">
+                            <form id="deleteForm" method="post" action="/users/delete/{{id}}">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
                                 <input type="hidden" name="_method" value="DELETE">
                                 <button id="deleteAccount" name="delete" value="delete" type="submit" class="btn btn-danger">Supprimer</button>
@@ -48,4 +56,3 @@
                 </div>
             </div>
     </div>
-</div>

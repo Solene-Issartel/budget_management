@@ -1,18 +1,21 @@
 <div>
     <div class="container">
-        <ul class="list-group">
-            {{#if errors}}
-                <div class="alert alert-success">
-                    {{errors}}
-                </div>
-            {{/if}}
-            {{#each persons as | person |}}
-            
-                <li class="lgi list-group-item" style="background-color: rgb(40,48,63);color: orange;">
-                    <a href="/users/{{id}}" style="color: rgb(255,165,0);">{{person.lastname}} {{firstname}}</a>
-                </li>
-            
-            {{/each}}
-        </ul>
+        <h2 style="margin-top:100px">Liste des utilisateurs.</h2>
+        {{#if errors}}
+            <div class="alert alert-success">
+                {{errors.msg}}
+            </div>
+        {{/if}}
+        <div class="row" style="margin-top:80px;margin-bottom:100px">
+            <ul class="list-group" style="width : 100%">
+                {{#each persons as | person |}}
+    
+                    <li class="lgi list-group-item" style="border-radius:10px;margin-top: 10px;padding-left: 70px;border : 1px solid orange;color: orange;">
+                        <a href="/users/{{id}}" style="color: rgb(255,165,0);">{{person.lastname}} {{firstname}}</a>
+                    </li>
+                
+                {{/each}}
+            </ul>
+        </div>
     </div>
 </div>

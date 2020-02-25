@@ -6,8 +6,11 @@ let middlewares = require('../src/middlewares');
 let bodyParser = require('body-parser');
 let cookieParser = require('cookie-parser');
 var methodOverride = require('method-override')
-var app = express()
+var app = express();
+let setupMiddlewares = require('./middlewares').makeMiddlewares;
  
+const PORT = process.env.PORT || 8080;
+// override with POST having ?_method=DELETE
 app.use(methodOverride('_method'));
 
 let router = express.Router();
@@ -23,24 +26,11 @@ app.use(express.static('public'));
 app.set('view engine', 'handlebars');
 app.set('views', __dirname + '/../src/views');
 
-/**
- * BODY PARSER : allow to handle body request/response
- */
-app.use(bodyParser.json());
-
-app.use(bodyParser.urlencoded({ extended: false }));
-
-/**
- * COOKIE PARSER : allow to handle cookies
- */
-app.use(cookieParser());
+setupMiddlewares(app);
 
 routes.makeRoutes(app);
 
-// if(process.env.NODE_ENV == "production"){
-//    serverhttps.listen(8080);
-// } else {
-   server.listen(8080);
+server.listen(PORT);
 
 
 

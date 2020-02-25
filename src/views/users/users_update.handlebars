@@ -2,6 +2,11 @@
     <div class="form-container">
         <form action='/user/update' method="post">
             <h2 class="text-center">Modifier le profil.</h2>
+            {{#if errors}}
+                <div class="alert {{errors.alert}}">
+                    {{errors.msg}}
+                </div>
+            {{/if}}
             <div class="row">
                 <div class="col">
                     <div class="form-group"><input type="text" class="form-control" name="firstname" value="{{firstname}}" /></div>
@@ -9,6 +14,7 @@
                     <div class="form-group"><input type="email" class="form-control" name="email" value="{{email}}" /></div>
                 </div>
                 <div class="col">
+                    <h5 id="changePass" class="text-center">Changer votre mot de passe (facultatif)</h5>
                     <div class="form-group"><input id="password_input" type="password" class="form-control" name="password" placeholder="Mot de passe" /></div>
                     <small id="password_msg" class="form-text text-danger"></small>
                     
@@ -17,14 +23,16 @@
                 </div>
             </div>
             
+            <input type="hidden" name="_method" value="PUT">
+            <div class="form-group"><button name="update" value="update" class="btn btn-primary btn-block" type="submit">Modifier</button></div>
+            
             <div class="d-flex">
                 <div class="mr-auto p-2"></div>
                 <div class="p-2 form-group"><button class="btn btn-danger btn-block" type="button" data-toggle="modal" data-target="#exampleModal">Supprimer mon compte</button></div>
             </div>
             
-            <input type="hidden" name="_method" value="PUT">
-            <div class="form-group"><button name="update" value="update" class="btn btn-primary btn-block" type="submit">Modifier</button></div>
         </form>
+    </div>
             <!-- Modal -->
             <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
@@ -49,7 +57,7 @@
                 </div>
             </div>
     </div>
-</div>
+
 
 <script>
 // Password validation

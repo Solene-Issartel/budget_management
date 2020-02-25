@@ -20,4 +20,18 @@ async function init() {
         }
     }
 }
-module.exports = {init, User, List, Product, Categorie,Contain};
+
+function setFlash  (flash,res){
+    return res.cookie('flash',flash,{ maxAge:1000*600, httpOnly: true })
+}
+
+function getFlash (req){
+    return req.cookies['flash'];
+}
+
+function destroyFlash (res){
+    return res.clearCookie('flash');
+
+}
+
+module.exports = {init, User, List, Product, Categorie,Contain, setFlash, getFlash, destroyFlash};

@@ -36,18 +36,21 @@ class Product {
         });
     }
 
-    static findByUser(id_user,cb){
-        co.query('SELECT * FROM products WHERE id_user = ?', [id_user], (err,result) => {
+    static findAll(cb){
+        co.query('SELECT * FROM products ORDER BY name_product', [id], (err,result) => {
             if(err) throw err;
             cb(result);
         });
     }
 
-    static findByCategorie(id_cat,cb){ //month is an int (1:january, 2:feb etc.)
-        co.query('SELECT * FROM products WHERE cat_product = ?', [id_cat], (err,result) => {
-            if(err) throw err;
-            cb(result);
-        });
+    static findByCategorie(id_cat){ //month is an int (1:january, 2:feb etc.)
+        return new Promise( ( resolve, reject ) => {
+            co.query('SELECT * FROM products WHERE cat_product = ? ORDER BY name_product', [id_cat], ( err, rows ) => {
+                if ( err )
+                    return reject( err );
+                resolve( rows );
+            } );
+        } );
     }
 }
 

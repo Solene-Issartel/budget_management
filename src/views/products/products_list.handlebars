@@ -1,0 +1,49 @@
+<section>
+    <div class="container">
+        <div class="row align-items-center"></div>
+        <div class="row align-items-center">
+            <div class="p-5">
+                <h3 class="display-4">Liste des produits</h3>
+                <p>Gérer les produits : modifier, ajouter ou supprimer.</p>
+            </div>
+        </div>
+    </div>
+</section>
+<section>
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col" style="width:50%">
+                <ul class="list-group">
+                    {{#each products as | prod |}}
+                    <li class="list-group-item"><span>{{prod.name}}</span><div>
+                        <a href="/products/update/{{id}}">Modifier</a><a type="button" data-toggle="modal" data-target="#DelProdModal{{id}}">Supprimer</a>
+                    </div></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Modal -->
+    <div class="modal fade" id="DelProdModal{{id}}" tabindex="-1" role="dialog" aria-labelledby="DelProdModal{{id}}" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="DelProdModal{{id}}">Attention</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Cette action est irréversible. Voulez-vous vraiment supprimer ce produit ?
+                </div>
+                <div class="modal-footer">
+                    <form id="deleteForm" method="post" action="/products/delete/{{id}}">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                        <input type="hidden" name="_method" value="DELETE">
+                        <button id="deleteAccount" name="delete" value="delete" type="submit" class="btn btn-danger">Supprimer</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{{/each}}

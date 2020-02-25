@@ -3,6 +3,7 @@ let login = require('../controllers/auth/login');
 let jwt = require('jsonwebtoken');
 let express = require('express');
 let usersRoutes = require('./users');
+let productsRoutes = require('./products');
 
 module.exports.makeRoutes = function (app){
 
@@ -10,7 +11,7 @@ module.exports.makeRoutes = function (app){
    * WELCOME PAGE ROUTE
    */
   app.get('/', (req, res) => {
-    res.render('index', { title : 'Accueil'});
+    res.render('index', { title : 'Accueil', layout: 'layhome'});
   })
 
    /**
@@ -34,8 +35,7 @@ module.exports.makeRoutes = function (app){
    * This route will "logout" the user (impossible with jsonwebtoken because it's stateless)
    */
   app.get('/logout', (req, res) => {
-      req.user = {};
-      req.cookies.token = null;
+      res.cookie('token', '', { maxAge: 0, httpOnly: true })
       res.redirect("/login");
   });
 
@@ -43,6 +43,8 @@ module.exports.makeRoutes = function (app){
    * Call other methods to get all the routes
    */
   usersRoutes.usersRoutes(app);
+
+  productsRoutes.productsRoutes(app);
 
   return app;
 }

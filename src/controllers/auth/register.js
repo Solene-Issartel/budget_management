@@ -15,15 +15,24 @@ function post(req, res) {
         q.passwordConfirm !== undefined
     ) {
         var errors = [];
+        let regexMail = /[a-zA-Z0-9._-]+@[a-zA-Z\.]+\.[a-z]{1,5}$/;
+        let regexPrenomNom = /^[a-zA-Z0-9áàâäçéèêëîïöùûü._\s-]+$/;
 
         /**
          * Check if firstname and username are defined 
          */
-        if (q.firstname.length == 0) {
-            errors.push("Le prénom ne peut pas être vide.");
+        if (q.firstname.length == 0 || !regexPrenomNom.test(q.firstname)) {
+            errors.push("Le prénom n'est pas valide (pas de caracteres speciaux).");
         }
-        if (q.lastname.length == 0) {
-            errors.push("Le nom de famille ne peut pas être vide.");
+        if (q.lastname.length == 0 || !regexPrenomNom.test(q.lastname)) {
+            errors.push("Le nom de famille n'est pas valide (pas de caracteres speciaux)");
+        }
+
+        /**
+         * Check if email have wrong characters defined 
+         */       
+        if (q.email.length == 0 || !regexMail.test(q.email)) {
+            errors.push("L'email n'est pas valide (pas de caracteres speciaux).");
         }
 
         /**
@@ -40,16 +49,21 @@ function post(req, res) {
          * Errors management
          */
         if (errors.length > 0) {
-            res.render("auth/register", { name: "S'inscrire", errors });
+            res.render("auth/register", {
+                errors: errors,
+                layout: 'layhome' 
+            });
             return;
         } else {
             models.User.findOne(q.email, function(user){
                 if (user.length != 0){
-                    res.render("auth/register", { 
-                        name: "S'inscrire",  
-                        errors: ["Cet email est déjà utilisé."] 
-                    });
-                    return;
+                    const flash = {
+                        msg:"Cet email est déjà utilisé.",
+                        //type : alert-danger {errors}, alert-succes {{success}}
+                        //alert:"alert-danger"
+                    };
+                    models.setFlash(flash, res);
+                    res.redirect('/register'); 
               } else {     
                 bcrypt.genSalt(10, (err, salt) => {
                   bcrypt.hash(q.password, salt, (err, hash) => {
@@ -67,7 +81,10 @@ function post(req, res) {
 }
 
 function get(req, res) {
-    res.render('auth/register', { name: "S'inscrire" });
+    const flash = models.getFlash(req);
+    models.destroyFlash(res);
+    console.log(flash)
+    res.render('auth/register', {layout: 'layhome',errors: flash });
 }
 
 module.exports = {post, get};
