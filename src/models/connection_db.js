@@ -1,4 +1,4 @@
-const mysql = require('mysql2');
+const mysql = require('mysql');
 
 if(process.env.NODE_ENV == "production"){
   const connection = mysql.createConnection(process.env.CLEARDB_DATABASE_URL);

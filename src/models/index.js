@@ -6,13 +6,13 @@ var Contain = require('./contain');
 var Categorie = require('./categorie');
 
 async function init() {
-    if(process.env.NODE_ENV == "test") {
+    if(process.env.NODE_ENV != "production") {
         await co.drop();
     }
 
     await co.sync();
 
-    if(process.env.NODE_ENV == "test") {
+    if(process.env.NODE_ENV != "production") {
         try {
            // await User.create("Admin", "Master", "admin", "admin@yopmail.com", true);
         } catch {
