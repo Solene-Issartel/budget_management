@@ -1,7 +1,7 @@
 const mysql = require('mysql2');
 
 if(process.env.NODE_ENV == "production"){
-  const connection = mysql.createConnection(precess.env.CLEARDB_DATABASE_URL);
+  const connection = mysql.createConnection(process.env.CLEARDB_DATABASE_URL);
   connection.connect((err, connection) => {
     if(err){
         console.error("Unable to connect to the database:", err);
