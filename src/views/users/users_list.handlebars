@@ -2,7 +2,7 @@
     <div class="container">
         <h2 style="margin-top:100px">Liste des utilisateurs.</h2>
         {{#if errors}}
-            <div class="alert alert-success">
+            <div class="alert {{errors.alert}}">
                 {{errors.msg}}
             </div>
         {{/if}}

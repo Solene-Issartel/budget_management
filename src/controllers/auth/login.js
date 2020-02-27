@@ -35,12 +35,8 @@ function post(req, res, next) {
                 if(result){
                     let id = user[0].id_user;
                     let firstname = user[0].firstname;
-                    let isAdmin = user[0].isAdmin;
-                    if(isAdmin == 0){
-                        isAdmin = false;
-                    } else {
-                        isAdmin = true;
-                    }
+                    let isAdmin = user[0].isAdmin == 1 ? true : false;
+                    
                     const token = jwt.sign({id,firstname,email,isAdmin},SECRET_KEY, {
                         algorithm: 'HS256',
                     });

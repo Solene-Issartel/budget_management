@@ -17,6 +17,24 @@
   box-shadow: 1px 1px 5px rgba(0,0,0,0.1);
 }
 
+.btn-primary:hover{
+  background-color:
+  #c08b19;
+  border-color:
+  #b15e0c;
+} 
+
+.btn-primary{
+    background-color:
+  #ee9f09;
+  border-color:
+  #ee7f09;
+}
+
+.header_center{
+  text-align: center;
+}
+
 #changePass{
   font-size: 15px;;
 }
@@ -95,6 +113,7 @@
 }
 
 .navbar-brand {
+  font-family: 'Kaushan Script';
   display: inline-block;
   padding-top: 0.3125rem;
   padding-bottom: 0.3125rem;
@@ -103,7 +122,76 @@
   line-height: inherit;
   white-space: nowrap; }
 
+  .nav-link {
+    font-family: 'Montserrat';
+    font-size: 13px;
+    color: white;
+  }
+
+  .nav-link#register {
+    color: #ee7f09;
+  }
+
   .navbar-brand:hover, .navbar-brand:focus {
     text-decoration: none; }
 
+    h3.section-subheading{
+    font-size: 15px;
+    font-weight: 400;
+    font-style: italic;
+    margin-bottom: 60px;
+    text-transform: none;
+    font-family: "Droid Serif";
+  }
+
+  .intro-text .intro-lead-in {
+    color: white;
+    font-size: 30px;
+    font-style: italic;
+    line-height: 40px;
+    font-family: "Droid Serif";
+}
+
+.intro-text .intro-heading {
+  color: white;
+  font-size: 60px;
+  font-weight: 700;
+  line-height: 75px;
+  font-family: "Montserrat";
+}
+
+#contact{
+  margin-top: 8%;
+  margin-bottom: 8%;
+  font-family: "Droid Serif";
+}
+
+#services {
+  margin-top: 5%;
+  margin-bottom: 8%;
+  font-family: "Droid Serif";
+}
+
+section#contact .form-group input, 
+section#contact .form-group textarea{
+  padding: 20px;
+  height: auto;
+}
+
+section#contact .form-group #message {
+  height: 230px;
+  margin-bottom: 7%;
+}
+
+.fa-circle{
+  color:#e9a91e;
+}
+
+#aboutUs{
+  margin-bottom: 5%;
+}
+
+#homePage{
+  margin-top: 18%;
+}
 

@@ -24,13 +24,13 @@ module.exports.usersRoutes = function (app){
   /**
    * MODIFY USER (his account)
    */
-  app.get("/user/update", login.verifyToken, userController.update_get);
-  app.post("/user/update", login.verifyToken, userController.update_post);
+  app.get("/profile/update", login.verifyToken, userController.update_get);
+  app.put("/profile/update", login.verifyToken, userController.update_post);
 
   /**
    * DELETE USER (only admin)
    */
-  app.post("/users/delete/:id", login.verifyToken,(req, res) => {
+  app.delete("/users/delete/:id", login.verifyToken,(req, res) => {
     let id = req.params.id;
     let from = false; //var to know if the delete form is from the user and not an admin 
     userController.delete_account(id,from,req,res);
@@ -39,7 +39,7 @@ module.exports.usersRoutes = function (app){
   /**
    * DELETE MY ACCOUNT
    */
-  app.post("/user/delete/:id", login.verifyToken, (req, res) => {
+  app.delete("/profile/delete/:id", login.verifyToken, (req, res) => {
       let id = req.params.id;
       let from = true; //var to know if the delete form is from the user and not an admin 
       userController.delete_account(id,from,req,res);

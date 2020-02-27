@@ -1,9 +1,9 @@
-var co = require('./connection_db');
-var User = require('./user');
-var List = require('./list');
-var Product = require('./product');
-var Contain = require('./contain');
-var Categorie = require('./categorie');
+let co = require('./connection_db');
+let User = require('./user');
+let List = require('./list');
+let Product = require('./product');
+let Contain = require('./contain');
+let Categorie = require('./categorie');
 
 async function init() {
     if(process.env.NODE_ENV != "production") {

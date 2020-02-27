@@ -1,6 +1,6 @@
 <div class="register-photo">
     <div class="form-container">
-        <form action='/user/update' method="post">
+        <form action='/profile/update?_method=PUT' method="post">
             <h2 class="text-center">Modifier le profil.</h2>
             {{#if errors}}
                 <div class="alert {{errors.alert}}">
@@ -47,7 +47,7 @@
                             Cette action est irréversible. Voulez-vous vraiment supprimer votre compte ?
                         </div>
                         <div class="modal-footer">
-                            <form id="deleteForm" method="post" action="/user/delete/{{id}}">
+                            <form id="deleteForm" method="post" action="/profile/delete/{{id}}?_method=DELETE">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
                                 <input type="hidden" name="_method" value="DELETE">
                                 <button id="deleteAccount" name="delete" value="delete" type="submit" class="btn btn-danger">Supprimer</button>

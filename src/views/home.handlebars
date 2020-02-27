@@ -4,10 +4,57 @@
     </div>
 {{/if}}
 
-<div class="row align-items-center">
-    <div class="p-5">
-        <h1>Bonjour {{firstname}},</h1>
-        <p>Plusieurs magasins sont disponibles afin de réaliser vos listes de courses et gérer votre budget mensuel. </p>
-        <p>Si le magasin où vous faites vos courses n&#39;est pas présent dans la liste, veuillez faire une demande aux gérants du site. Pour cela, laissez un message ici, votre demande sera étudiée.</p>
+<section>
+    <div class="container">
+        <div class="row">
+            <div id="homePage" class="col-lg-12 text-center">
+                <h4>Bonjour {{firstname}},</h4>
+                <h1 class="text-uppercase section-heading">Bienvenue sur budman</h1>
+                <h3 class="text-muted section-subheading">Votre application de gestion bugétaire.</h3>
+            </div>
+        </div>
+        <div class="row text-center">
+            <div class="col-md-4"><span class="fa-stack fa-4x"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-chart-bar fa-stack-1x fa-inverse"></i></span>
+                <h4 class="section-heading">Graphiques</h4>
+                <p class="text-muted"><a href="#">Voir l'évolution de mes budgets</a></p>
+            </div>
+            <div class="col-md-4"><span class="fa-stack fa-4x"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-list-alt fa-stack-1x fa-inverse"></i></span>
+                <h4 class="section-heading">Gérez vos listes</h4>
+                <p class="text-muted"><a href="#">Voir toutes mes listes</a></p><a href="#">Créer une nouvelle liste</a></div>
+            <div class="col-md-4"><span class="fa-stack fa-4x"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-envelope fa-stack-1x fa-inverse"></i></span>
+                <h4 class="section-heading">Envoyez un message</h4>
+                <p class="text-muted"></p><a href="#contact">Contacter l'équipe</a></div>
+        </div>
     </div>
-</div>
+</section>
+<section id="contact" style="background-image:url('/img/map-image.png');">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h2 class="text-uppercase section-heading">Contactez nous</h2>
+                    <h3 class="section-subheading text-muted">Vos messages seront étudiés par notre équipe. Le temps de réponse est estimé à 48h.</h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <form id="contactForm" name="contactForm" novalidate="novalidate">
+                        <div class="form-row">
+                            <div class="col col-md-6">
+                                <div class="form-group"><input class="form-control" type="text" id="name" placeholder="Votre Nom *" required=""><small class="form-text text-danger flex-grow-1 help-block lead"></small></div>
+                                <div class="form-group"><input class="form-control" type="email" id="email" placeholder="Votre Email *" required=""><small class="form-text text-danger help-block lead"></small></div>
+                                <div class="form-group"><small class="form-text text-danger help-block lead"></small></div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group"><textarea class="form-control" id="message" placeholder="Votre Message *" required=""></textarea><small class="form-text text-danger help-block lead"></small></div>
+                            </div>
+                            <div class="col">
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="col-lg-12 text-center">
+                                <div id="success"></div><button class="btn btn-secondary text-uppercase" id="sendMessageButton" type="submit">envoyer</button></div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>

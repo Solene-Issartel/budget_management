@@ -1,4 +1,5 @@
 let models = require('../models');
+let services = require('../services');
 let bcrypt = require('bcrypt');
 
 
@@ -6,29 +7,13 @@ function get(req, res) {
     let isAdmin = req.user.isAdmin;
     if(isAdmin){
         models.User.findAll((users)=>{
-            let letters = [];
-            let persons = [];
-            users.forEach(user => {
-                if(req.user.id != user.id_user){ //current user cannot see him-self
-                    let letter = user.lastname.charAt(0).toUpperCase();
-                    let alreadyIn = letters.includes(letter); 
-                    if(!alreadyIn){
-                        letters.push(letter);
-                    }
-                    var person = {
-                        letter: letter,
-                        id: user.id_user,
-                        firstname: user.firstname,
-                        lastname: user.lastname,
-                        isAdmin: user.isAdmin 
-                    }
-                    persons.push(person);
-                }
-            });
+            let results = services.users.sortUsersByLetter(users,req,res);
+            console.log(results);
             const flash = models.getFlash(req);
             models.destroyFlash(res);
-            res.render("users/users_list", {letters: letters, persons: persons, errors: flash, userAdmin: req.user.isAdmin == 1? true : false});
-        })
+            res.render("users/users_list", {letters: results.letters, persons: results.persons, errors: flash, userAdmin: req.user.isAdmin == 1? true : false});
+        });
+        
     } else {
         const flash = {
             msg:"Vous n'avez pas les droits pour effectuer cette action.",
@@ -49,7 +34,7 @@ function user_info_get(id_req,req, res) {
             models.User.findById(id_req,(user) => {
                 const flash = models.getFlash(req);
                 models.destroyFlash(res);
-                let isAdmin = user[0].isAdmin==1 ? true : false;
+                let isAdmin = user[0].isAdmin==1 ? true : false; //true if the user that we are looking for is an admin
                 res.render('users/users_info', {id: id_req,firstname : user[0].firstname, lastname : user[0].lastname, email: user[0].email, isAdmin: isAdmin, errors: flash, userAdmin: req.user.isAdmin == 1? true : false});
             })
         } else {
@@ -105,7 +90,6 @@ function update_get(req, res) {
             models.destroyFlash(res);
             res.render('users/users_update', 
             { 
-                name: "Modification du profil", 
                 id: id,
                 firstname: user[0].firstname,
                 lastname: user[0].lastname,
@@ -161,7 +145,13 @@ function update_post(req, res) {
                         if (err) throw err;
                         q.password = hash;
                         models.User.updateWithPassword(id,q.firstname,q.lastname,q.email,q.password,(user) => {
-                            res.redirect('/user/update');
+                            const flash = {
+                                msg:"Vous avez modifié votre profil avec succès.",
+                                //type : alert-danger {errors}, alert-succes {{success}}
+                                alert:"alert-success"
+                            };
+                            models.setFlash(flash, res);
+                            res.redirect('/profile/update');
                         })
                     });
                 });
@@ -170,13 +160,23 @@ function update_post(req, res) {
         } else {
             models.User.update(id,q.firstname,q.lastname,q.email,(user) => {
                 req.user.firstname=q.firstname; //marche pas ne met pas a jour le nv nom
-                req.user.errors='Vous avez modifier votre profil avec succès'
-                res.redirect('/user/update');
+                const flash = {
+                    msg:"Vous avez modifié votre profil avec succès.",
+                    //type : alert-danger {errors}, alert-succes {{success}}
+                    alert:"alert-success"
+                };
+                models.setFlash(flash, res);
+                res.redirect('/profile/update');
             })
         }
 
     } else {
-        req.user.errors = "Vous n'avez pas les droits pour effectuer cette action."
+        const flash = {
+            msg:"Vous n'avez pas les droits pour effectuer cette action.",
+            //type : alert-danger {errors}, alert-succes {{success}}
+            alert:"alert-danger"
+        };
+        models.setFlash(flash, res);
         res.redirect('/home',403);
         return;
     }
