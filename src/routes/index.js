@@ -4,6 +4,7 @@ let jwt = require('jsonwebtoken');
 let express = require('express');
 let usersRoutes = require('./users');
 let productsRoutes = require('./products');
+let listsRoutes = require('./lists');
 
 module.exports.makeRoutes = function (app){
 
@@ -45,6 +46,8 @@ module.exports.makeRoutes = function (app){
   usersRoutes.usersRoutes(app);
 
   productsRoutes.productsRoutes(app);
+
+  listsRoutes.listsRoutes(app);
 
   return app;
 }

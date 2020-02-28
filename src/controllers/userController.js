@@ -21,7 +21,7 @@ function get(req, res) {
             alert:"alert-danger"
         };
         models.setFlash(flash, res);
-        res.redirect('/home',403);
+        res.redirect(403,'/home');
         return;
     }
     
@@ -44,10 +44,16 @@ function user_info_get(id_req,req, res) {
                 alert:"alert-danger"
             };
             models.setFlash(flash, res);
-            res.redirect('/home',403)
+            res.redirect('/home',403);
         }
     } else {
-        return res.status(403).json(err.toString());
+        const flash = {
+            msg:"Vous devez vous identifer pour faire cette action.",
+            //type : alert-danger {errors}, alert-succes {{success}}
+            alert:"alert-danger"
+        };
+        models.setFlash(flash, res);
+        res.redirect(401,'/login');
     }
 }
 
@@ -72,10 +78,16 @@ function user_info_post(id_req,req, res) {
                 alert:"alert-danger"
             };
             models.setFlash(flash, res);
-            res.redirect('/home',403)
+            res.redirect(403,'/home');
         }
     } else {
-        return res.status(403).json(err.toString());
+        const flash = {
+            msg:"Vous devez vous identifer pour faire cette action.",
+            //type : alert-danger {errors}, alert-succes {{success}}
+            alert:"alert-danger"
+        };
+        models.setFlash(flash, res);
+        res.redirect(401,'/login');
     }
 }
 
@@ -105,8 +117,7 @@ function update_get(req, res) {
             alert:"alert-danger"
         };
         models.setFlash(flash, res);
-        res.redirect('/home',403);
-        return;
+        res.redirect(403,'/home');
     }
     
 }
@@ -177,7 +188,7 @@ function update_post(req, res) {
             alert:"alert-danger"
         };
         models.setFlash(flash, res);
-        res.redirect('/home',403);
+        res.redirect(403,'/home');
         return;
     }
 }
@@ -239,7 +250,7 @@ function delete_account(id_req,from,req, res) {
             alert:"alert-danger"
         };
         models.setFlash(flash, res);
-        res.redirect('home',403);
+        res.redirect('/home',403);
         return;
     }
 }

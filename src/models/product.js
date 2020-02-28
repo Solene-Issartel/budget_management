@@ -22,11 +22,14 @@ class Product {
         })
     }
 
-    static update(id,name,id_cat,cb){
-        co.query('UPDATE products SET name_product = ?, cat_product = ? WHERE id_product = ?', [price,date,id_user,id], (err,result) => {
-            if (err) throw err;
-            cb(result) //cb is callback function
-        })
+    static update(id,name,id_cat){
+        return new Promise( ( resolve, reject ) => {
+            co.query('UPDATE products SET name_product = ?, cat_product = ? WHERE id_product = ?', [name,id_cat,id], ( err, rows ) => {
+                if ( err )
+                    return reject( err );
+                resolve( rows );
+            } );
+        } );
     }
 
     static findById(id,cb){
@@ -36,14 +39,17 @@ class Product {
         });
     }
 
-    static findAll(cb){
-        co.query('SELECT * FROM products ORDER BY name_product', [id], (err,result) => {
-            if(err) throw err;
-            cb(result);
-        });
+    static async findAll(){
+        return new Promise( ( resolve, reject ) => {
+            co.query('SELECT * FROM products ORDER BY cat_product,name_product', ( err, rows ) => {
+                if ( err )
+                    return reject( err );
+                resolve( rows );
+            } );
+        } );
     }
 
-    static findByCategorie(id_cat){ //month is an int (1:january, 2:feb etc.)
+    static async findByCategorie(id_cat){ //month is an int (1:january, 2:feb etc.)
         return new Promise( ( resolve, reject ) => {
             co.query('SELECT * FROM products WHERE cat_product = ? ORDER BY name_product', [id_cat], ( err, rows ) => {
                 if ( err )

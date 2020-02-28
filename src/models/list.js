@@ -37,11 +37,14 @@ class List {
         });
     }
 
-    static findByUser(id_user,cb){
-        co.query('SELECT * FROM lists WHERE id_user = ?', [id_user], (err,result) => {
-            if(err) throw err;
-            cb(result);
-        });
+    static findByUser(id_user){
+        return new Promise( ( resolve, reject ) => {
+            co.query('SELECT * FROM lists WHERE id_user = ?', [id_user], ( err, rows ) => {
+                if ( err )
+                    return reject( err );
+                resolve( rows );
+            } );
+        } );
     }
 
     static findByMonth(month,id_user,cb){ //month is an int (1:january, 2:feb etc.)

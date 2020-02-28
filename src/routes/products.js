@@ -13,16 +13,16 @@ module.exports.productsRoutes = function (app){
    */
   app.delete("/products/delete/:id", login.verifyToken, (req, res) => {
     let id = req.params.id;
-    userController.delete_post(id,req,res);
+    productController.delete_post(id,req,res);
   });
 
-  app.get("/product/update/:id", login.verifyToken, (req, res) => {
+  app.get("/products/update/:id", login.verifyToken, (req, res) => {
     let id = req.params.id;
-    userController.update_get(id,req,res);
+    productController.update_get(id,req,res);
   });
-  app.put("/product/update/:id", login.verifyToken, (req, res) => {
+  app.put("/products/update/:id", login.verifyToken, (req, res) => {
     let id = req.params.id;
-    userController.update_post(id,req,res);
+    productController.update_post(id,req,res);
   });
 
 

@@ -28,7 +28,7 @@ class Categorie {
         })
     }
 
-    static findAll(){
+    static async findAll(){
         return new Promise( ( resolve, reject ) => {
             co.query('SELECT * FROM categories', ( err, rows ) => {
                 if ( err )
