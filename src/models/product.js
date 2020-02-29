@@ -18,11 +18,14 @@ class Product {
         } );
     }
 
-    static delete(id,cb){
-        co.query('DELETE FROM products WHERE id_product = ?', [id], (err,result) => {
-            if (err) throw err;
-            cb(result) //cb is callback function
-        })
+    static delete(id){
+        return new Promise( ( resolve, reject ) => {
+            co.query('DELETE FROM products WHERE id_product = ?', [id], ( err, rows ) => {
+                if ( err )
+                    return reject( err );
+                resolve( rows );
+            } );
+        } );
     }
 
     static async update(id,name,id_cat){

@@ -7,25 +7,34 @@ class Categorie {
         this.name_categorie;
     }
 
-    static create(name_cat,cb) {
-        co.query('INSERT INTO categories SET name_categorie = ?', [name_cat], (err,result) => {
-            if (err) throw err;
-            cb(result) //cb is callback function
-        })
+    static async create(name_cat) {
+        return new Promise( ( resolve, reject ) => {
+            co.query('INSERT INTO categories SET name_categorie = ?', [name_cat], ( err, result ) => {
+                if ( err )
+                    return reject( err );
+                resolve( result );
+            } );
+        } );
     }
 
-    static delete(id,cb){
-        co.query('DELETE FROM categories WHERE id_categorie = ?', [id], (err,result) => {
-            if (err) throw err;
-            cb(result) //cb is callback function
-        })
+    static async delete(id){
+        return new Promise( ( resolve, reject ) => {
+            co.query('DELETE FROM categories WHERE id_categorie = ?', [id], ( err, result ) => {
+                if ( err )
+                    return reject( err );
+                resolve( result );
+            } );
+        } );
     }
 
-    static update(id,name_cat,cb){
-        co.query('UPDATE categories SET name_categorie = ? WHERE id_categorie = ?', [name_cat,id], (err,result) => {
-            if (err) throw err;
-            cb(result) //cb is callback function
-        })
+    static async update(id,name_cat){
+        return new Promise( ( resolve, reject ) => {
+            co.query('UPDATE categories SET name_categorie = ? WHERE id_categorie = ?', [name_cat,id], ( err, result ) => {
+                if ( err )
+                    return reject( err );
+                resolve( result );
+            } );
+        } );
     }
 
     static async findName(id){
@@ -48,11 +57,15 @@ class Categorie {
         } );
     }
 
-    static findById(id,cb){
-        co.query('SELECT * FROM categories WHERE id_categorie = ?', [id], (err,result) => {
-            if(err) throw err;
-            cb(result);
-        });
+    static async findById(id){
+        return new Promise( ( resolve, reject ) => {
+            co.query('SELECT * FROM categories WHERE id_categorie = ?', [id], ( err, rows ) => {
+                if ( err )
+                    return reject( err );
+                resolve( rows );
+            } );
+        } );
+        
     }
 }
 

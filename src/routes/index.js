@@ -5,6 +5,7 @@ let express = require('express');
 let usersRoutes = require('./users');
 let productsRoutes = require('./products');
 let listsRoutes = require('./lists');
+let categoriesRoutes = require('./categorie');
 
 module.exports.makeRoutes = function (app){
 
@@ -48,6 +49,8 @@ module.exports.makeRoutes = function (app){
   productsRoutes.productsRoutes(app);
 
   listsRoutes.listsRoutes(app);
+
+  categoriesRoutes.categoriesRoutes(app);
 
   return app;
 }

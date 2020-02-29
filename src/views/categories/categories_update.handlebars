@@ -1,6 +1,6 @@
 <div class="register-photo">
     <div class="form-container">
-        <form action='/products/update/{{id}}?_method=PUT' method="post">
+        <form action='/categories/update/{{id_cat}}?_method=PUT' method="post">
             <h2 class="text-center">Modifier le produit.</h2>
             {{#if errors}}
                 <div class="alert {{errors.alert}}">
@@ -9,17 +9,7 @@
             {{/if}}
             <div class="row">
                 <div class="col">
-                    <div class="form-group"><input type="text" class="form-control" name="name_product" value="{{name}}" /></div>
-                
-                    <h5 id="changeCat" class="text-center">Changer de catégorie (facultatif)</h5>
-                    <div class="form-group">
-                        <input type="hidden" id='id_cat_prod' name="id_cat_prod" value="{{id_cat}}">
-                        <select name ="cat_product" class="form-control">
-                            {{#each categories as | cat |}}
-                                <option value="{{cat.id_categorie}}">{{cat.name_categorie}}</option>
-                            {{/each}}
-                        </select>
-                    </div>
+                    <div class="form-group"><input type="text" class="form-control" name="name_categorie" value="{{name}}" /></div>
                 </div>
             </div>
             
@@ -28,7 +18,7 @@
             
             <div class="d-flex">
                 <div class="mr-auto p-2"></div>
-                <div class="p-2 form-group"><button class="btn btn-danger btn-block" type="button" data-toggle="modal" data-target="#exampleModal">Supprimer ce produit</button></div>
+                <div class="p-2 form-group"><button class="btn btn-danger btn-block" type="button" data-toggle="modal" data-target="#exampleModal">Supprimer cette catégorie</button></div>
             </div>
             
         </form>
@@ -48,23 +38,13 @@
                 Cette action est irréversible. Voulez-vous vraiment supprimer ce produit ?
             </div>
             <div class="modal-footer">
-                <form id="deleteForm" method="post" action="/products/delete/{{id}}?_method=DELETE">
+                <form id="deleteForm" method="post" action="/categories/delete/{{id_cat}}?_method=DELETE">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
                     <input type="hidden" name="_method" value="DELETE">
-                    <button id="deleteAccount" name="delete" value="delete" type="submit" class="btn btn-danger">Supprimer</button>
+                    <button id="deleteAccount" type="submit" class="btn btn-danger">Supprimer</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
 
-<script>
-    let id_cat = $('#id_cat_prod')[0].value;
-    let options = $('select.form-control option');
-
-    options.each(function(){
-    if ($(this).val() == id_cat)
-        $(this).attr("selected","selected");
-    });
-
-</script>
