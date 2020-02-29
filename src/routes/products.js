@@ -8,6 +8,12 @@ module.exports.productsRoutes = function (app){
    */
   app.get("/products", login.verifyToken, productController.get);
 
+    /**
+   * CREATE PRODUCT (only for Admin)
+   */
+  app.get("/products/create", login.verifyToken, productController.create_get);
+  app.post("/products/create", login.verifyToken, productController.create_post);
+
    /**
    * PRODUCT SUPPRESSION (only for Admin)
    */

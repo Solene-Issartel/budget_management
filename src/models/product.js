@@ -8,11 +8,14 @@ class Product {
         this.cat_product;
     }
 
-    static create(name,id_cat,cb) {
-        co.query('INSERT INTO products SET name_product = ? AND cat_product = ?', [name,id_cat], (err,result) => {
-            if (err) throw err;
-            cb(result) //cb is callback function
-        })
+    static async create(name,id_cat) {
+        return new Promise( ( resolve, reject ) => {
+            co.query('INSERT INTO products (name_product, cat_product) VALUES (?,?)', [name,id_cat], ( err, result ) => {
+                if ( err )
+                    return reject( err );
+                resolve( result );
+            } );
+        } );
     }
 
     static delete(id,cb){
@@ -22,7 +25,7 @@ class Product {
         })
     }
 
-    static update(id,name,id_cat){
+    static async update(id,name,id_cat){
         return new Promise( ( resolve, reject ) => {
             co.query('UPDATE products SET name_product = ?, cat_product = ? WHERE id_product = ?', [name,id_cat,id], ( err, rows ) => {
                 if ( err )
@@ -32,11 +35,14 @@ class Product {
         } );
     }
 
-    static findById(id,cb){
-        co.query('SELECT * FROM products WHERE id_product = ?', [id], (err,result) => {
-            if(err) throw err;
-            cb(result);
-        });
+    static findById(id){
+        return new Promise( ( resolve, reject ) => {
+            co.query('SELECT * FROM products WHERE id_product = ?', [id], ( err, rows ) => {
+                if ( err )
+                    return reject( err );
+                resolve( rows );
+            } );
+        } );
     }
 
     static async findAll(){

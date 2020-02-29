@@ -28,6 +28,16 @@ class Categorie {
         })
     }
 
+    static async findName(id){
+        return new Promise( ( resolve, reject ) => {
+            co.query('SELECT id_cat,name_product FROM categories WHERE id_categorie = ?', [id], ( err, result ) => {
+                if ( err )
+                    return reject( err );
+                resolve( result );
+            } );
+        } );
+    }
+
     static async findAll(){
         return new Promise( ( resolve, reject ) => {
             co.query('SELECT * FROM categories', ( err, rows ) => {
