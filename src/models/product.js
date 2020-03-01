@@ -38,7 +38,17 @@ class Product {
         } );
     }
 
-    static findById(id){
+    static async findOne(name){
+        return new Promise( ( resolve, reject ) => {
+            co.query('SELECT * FROM products WHERE name_product = ?', [name], ( err, rows ) => {
+                if ( err )
+                    return reject( err );
+                resolve( rows );
+            } );
+        } );
+    }
+
+    static async findById(id){
         return new Promise( ( resolve, reject ) => {
             co.query('SELECT * FROM products WHERE id_product = ?', [id], ( err, rows ) => {
                 if ( err )

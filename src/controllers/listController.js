@@ -57,7 +57,8 @@ function create_post(req, res){
     let id_user = req.user.id;
     if(id_user){
         let q = req.body;
-        res.render("products/products_create",{ userAdmin:req.user.isAdmin == 1? true : false});
+        console.log(q)
+        //res.render("products/products_create",{ userAdmin:req.user.isAdmin == 1? true : false});
     } else {
         const flash = {
             msg:"Vous devez vous identifier pour effectuer cette action.",

@@ -12,6 +12,7 @@ module.exports.listsRoutes = function (app){
    * PRODUCTS LIST (only for Admin)
    */
   app.get("/lists/create", login.verifyToken, listController.create_get);
+  app.post("/lists/create", login.verifyToken, listController.create_post);
 
    /**
    * PRODUCT SUPPRESSION (only for Admin)

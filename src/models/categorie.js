@@ -47,6 +47,16 @@ class Categorie {
         } );
     }
 
+    static async findOne(name){
+        return new Promise( ( resolve, reject ) => {
+            co.query('SELECT * FROM categories WHERE name_categorie = ?', [name], ( err, rows ) => {
+                if ( err )
+                    return reject( err );
+                resolve( rows );
+            } );
+        } );
+    }
+
     static async findAll(){
         return new Promise( ( resolve, reject ) => {
             co.query('SELECT * FROM categories', ( err, rows ) => {

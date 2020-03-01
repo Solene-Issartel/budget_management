@@ -1,7 +1,9 @@
-<section>
+<section style="margin-top:250px">
     <div class="container">
         <div class="row">
-            <div class="col-md-6"><input type="search" />
+            <div class="col-md-6"><input id="tags"><button onclick="addProduct()"type="button">Ajouter</button>
+                <input type="hidden" id="tagsID">
+                <div class="msg"></div>
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Sélection de vos derniers produits</h4>
@@ -10,17 +12,81 @@
                             <li class="list-group-item"><span>List Group Item 1</span></li>
                             <li class="list-group-item"><span>List Group Item 2</span></li>
                             <li class="list-group-item"><span>List Group Item 3</span></li>
-                        </ul><a class="card-link" href="#">Link</a><a class="card-link" href="#">Link</a></div>
+                        </ul>
+                    </div>
                 </div>
             </div>
             <div class="col-md-6">
                 <h5>Heading</h5>
-                <ul class="list-group">
-                    <li class="list-group-item"><span>List Group Item 3</span><input type="number" /></li>
-                    <li class="list-group-item"><span>List Group Item 2</span></li>
-                    <li class="list-group-item"><span>List Group Item 3</span></li>
-                </ul>
+                <form action="/lists/create" method="POST">
+                    <ul class="prodlist list-group">
+                    </ul>
+
+                    <p>Total : </p><p id="total"></p><p>€</p>
+
+                    <button type="submit">Sauvegarder</button>
+                </form>
             </div>
         </div>
     </div>
 </section>
+
+<script>
+    const total =0;
+    $(document).ready(function(){
+        $.ajax({
+            type: 'post',
+            url: '/products/all',
+            dataType: 'json'
+        })
+        .done(function(data){
+            let prodTags = data.map(func)
+            console.log(prodTags)
+            $("#tags").autocomplete({
+                source: prodTags,
+                select: function (event, ui) {
+                    $("#tags").val(ui.item.label); // display the selected text
+                    $("#tagsID").attr("id_prod",ui.item.id); // save selected id to hidden input
+                }
+            });
+        })
+        .fail(function(XMLHttpRequest, textStatus, errorThrown) { 
+        console.log("Status: " + textStatus); console.log("Error: " + errorThrown);
+        }) 
+    })
+    function func (x){
+        return {
+            label: x.name_product, 
+            id: x.id_product
+        }
+    }
+    function addProduct(){
+        const name_p = $('#tags').val();
+        const id_p = $('#tagsID').attr("id_prod");
+        if(name_p != undefined && id_p != undefined){
+            let alreadyIn = false;
+            $('.prodlist li').each(function() {
+                if($( this ).attr("id")==id_p){
+                    alreadyIn = true;
+                }      
+            })
+            if(!alreadyIn){
+                $( ".msg div" ).remove();
+                let html ="<li id='"+id_p+"'class='list-group-item'><span>"+name_p+"</span><input class='price_prod' name='prices' type='number' min='0'/><input type='hidden' name='ids' value='"+id_p+"'></li>"
+                $(html).appendTo( ".prodlist" );
+                $('#tags').val('');
+            } else {
+                $( ".msg div" ).remove();
+                let html = "<div class='alert alert-warning'>Ce produit est déjà présent dans votre liste</div>"
+                $('#tags').val('');
+                $(html).appendTo( ".msg" );
+            }
+            
+        }
+    }
+
+    $('.price_prod').focusout(function(){
+        console.log('nbgvf')
+    })
+
+</script>

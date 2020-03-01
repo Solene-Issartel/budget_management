@@ -84,25 +84,36 @@ async function create_post(req, res){
     let isAdmin = req.user.isAdmin;
     if(isAdmin){
         let q = req.body;
-        let errors = services.product.checkNameRegex(q.name_product);
-        if (errors.length > 0){
+        let prod = await models.Product.findOne(q.name_product);
+        if(prod.length > 0){
             const flash = {
-                msg:errors[0],
+                msg:"Ce produit existe déjà",
                 //type : alert-danger {errors}, alert-success {{success}}
                 alert:"alert-danger"
             };
             models.setFlash(flash, res);
             res.redirect('/products/create');
-        } else { 
-            models.Product.create(q.name_product,q.cat_product).then((product) => {
+        } else {
+            let errors = services.product.checkNameRegex(q.name_product);
+            if (errors.length > 0){
                 const flash = {
-                    msg:"Vous avez créé le produit avec succès",
+                    msg:errors[0],
                     //type : alert-danger {errors}, alert-success {{success}}
-                    alert:"alert-success"
+                    alert:"alert-danger"
                 };
                 models.setFlash(flash, res);
-                res.redirect('/products');
-            })
+                res.redirect('/products/create');
+            } else { 
+                models.Product.create(q.name_product,q.cat_product).then((product) => {
+                    const flash = {
+                        msg:"Vous avez créé le produit avec succès",
+                        //type : alert-danger {errors}, alert-success {{success}}
+                        alert:"alert-success"
+                    };
+                    models.setFlash(flash, res);
+                    res.redirect('/products');
+                })
+            }
         }
     } else {
         const flash = {
@@ -218,4 +229,9 @@ function update_post(id_req,req, res) {
     }
 }
 
-module.exports = {get, delete_post, create_get,create_post,update_get, update_post};
+async function get_all(req,res){
+    let prod = await models.Product.findAll();
+    res.send(prod);
+}
+
+module.exports = {get, get_all,delete_post, create_get,create_post,update_get, update_post};

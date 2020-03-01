@@ -55,25 +55,36 @@ async function create_post(req, res){
     let isAdmin = req.user.isAdmin;
     if(isAdmin){
         let q = req.body;
-        let errors = services.product.checkNameRegex(q.name_categorie);
-        if (errors.length > 0){
+        let cat = await models.Catégorie.findOne(q.name_categorie);
+        if(cat.length > 0){
             const flash = {
-                msg:errors[0],
+                msg:"Cette catégorie existe déjà",
                 //type : alert-danger {errors}, alert-success {{success}}
                 alert:"alert-danger"
             };
             models.setFlash(flash, res);
             res.redirect('/categories/create');
-        } else { 
-            models.Categorie.create(q.name_categorie).then((product) => {
+        } else {
+            let errors = services.product.checkNameRegex(q.name_categorie);
+            if (errors.length > 0){
                 const flash = {
-                    msg:"Vous avez créé la catégorie avec succès",
+                    msg:errors[0],
                     //type : alert-danger {errors}, alert-success {{success}}
-                    alert:"alert-success"
+                    alert:"alert-danger"
                 };
                 models.setFlash(flash, res);
-                res.redirect('/categories');
-            })
+                res.redirect('/categories/create');
+            } else { 
+                models.Categorie.create(q.name_categorie).then((product) => {
+                    const flash = {
+                        msg:"Vous avez créé la catégorie avec succès",
+                        //type : alert-danger {errors}, alert-success {{success}}
+                        alert:"alert-success"
+                    };
+                    models.setFlash(flash, res);
+                    res.redirect('/categories');
+                })
+            }
         }
     } else {
         const flash = {

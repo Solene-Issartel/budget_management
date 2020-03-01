@@ -32,7 +32,8 @@ module.exports.productsRoutes = function (app){
   });
 
 
-
+  app.get('/products/all',productController.get_all)
+  app.post('/products/all',productController.get_all)
   
   return app;
 }
