@@ -1,0 +1,58 @@
+<section>
+    <div class="container">
+        <div class="row align-items-center"></div>
+        <div class="row align-items-center">
+            <div class="p-5">
+                <h3 class="display-4">Liste de vos listes</h3>
+                <p>Gérer vos listes : modifier, ajouter ou supprimer.</p>
+                <a href="/lists/create">Ajouter une liste</a>
+            </div>
+        </div>
+    </div>
+</section>
+<section>
+    <div class="container">
+        {{#if errors}}
+            <div class="alert {{errors.alert}}">
+                {{errors.msg}}
+            </div>
+        {{/if}}
+        <div class="row align-items-center">
+            <div class="col" style="width:50%">
+                <ul class="list-group">
+                    {{#each lists as | list |}}
+                    <li class="list-group-item infoProd" value="{{id_list}}"><span>Liste du {{date_list}}</span><div>
+                        <a href="/lists/update/{{id_list}}">Modifier</a><a type="button" data-toggle="modal" data-target="#DelCatModal{{id_list}}">Supprimer</a>
+                    </div></li>
+              
+                    <!-- Modal -->
+                        <div class="modal fade" id="DelCatModal{{id_list}}" tabindex="-1" role="dialog" aria-labelledby="DelCatModal{{id_list}}" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="DelCatModal{{id_list}}">Attention</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Cette action est irréversible. Voulez-vous vraiment supprimer cette liste ?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <form id="deleteForm" method="post" action="/lists/delete/{{id_list}}?_method=DELETE">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                                            <input type="hidden" name="_method" value="DELETE">
+                                            <button id="deleteAccount" name="delete" value="delete" type="submit" class="btn btn-danger">Supprimer</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {{/each}}
+
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+

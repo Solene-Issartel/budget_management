@@ -30,4 +30,6 @@ module.exports.listsRoutes = function (app){
     let id = req.params.id;
     listController.update_post(id,req,res);
   });
+
+  app.get('/graphs',login.verifyToken,listController.graphs_get)
 }

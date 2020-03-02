@@ -20,9 +20,12 @@
                 <h5>Votre liste</h5>
                 <form action="/lists/create" method="POST">
                     <ul class="prodlist list-group">
+                        {{#each old_prod as | old |}}
+                            <li id="{{old.id_product}}" class='list-group-item'><span>{{old.name_product}}</span><input class='price_prod' name='prices' type='number' value="{{old.price_product}}" min='0'/><input type='hidden' name='ids' value="{{old.id_product}}"></li>
+                        {{/each}}
                     </ul>
 
-                    <p>Total : </p><p id="total"></p><p>€</p>
+                    <p>Total : </p><p id="total">{{old.total_price_list}}</p><p>€</p>
 
                     <button type="submit">Sauvegarder</button>
                 </form>

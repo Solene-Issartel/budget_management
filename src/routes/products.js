@@ -31,9 +31,8 @@ module.exports.productsRoutes = function (app){
     productController.update_post(id,req,res);
   });
 
-
   app.get('/products/all',productController.get_all)
   app.post('/products/all',productController.get_all)
-  
+
   return app;
 }

@@ -9,18 +9,25 @@ class List {
 
     }
 
-    static create(price,date,id_user,cb) {
-        co.query('INSERT INTO lists SET total_price_list = ? AND date_list = ? AND id_user = ?', [price,date,id_user], (err,result) => {
-            if (err) throw err;
-            cb(result) //cb is callback function
-        })
+    static async create(price,date,id_user) {
+        return new Promise( ( resolve, reject ) => {
+            console.log(price,date,id_user)
+            co.query('INSERT INTO lists SET total_price_list = ? AND date_list = ? AND id_user = ?', [price,date,id_user], ( err, result ) => {
+                if ( err )
+                    return reject( err );
+                resolve( result );
+            } );
+        } );
     }
 
-    static delete(id,cb){
-        co.query('DELETE FROM lists WHERE id_list = ?', [id], (err,result) => {
-            if (err) throw err;
-            cb(result) //cb is callback function
-        })
+    static async delete(id){
+        return new Promise( ( resolve, reject ) => {
+            co.query('DELETE FROM lists WHERE id_list = ?', [id], ( err, rows ) => {
+                if ( err )
+                    return reject( err );
+                resolve( rows );
+            } );
+        } );
     }
 
     static update(id,price,date,id_user,cb){
@@ -30,14 +37,17 @@ class List {
         })
     }
 
-    static findById(id,cb){
-        co.query('SELECT * FROM lists WHERE id_list = ?', [id], (err,result) => {
-            if(err) throw err;
-            cb(result);
-        });
+    static async findById(id){
+        return new Promise( ( resolve, reject ) => {
+            co.query('SELECT * FROM lists WHERE id_list = ?', [id], ( err, rows ) => {
+                if ( err )
+                    return reject( err );
+                resolve( rows );
+            } );
+        } );
     }
 
-    static findByUser(id_user){
+    static async findByUser(id_user){
         return new Promise( ( resolve, reject ) => {
             co.query('SELECT * FROM lists WHERE id_user = ?', [id_user], ( err, rows ) => {
                 if ( err )
@@ -47,7 +57,17 @@ class List {
         } );
     }
 
-    static findByMonth(month,id_user,cb){ //month is an int (1:january, 2:feb etc.)
+    static async findBudgetByUser(id_user){
+        return new Promise( ( resolve, reject ) => {
+            co.query('SELECT total_price_list FROM lists WHERE id_user = ?', [id_user], ( err, rows ) => {
+                if ( err )
+                    return reject( err );
+                resolve( rows );
+            } );
+        } );
+    }
+
+    static findPricesByMonth(month,id_user,cb){ //month is an int (1:january, 2:feb etc.)
         co.query('SELECT * FROM lists WHERE id_user = ? AND MONTH(date_list) = ?', [id_user,month], (err,result) => {
             if(err) throw err;
             cb(result);
