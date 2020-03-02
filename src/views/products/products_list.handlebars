@@ -20,39 +20,45 @@
         <div class="row align-items-center">
             <div class="col" style="width:50%">
                 <ul class="list-group">
-                    {{#each products as | prod |}}
-                    <li class="list-group-item infoProd" value="{{cat_product}}"><span>{{prod.name_product}}</span><div>
-                        <a href="/products/update/{{id_product}}">Modifier</a><a type="button" data-toggle="modal" data-target="#DelProdModal{{id_product}}">Supprimer</a>
+                    {{#each products as | cat |}}
+                    <li class="list-group-item"><span>{{cat.name_product}}</span><div>
+                        <a href="/products/update/{{id_product}}">Modifier</a><a type="button" onclick="changeUrl({{id_product}})" data-toggle="modal" data-target="#DelProdModal">Supprimer</a>
                     </div></li>
+                    {{/each}}
+                </ul>
               
-                    <!-- Modal -->
-                        <div class="modal fade" id="DelProdModal{{id_product}}" tabindex="-1" role="dialog" aria-labelledby="DelProdModal{{id_product}}" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="DelProdModal{{id_product}}">Attention</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        Cette action est irréversible. Voulez-vous vraiment supprimer ce produit ?
-                                    </div>
-                                    <div class="modal-footer">
-                                        <form id="deleteForm" method="post" action="/products/delete/{{id_product}}?_method=DELETE">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-                                            <input type="hidden" name="_method" value="DELETE">
-                                            <button id="deleteAccount" name="delete" value="delete" type="submit" class="btn btn-danger">Supprimer</button>
-                                        </form>
-                                    </div>
+                <!-- Modal -->
+                    <div class="modal fade" id="DelProdModal" tabindex="-1" role="dialog" aria-labelledby="DelProdModal" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="DelProdModal">Attention</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    Cette action est irréversible. Voulez-vous vraiment supprimer cette produit ?
+                                </div>
+                                <div class="modal-footer">
+                                    <form id="deleteForm" method="post" action="">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        <button id="deleteProd" name="delete" value="delete" type="submit" class="btn btn-danger">Supprimer</button>
+                                        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+                                    </form>
                                 </div>
                             </div>
                         </div>
-                    {{/each}}
-
-                </ul>
+                    </div>
+                
             </div>
         </div>
     </div>
 </section>
-
+<script>
+    function changeUrl(id){
+        let url="/products/delete/"+id+"?_method=DELETE"
+        $("form#deleteForm").attr("action",url);
+    }
+</script>

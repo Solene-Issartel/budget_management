@@ -24,7 +24,8 @@ function post(req, res) {
         if (errors.length > 0) {
             res.render("auth/register", {
                 errors: errors,
-                layout: 'layhome' 
+                layout: 'layhome',
+                csrfToken: req.csrfToken() 
             });
             return;
         } else {
@@ -63,7 +64,7 @@ function get(req, res) {
     const flash = models.getFlash(req);
     models.destroyFlash(res);
     console.log(flash)
-    res.render('auth/register', {layout: 'layhome',errors: flash });
+    res.render('auth/register', {layout: 'layhome',errors: flash,csrfToken: req.csrfToken() });
 }
 
 module.exports = {post, get};

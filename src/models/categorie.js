@@ -59,7 +59,7 @@ class Categorie {
 
     static async findAll(){
         return new Promise( ( resolve, reject ) => {
-            co.query('SELECT * FROM categories', ( err, rows ) => {
+            co.query('SELECT * FROM categories ORDER BY name_categorie', ( err, rows ) => {
                 if ( err )
                     return reject( err );
                 resolve( rows );

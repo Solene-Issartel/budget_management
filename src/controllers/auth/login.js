@@ -11,14 +11,15 @@ function home(req, res) {
     res.render('home', {
         firstname: req.user.firstname,
         errors: flash,
-        userAdmin: req.user.isAdmin == 1? true : false
+        userAdmin: req.user.isAdmin == 1? true : false,
+        csrfToken: req.csrfToken()
     });
 }
 
 function get(req, res) {
     const flash = models.getFlash(req);
     models.destroyFlash(res);
-    res.render('auth/login',{layout: 'layhome',errors : flash})
+    res.render('auth/login',{layout: 'layhome',errors : flash,csrfToken: req.csrfToken()})
 }
 
 // Login

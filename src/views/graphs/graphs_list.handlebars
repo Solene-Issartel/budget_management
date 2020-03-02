@@ -1,28 +1,30 @@
-<canvas id="myChart" style="max-width: 500px;"></canvas>
-<div><p>Salut</p></div>
+<canvas id="myChart" style="max-width: 70%; margin-top:100px;"></canvas>
+<input type="hidden" name="_csrf" value="{{csrfToken}}">
 
 <script>
  $(document).ready(function(){
     $.ajax({
         type: 'post',
-        url: '/graphs',
+        url: '/graphs/budgets',
+        data: { _csrf: $("input[name='_csrf']").val()},
         dataType: 'json'
     })
     .done(function(results){
         const datas = results.map(x => x.total_price_list)
-        makeBarChart(datas)
+        const dates = results.map(x => x.date_list)
+        makeBarChart(datas,dates)
     })
     .fail(function(XMLHttpRequest, textStatus, errorThrown) { 
     console.log("Status: " + textStatus); console.log("Error: " + errorThrown);
     }) 
 })
 
-function makeBarChart(datas){
+function makeBarChart(datas,dates){
     var ctx = document.getElementById("myChart").getContext('2d');
     var myChart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+            labels: dates,
             datasets: [{
                 label: 'Evolution de vos budgets',
                 data: datas,

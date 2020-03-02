@@ -12,7 +12,7 @@ function get(req, res) {
                 }
             })
             console.log(lists)
-            res.render("lists/lists_list", {lists: lists, userAdmin:req.user.isAdmin == 1? true : false});
+            res.render("lists/lists_list", {lists: lists, userAdmin:req.user.isAdmin == 1? true : false, csrfToken: req.csrfToken()});
         })
     } else {
         const flash = {
@@ -30,7 +30,7 @@ function list_info_get(req, res) {
     let id_user = req.user.id;
     if(id_user){
         models.List.findByUser(id_user).then(lists => {
-            res.render("lists/lists_list", {lists: lists, userAdmin:req.user.isAdmin == 1? true : false});
+            res.render("lists/lists_list", {lists: lists, userAdmin:req.user.isAdmin == 1? true : false,csrfToken: req.csrfToken()});
         })
     } else {
         const flash = {
@@ -54,7 +54,7 @@ async function create_get(req, res){
        
         Promise.all(products).then(()=>{
             console.log(products)
-            res.render("lists/lists_create",{products:products,userAdmin:req.user.isAdmin == 1? true : false});
+            res.render("lists/lists_create",{products:products,userAdmin:req.user.isAdmin == 1? true : false,csrfToken: req.csrfToken()});
         })
         
     } else {
@@ -84,7 +84,7 @@ async function create_post(req, res){
             await models.Contain.create(newList.id_list,parseInt(q.ids[i]),parseInt(q.prices[i]))
         }
 
-        res.render("products/products_create",{ userAdmin:req.user.isAdmin == 1? true : false});
+        res.render("products/products_create",{ userAdmin:req.user.isAdmin == 1? true : false,csrfToken: req.csrfToken()});
     } else {
         const flash = {
             msg:"Vous devez vous identifier pour effectuer cette action.",
@@ -153,7 +153,7 @@ async function update_get(id_req,req, res) {
                 Promise.all(products).then(()=>{
                     console.log(products)
                     console.log(old_prod)
-                    res.render("lists/lists_create",{products:products,old_prod:old_prod,userAdmin:req.user.isAdmin == 1? true : false});
+                    res.render("lists/lists_create",{products:products,old_prod:old_prod,userAdmin:req.user.isAdmin == 1? true : false,csrfToken: req.csrfToken()});
                 })
         
             } else {
@@ -214,6 +214,22 @@ function update_post(id_req,req, res) {
 async function graphs_get(req,res){
     let id_user=req.user.id;
     if(id_user){
+        res.render('graphs/graphs_list', {userAdmin:req.user.isAdmin == 1? true : false,csrfToken: req.csrfToken()})
+    }
+    else {
+        const flash = {
+            msg:"Vous n'avez pas les droits pour effectuer cette action.",
+            //type : alert-danger {errors}, alert-succes {{success}}
+            alert:"alert-danger"
+        };
+        models.setFlash(flash, res);
+        res.redirect('/home',403)
+    }
+}
+
+async function get_budgets(req,res){
+    let id_user=req.user.id;
+    if(id_user){
         let budgets = await models.List.findBudgetByUser(id_user);
         res.send(budgets);
     }
@@ -228,4 +244,4 @@ async function graphs_get(req,res){
     }
 }
 
-module.exports = {get, list_info_get, create_get, create_post, delete_post, update_get, update_post,graphs_get};
+module.exports = {get, list_info_get, create_get, create_post, delete_post, update_get, update_post,graphs_get,get_budgets};

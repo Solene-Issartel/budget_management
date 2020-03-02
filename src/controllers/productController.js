@@ -10,7 +10,7 @@ async function get(req, res) {
             const products = await models.Product.findAll();
             const flash = models.getFlash(req);
             models.destroyFlash(res);
-            res.render("products/products_list", {products: products, errors: flash, userAdmin:req.user.isAdmin == 1? true : false});
+            res.render("products/products_list", {products: products, layout: "layapp",errors: flash,csrfToken: req.csrfToken(), userAdmin:req.user.isAdmin == 1? true : false});
             
 
             // const categories = await models.Categorie.findAll();
@@ -67,7 +67,7 @@ async function create_get(req, res){
         let categories = await services.product.setOptionsSelect();
         const flash = models.getFlash(req);
         models.destroyFlash(res);
-        res.render("products/products_create",{ userAdmin:req.user.isAdmin == 1? true : false, errors: flash, categories: categories});
+        res.render("products/products_create",{ userAdmin:req.user.isAdmin == 1? true : false, errors: flash, categories: categories,csrfToken: req.csrfToken()});
     } else {
         const flash = {
             msg:"Vous n'avez pas les droits pour effectuer cette action.",
@@ -171,6 +171,7 @@ async function update_get(id_req,req, res) {
             id_cat: product[0].cat_product,
             categories:categories,
             errors:flash,
+            csrfToken: req.csrfToken(),
         });
     } else {
         const flash = {

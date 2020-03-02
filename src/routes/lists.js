@@ -31,5 +31,6 @@ module.exports.listsRoutes = function (app){
     listController.update_post(id,req,res);
   });
 
-  app.get('/graphs',login.verifyToken,listController.graphs_get)
+  app.get('/graphs',login.verifyToken,listController.graphs_get);
+  app.post('/graphs/budgets',login.verifyToken,listController.get_budgets);
 }

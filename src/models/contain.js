@@ -41,7 +41,7 @@ class Contain {
 
     static findByIdList(id_l){
         return new Promise( ( resolve, reject ) => {
-            co.query('SELECT lists.id_list, lists.total_price_list,contains.price_product, products.name_product, products.id_product FROM contains INNER JOIN lists ON lists.id_list=contains.id_list INNER JOIN products ON products.id_product=contains.id_product WHERE contains.id_list=?', [id_l], ( err, result ) => {
+            co.query('SELECT lists.id_list, lists.total_price_list, lists.date_list,contains.price_product, products.name_product, products.id_product FROM contains INNER JOIN lists ON lists.id_list=contains.id_list INNER JOIN products ON products.id_product=contains.id_product WHERE contains.id_list=?', [id_l], ( err, result ) => {
                 if ( err )
                     return reject( err );
                 resolve( result );

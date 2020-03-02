@@ -11,7 +11,7 @@ function get(req, res) {
             console.log(results);
             const flash = models.getFlash(req);
             models.destroyFlash(res);
-            res.render("users/users_list", {letters: results.letters, persons: results.persons, errors: flash, userAdmin: req.user.isAdmin == 1? true : false});
+            res.render("users/users_list", {letters: results.letters, persons: results.persons, errors: flash, userAdmin: req.user.isAdmin == 1? true : false,csrfToken: req.csrfToken()});
         });
         
     } else {
@@ -35,7 +35,7 @@ function user_info_get(id_req,req, res) {
                 const flash = models.getFlash(req);
                 models.destroyFlash(res);
                 let isAdmin = user[0].isAdmin==1 ? true : false; //true if the user that we are looking for is an admin
-                res.render('users/users_info', {id: id_req,firstname : user[0].firstname, lastname : user[0].lastname, email: user[0].email, isAdmin: isAdmin, errors: flash, userAdmin: req.user.isAdmin == 1? true : false});
+                res.render('users/users_info', {id: id_req,firstname : user[0].firstname, lastname : user[0].lastname, email: user[0].email, isAdmin: isAdmin, errors: flash, userAdmin: req.user.isAdmin == 1? true : false,csrfToken: req.csrfToken()});
             })
         } else {
             const flash = {
@@ -108,6 +108,7 @@ function update_get(req, res) {
                 email: user[0].email,
                 userAdmin: req.user.isAdmin == 1? true : false,
                 errors : flash,
+                csrfToken: req.csrfToken()
             });
         })
     } else {
@@ -148,7 +149,7 @@ function update_post(req, res) {
              * Errors management
              */
             if (errors.length > 0) {
-                res.render("users/users_update", {errors: errors, userAdmin: req.user.isAdmin == 1? true : false });
+                res.render("users/users_update", {errors: errors, userAdmin: req.user.isAdmin == 1? true : false,csrfToken: req.csrfToken() });
                 return;
             } else {    
                 bcrypt.genSalt(10, (err, salt) => {
@@ -156,6 +157,7 @@ function update_post(req, res) {
                         if (err) throw err;
                         q.password = hash;
                         models.User.updateWithPassword(id,q.firstname,q.lastname,q.email,q.password,(user) => {
+                            req.user.firstname=q.firstname;
                             const flash = {
                                 msg:"Vous avez modifié votre profil avec succès.",
                                 //type : alert-danger {errors}, alert-succes {{success}}

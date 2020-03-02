@@ -30,7 +30,7 @@
                 <div class="mr-auto p-2"></div>
                 <div class="p-2 form-group"><button class="btn btn-danger btn-block" type="button" data-toggle="modal" data-target="#exampleModal">Supprimer Ze produit</button></div>
             </div>
-            
+            <input type="hidden" name="_csrf" value="{{csrfToken}}">
         </form>
     </div>
 </div>
@@ -52,6 +52,7 @@
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
                     <input type="hidden" name="_method" value="DELETE">
                     <button id="deleteAccount" name="delete" value="delete" type="submit" class="btn btn-danger">Supprimer</button>
+                    <input type="hidden" name="_csrf" value="{{csrfToken}}">
                 </form>
             </div>
         </div>

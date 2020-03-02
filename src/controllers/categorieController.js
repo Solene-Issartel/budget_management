@@ -9,7 +9,7 @@ async function get(req, res) {
             const categories = await models.Categorie.findAll();
             const flash = models.getFlash(req);
             models.destroyFlash(res);
-            res.render("categories/categories_list", {categories: categories, errors: flash, userAdmin:req.user.isAdmin == 1? true : false});
+            res.render("categories/categories_list", {categories: categories, errors: flash, userAdmin:req.user.isAdmin == 1? true : false, csrfToken: req.csrfToken()});
 
         } catch (e){
             const flash = {
@@ -38,7 +38,7 @@ async function create_get(req, res){
     if(isAdmin){
         const flash = models.getFlash(req);
         models.destroyFlash(res);
-        res.render("categories/categories_create",{ userAdmin:req.user.isAdmin == 1? true : false, errors: flash});
+        res.render("categories/categories_create",{ userAdmin:req.user.isAdmin == 1? true : false, csrfToken: req.csrfToken(), errors: flash});
     } else {
         const flash = {
             msg:"Vous n'avez pas les droits pour effectuer cette action.",
@@ -53,9 +53,10 @@ async function create_get(req, res){
 
 async function create_post(req, res){
     let isAdmin = req.user.isAdmin;
+    let q = req.body;
+    console.log(q)
     if(isAdmin){
-        let q = req.body;
-        let cat = await models.Catégorie.findOne(q.name_categorie);
+        let cat = await models.Categorie.findOne(q.name_categorie);
         if(cat.length > 0){
             const flash = {
                 msg:"Cette catégorie existe déjà",
@@ -101,7 +102,7 @@ async function create_post(req, res){
 function delete_post(id_req,req, res) {
     let isAdmin = req.user.isAdmin;
     if(isAdmin){
-        models.Categorie.delete(id_req).then((prod) => {
+        models.Categorie.delete(id_req).then((cat) => {
             const flash = {
                 msg:"Vous avez supprimé la catégorie avec succès",
                 //type : alert-danger {errors}, alert-success {{success}}
@@ -136,9 +137,10 @@ async function update_get(id_req,req, res) {
         //faire appel à la catégorie
         res.render('categories/categories_update', 
         { 
-            id: cat[0].id_categorie,
+            id_cat: cat[0].id_categorie,
             name: cat[0].name_categorie,
             errors:flash,
+            csrfToken: req.csrfToken()
         });
     } else {
         const flash = {

@@ -25,6 +25,7 @@
                     <p>Total : </p><p id="total"></p><p>€</p>
 
                     <button type="submit">Sauvegarder</button>
+                    <input type="hidden" name="_csrf" value="{{csrfToken}}">
                 </form>
             </div>
         </div>
@@ -37,6 +38,7 @@
         $.ajax({
             type: 'post',
             url: '/products/all',
+            data: { _csrf: $("input[name='_csrf']").val()},
             dataType: 'json'
         })
         .done(function(data){
