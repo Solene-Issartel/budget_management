@@ -9,10 +9,13 @@ class List {
 
     }
 
-    static async create(price,date,id_user) {
+    static async create(price,id_user) {
         return new Promise( ( resolve, reject ) => {
-            console.log(price,date,id_user)
-            co.query('INSERT INTO lists SET total_price_list = ? AND date_list = ? AND id_user = ?', [price,date,id_user], ( err, result ) => {
+            let d=new Date();
+            console.log(price,d,id_user)
+
+            co.query('INSERT INTO lists (total_price_list,date_list,id_user) VALUES (?,?,?)', [price,d,id_user], ( err, result ) => {
+                console.log(result)
                 if ( err )
                     return reject( err );
                 resolve( result );
@@ -30,11 +33,14 @@ class List {
         } );
     }
 
-    static update(id,price,date,id_user,cb){
-        co.query('UPDATE lists SET total_price_list = ?, date_list = ?, id_user = ? WHERE id_list = ?', [price,date,id_user,id], (err,result) => {
-            if (err) throw err;
-            cb(result) //cb is callback function
-        })
+    static async  update(id,price,date,id_user){
+        return new Promise( ( resolve, reject ) => {
+            co.query('UPDATE lists SET total_price_list = ?, date_list = ?, id_user = ? WHERE id_list = ?', [price,date,id_user,id], ( err, result) => {
+                if ( err )
+                    return reject( err );
+                resolve( result );
+            } );
+        } );
     }
 
     static async findById(id){

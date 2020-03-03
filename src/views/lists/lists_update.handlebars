@@ -1,7 +1,7 @@
 <section style="margin-top:250px">
     <div class="container">
         <div class="row">
-            <div class="col-md-6"><input id="tags"><button onclick="addProduct()"type="button">Ajouter</button>
+            <div class="col-md-6"><input class="myAutocomplete" id="tags"><button onclick="addFromAutocomplete()"type="button">Ajouter</button>
                 <input type="hidden" id="tagsID">
                 <div class="msg"></div>
                 <div class="card">
@@ -9,8 +9,10 @@
                         <h4 class="card-title">Sélection de vos derniers produits</h4>
                         <h6 class="text-muted card-subtitle mb-2">Ces produits sont ceux que vous avez choisis plusieurs fois durant les 3 derniers mois</h6>
                         <ul class="list-group">
-                            {{#each products as | prod |}}
-                                <li id="{{prod.id_product}}"class="ols_prod list-group-item"><span>{{prod.name_product}}</span></li>
+                            {{#each old_prod as | prod |}}
+                                <li id="{{prod.id_product}}"class="old_prod list-group-item"><span id="tags2">{{prod.name_product}}</span>
+                                <input type="hidden" id="tagsID2" id_prod="{{prod.id_product}}">
+                                <div onclick='addProduct("{{prod.name_product}}",{{prod.id_product}})'><i class="fa fa-plus"></i></div></li>
                             {{/each}}
                         </ul>
                     </div>
@@ -18,16 +20,24 @@
             </div>
             <div class="col-md-6">
                 <h5>Votre liste</h5>
-                <form action="/lists/create" method="POST">
+                <form action="/lists/update/{{id_list}}?_method=PUT" method="POST">
                     <ul class="prodlist list-group">
-                        {{#each old_prod as | old |}}
-                            <li id="{{old.id_product}}" class='list-group-item'><span>{{old.name_product}}</span><input class='price_prod' name='prices' type='number' value="{{old.price_product}}" min='0'/><input type='hidden' name='ids' value="{{old.id_product}}"></li>
+                        {{#each up_prod as | up |}}
+                            <li id_prod="{{up.id_product}}" class='list-group-item'>
+                                <span>{{up.name_product}}</span>
+                                <input class='price_prod' name='prices' type='number' step='0.01' min='0' value="{{up.price_product}}" required/>
+                                <div>
+                                    <i onclick='removeProduct({{up.id_product}})' class='fa fa-times'></i>
+                                </div>
+                                <input type='hidden' name='ids' value='{{up.id_product}}'>
+                            </li>
                         {{/each}}
                     </ul>
 
-                    <p>Total : </p><p id="total">{{old.total_price_list}}</p><p>€</p>
+                    <p>Total : </p><p id="total">{{total}}</p><p>€</p>
 
                     <button type="submit">Sauvegarder</button>
+                    <input type="hidden" name="_method" value="PUT">
                     <input type="hidden" name="_csrf" value="{{csrfToken}}">
                 </form>
             </div>
@@ -41,12 +51,13 @@
         $.ajax({
             type: 'post',
             url: '/products/all',
+            data: { _csrf: $("input[name='_csrf']").val()},
             dataType: 'json'
         })
         .done(function(data){
             let prodTags = data.map(func)
             console.log(prodTags)
-            $("#tags").autocomplete({
+            $(".myAutocomplete").autocomplete({
                 source: prodTags,
                 select: function (event, ui) {
                     $("#tags").val(ui.item.label); // display the selected text
@@ -64,19 +75,25 @@
             id: x.id_product
         }
     }
-    function addProduct(){
+
+    function addFromAutocomplete(){
         const name_p = $('#tags').val();
         const id_p = $('#tagsID').attr("id_prod");
+        addProduct(name_p,id_p)
+        
+    }
+
+    function addProduct(name_p,id_p){
         if(name_p != undefined && id_p != undefined){
             let alreadyIn = false;
             $('.prodlist li').each(function() {
-                if($( this ).attr("id")==id_p){
+                if($( this ).attr("id_prod")==id_p){
                     alreadyIn = true;
                 }      
             })
             if(!alreadyIn){
                 $( ".msg div" ).remove();
-                let html ="<li id='"+id_p+"'class='list-group-item'><span>"+name_p+"</span><input class='price_prod' name='prices' type='number' min='0'/><input type='hidden' name='ids' value='"+id_p+"'></li>"
+                let html ="<li id_prod='"+id_p+"'class='list-group-item'><span>"+name_p+"</span><input class='price_prod' name='prices' type='number' step='0.01' min='0' required/><div id='cross"+id_p+"'><i onclick='removeProduct("+id_p+")' class='fa fa-times'></i></div><input type='hidden' name='ids' value='"+id_p+"'></li>"
                 $(html).appendTo( ".prodlist" );
                 $('#tags').val('');
             } else {
@@ -87,6 +104,10 @@
             }
             
         }
+    }
+
+    function removeProduct(id){
+        $("ul.prodlist li[id_prod="+id+"]").remove();
     }
 
     $('.price_prod').focusout(function(){

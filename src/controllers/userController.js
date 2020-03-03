@@ -257,5 +257,8 @@ function delete_account(id_req,from,req, res) {
     }
 }
 
+function sendMail(){
 
-module.exports = {get, user_info_post, user_info_get, update_get, update_post, delete_account};
+}
+
+module.exports = {get, user_info_post, user_info_get, update_get, update_post, delete_account,sendMail};

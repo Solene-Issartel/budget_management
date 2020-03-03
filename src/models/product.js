@@ -38,6 +38,16 @@ class Product {
         } );
     }
 
+    static getTotalPrice(id_l){
+        return new Promise( ( resolve, reject ) => {
+            co.query('SELECT total_price_list FROM lists WHERE id_list=?', [id_l], ( err, result ) => {
+                if ( err )
+                    return reject( err );
+                resolve( result );
+            } );
+        } );
+    }
+
     static async findOne(name){
         return new Promise( ( resolve, reject ) => {
             co.query('SELECT * FROM products WHERE name_product = ?', [name], ( err, rows ) => {

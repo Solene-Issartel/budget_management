@@ -25,23 +25,30 @@ class Contain {
         })
     }
 
-    static update(id_l,id_p,price,cb){
-        co.query('UPDATE contains SET price_product = ? WHERE id_list = ? AND id_product = ?', [price,id_l,id_p], (err,result) => {
-            if (err) throw err;
-            cb(result) //cb is callback function
-        })
+    static async update(id_l,id_p,price){
+        return new Promise( ( resolve, reject ) => {
+            co.query('UPDATE contains SET price_product = ? WHERE id_list = ? AND id_product = ?', [price,id_l,id_p], (err,result) => {
+                if ( err )
+                    return reject( err );
+                resolve( result );
+            } );
+        } );
+        
     }
 
-    static findOne(id_l,id_p,cb){
-        co.query('SELECT * FROM contains WHERE id_list = ? AND id_product = ?', [id_l,id_p], (err,result) => {
-            if(err) throw err;
-            cb(result);
-        });
+    static findOne(id_l,id_p){
+        return new Promise( ( resolve, reject ) => {
+            co.query('SELECT * FROM contains WHERE id_list = ? AND id_product = ?', [id_l,id_p], (err,rows) => {
+                if ( err )
+                    return reject( err );
+                resolve( rows );
+            } );
+        } );
     }
 
     static findByIdList(id_l){
         return new Promise( ( resolve, reject ) => {
-            co.query('SELECT lists.id_list, lists.total_price_list, lists.date_list,contains.price_product, products.name_product, products.id_product FROM contains INNER JOIN lists ON lists.id_list=contains.id_list INNER JOIN products ON products.id_product=contains.id_product WHERE contains.id_list=?', [id_l], ( err, result ) => {
+            co.query('SELECT lists.id_list, lists.date_list,contains.price_product, products.name_product, products.id_product FROM contains INNER JOIN lists ON lists.id_list=contains.id_list INNER JOIN products ON products.id_product=contains.id_product WHERE contains.id_list=?', [id_l], ( err, result ) => {
                 if ( err )
                     return reject( err );
                 resolve( result );

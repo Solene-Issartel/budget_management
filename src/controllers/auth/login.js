@@ -1,6 +1,6 @@
 let jwt = require('jsonwebtoken');
 let SECRET_KEY="aNdRgUjX"; //random key
-let jwtExpirySeconds = 300;
+let jwtExpirySeconds = 3600;
 let models = require('../../models');
 let bcrypt = require ('bcrypt'); 
 
@@ -41,7 +41,7 @@ function post(req, res, next) {
                     const token = jwt.sign({id,firstname,email,isAdmin},SECRET_KEY, {
                         algorithm: 'HS256',
                     });
-                    res.cookie('token', token, { maxAge: jwtExpirySeconds * 1000 });
+                    res.cookie('token', token, { maxAge: (jwtExpirySeconds*2)*1000});
                     res.redirect("/home");
                 } else {
                     const flash = {
@@ -78,7 +78,7 @@ function verifyToken(req, res, next){
                 alert:"alert-danger"
             };
             models.setFlash(flash, res);
-            res.redirect('/login');   
+            res.redirect('/login',401);   
         }
         const decrypt = jwt.verify(token, SECRET_KEY);
         req.user = {

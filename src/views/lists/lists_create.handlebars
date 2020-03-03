@@ -1,7 +1,7 @@
 <section style="margin-top:250px">
     <div class="container">
         <div class="row">
-            <div class="col-md-6"><input id="tags"><button onclick="addProduct()"type="button">Ajouter</button>
+            <div class="col-md-6"><input class="myAutocomplete" id="tags"><button onclick="addFromAutocomplete()"type="button">Ajouter</button>
                 <input type="hidden" id="tagsID">
                 <div class="msg"></div>
                 <div class="card">
@@ -10,7 +10,9 @@
                         <h6 class="text-muted card-subtitle mb-2">Ces produits sont ceux que vous avez choisis plusieurs fois durant les 3 derniers mois</h6>
                         <ul class="list-group">
                             {{#each products as | prod |}}
-                                <li id="{{prod.id_product}}"class="ols_prod list-group-item"><span>{{prod.name_product}}</span></li>
+                                <li id="{{prod.id_product}}"class="ols_prod list-group-item"><span id="tags2">{{prod.name_product}}</span>
+                                <input type="hidden" id="tagsID2" id_prod="{{prod.id_product}}">
+                                <div onclick='addProduct("{{prod.name_product}}",{{prod.id_product}})'><i class="fa fa-plus"></i></div></li>
                             {{/each}}
                         </ul>
                     </div>
@@ -44,7 +46,7 @@
         .done(function(data){
             let prodTags = data.map(func)
             console.log(prodTags)
-            $("#tags").autocomplete({
+            $(".myAutocomplete").autocomplete({
                 source: prodTags,
                 select: function (event, ui) {
                     $("#tags").val(ui.item.label); // display the selected text
@@ -62,19 +64,25 @@
             id: x.id_product
         }
     }
-    function addProduct(){
+
+    function addFromAutocomplete(){
         const name_p = $('#tags').val();
         const id_p = $('#tagsID').attr("id_prod");
+        addProduct(name_p,id_p)
+        
+    }
+
+    function addProduct(name_p,id_p){
         if(name_p != undefined && id_p != undefined){
             let alreadyIn = false;
             $('.prodlist li').each(function() {
-                if($( this ).attr("id")==id_p){
+                if($( this ).attr("id_prod")==id_p){
                     alreadyIn = true;
                 }      
             })
             if(!alreadyIn){
                 $( ".msg div" ).remove();
-                let html ="<li id='"+id_p+"'class='list-group-item'><span>"+name_p+"</span><input class='price_prod' name='prices' type='number' min='0'/><input type='hidden' name='ids' value='"+id_p+"'></li>"
+                let html ="<li id_prod='"+id_p+"'class='list-group-item'><span>"+name_p+"</span><input class='price_prod' name='prices' type='number' step='0.01' min='0' required/><div id='cross"+id_p+"'><i onclick='removeProduct("+id_p+")' class='fa fa-times'></i></div><input type='hidden' name='ids' value='"+id_p+"'></li>"
                 $(html).appendTo( ".prodlist" );
                 $('#tags').val('');
             } else {
@@ -85,6 +93,10 @@
             }
             
         }
+    }
+
+    function removeProduct(id){
+        $("ul.prodlist li[id_prod="+id+"]").remove();
     }
 
     $('.price_prod').focusout(function(){
