@@ -1,61 +1,79 @@
-<section>
+<section class="topMargin">
     <div class="container">
-        <div class="row align-items-center"></div>
-        <div class="row align-items-center">
-            <div class="p-5">
-                <h3 class="display-4">Liste des catégories</h3>
-                <p>Gérer les catégories : modifier, ajouter ou supprimer.</p>
-                <a href="/categories/create">Ajouter une catégorie</a>
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="text-uppercase section-heading">listes des categories</h2>
+                <h3 class="text-muted section-subheading">Gérez les catégories : vous pouvez les modifier, les supprimer, <a href="/categories/create">en ajouter</a>.</h3>
             </div>
         </div>
-    </div>
-</section>
-<section>
-    <div class="container">
         {{#if errors}}
             <div class="alert {{errors.alert}}">
                 {{errors.msg}}
             </div>
         {{/if}}
-        <div class="row align-items-center">
-            <div class="col" style="width:50%">
-                <ul class="list-group">
-                    {{#each categories as | cat |}}
-                    <li class="list-group-item"><span>{{cat.name_categorie}}</span><div>
-                        <a href="/categories/update/{{id_categorie}}">Modifier</a><a type="button" onclick="changeUrl({{id_categorie}})" data-toggle="modal" data-target="#DelCatModal">Supprimer</a>
-                    </div></li>
-                    {{/each}}
-                </ul>
-              
-                <!-- Modal -->
-                    <div class="modal fade" id="DelCatModal" tabindex="-1" role="dialog" aria-labelledby="DelCatModal" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="DelCatModal">Attention</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    Cette action est irréversible. Voulez-vous vraiment supprimer cette catégorie ?
-                                </div>
-                                <div class="modal-footer">
-                                    <form id="deleteForm" method="post" action="">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-                                        <input type="hidden" name="_method" value="DELETE">
-                                        <button id="deleteCat" name="delete" value="delete" type="submit" class="btn btn-danger">Supprimer</button>
-                                        <input type="hidden" name="_csrf" value="{{csrfToken}}">
-                                    </form>
-                                </div>
-                            </div>
+        <div class="row text-center">
+            <div class=" col-md-4">
+                {{#each col_1 as | cat |}}
+
+                    <div class="cardList card">
+                        <div class="card-body">
+                            <h4 class="card-title custom_title">{{cat.name_categorie}}</h4><a class="card-link"href="/categories/update/{{id_categorie}}">Modifier</a><a class="card-link" onclick="changeUrl({{id_categorie}})" data-toggle="modal" data-target="#DelCatModal">Supprimer</a>
                         </div>
+                        
                     </div>
+                {{/each}}
                 
+            </div>
+            <div class="col-md-4">
+                {{#each col_2 as | cat |}}
+
+                    <div class="cardList card">
+                        <div class="card-body">
+                            <h4 class="card-title">{{cat.name_categorie}}</h4><a class="card-link"href="/categories/update/{{id_categorie}}">Modifier</a><a class="card-link" onclick="changeUrl({{id_categorie}})" data-toggle="modal" data-target="#DelCatModal">Supprimer</a>
+                        </div>
+                        
+                    </div>
+                {{/each}}
+            </div>
+            <div class="col-md-4">
+                {{#each col_3 as | cat |}}
+
+                    <div class="cardList card">
+                        <div class="card-body">
+                            <h4 class="card-title">{{cat.name_categorie}}</h4><a class="card-link"href="/categories/update/{{id_categorie}}">Modifier</a><a class="card-link" onclick="changeUrl({{id_categorie}})" data-toggle="modal" data-target="#DelCatModal">Supprimer</a>
+                        </div>
+                        
+                    </div>
+                {{/each}}
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="DelCatModal" tabindex="-1" role="dialog" aria-labelledby="DelCatModal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="DelCatModal">Attention</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Cette action est irréversible. Voulez-vous vraiment supprimer cette catégorie ?
+                </div>
+                <div class="modal-footer">
+                    <form id="deleteForm" method="post" action="">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                        <input type="hidden" name="_method" value="DELETE">
+                        <button id="deleteCat" name="delete" value="delete" type="submit" class="btn btn-danger">Supprimer</button>
+                        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 </section>
+
 <script>
     function changeUrl(id){
         $("form#deleteForm").attr("action","/categories/delete/"+id+"?_method=DELETE");

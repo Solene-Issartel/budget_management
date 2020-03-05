@@ -1,36 +1,34 @@
 let listController = require('../controllers/listController');
 let login = require('../controllers/auth/login');
-
-module.exports.listsRoutes = function (app){
+const express = require('express');
+let router = express.Router();
 
   /**
    * PRODUCTS LIST (only for Admin)
    */
-  app.get("/lists", login.verifyToken, listController.get);
+  router.get("/", login.verifyToken, listController.get);
 
    /**
    * PRODUCTS LIST (only for Admin)
    */
-  app.get("/lists/create", login.verifyToken, listController.create_get);
-  app.post("/lists/create", login.verifyToken, listController.create_post);
+  router.get("/create", login.verifyToken, listController.create_get);
+  router.post("/create", login.verifyToken, listController.create_post);
 
    /**
    * PRODUCT SUPPRESSION (only for Admin)
    */
-  app.delete("/lists/delete/:id", login.verifyToken, (req, res) => {
+  router.delete("/delete/:id", login.verifyToken, (req, res) => {
     let id = req.params.id;
     listController.delete_post(id,req,res);
   });
 
-  app.get("/lists/update/:id", login.verifyToken, (req, res) => {
+  router.get("/update/:id", login.verifyToken, (req, res) => {
     let id = req.params.id;
     listController.update_get(id,req,res);
   });
-  app.put("/lists/update/:id", login.verifyToken, (req, res) => {
+  router.put("/update/:id", login.verifyToken, (req, res) => {
     let id = req.params.id;
     listController.update_post(id,req,res);
   });
-
-  app.get('/graphs',login.verifyToken,listController.graphs_get);
-  app.post('/graphs/budgets',login.verifyToken,listController.get_budgets);
-}
+  
+  module.exports = router;

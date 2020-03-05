@@ -1,7 +1,7 @@
-<div class="register-photo">
+<div class="custom_form">
     <div class="form-container">
-        <form action='/categories/update/{{id_cat}}?_method=PUT' method="post">
-            <h2 class="text-center">Modifier le produit.</h2>
+        <form class="upForm" action='/categories/update/{{id_cat}}?_method=PUT' method="post">
+            <h2 class="title_form text-center">Modifier le produit.</h2>
             {{#if errors}}
                 <div class="alert {{errors.alert}}">
                     {{errors.msg}}

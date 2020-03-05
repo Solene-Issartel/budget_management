@@ -6,7 +6,14 @@ let middlewares = require('../src/middlewares');
 var methodOverride = require('method-override')
 var app = express();
 let setupMiddlewares = require('./middlewares').makeMiddlewares;
- 
+const catRouter = require('./routes/categories')
+const listRouter = require('./routes/lists')
+const prodRouter = require('./routes/products')
+const userRouter = require('./routes/users')
+const profilRouter = require('./routes/profiles')
+const graphRouter = require('./routes/graphs')
+const indexRouter = require('./routes')
+
 const PORT = process.env.PORT || 8080;
 // override with POST having ?_method=DELETE
 app.use(methodOverride('_method'));
@@ -25,7 +32,14 @@ app.set('views', __dirname + '/../src/views');
 
 setupMiddlewares(app);
 
-routes.makeRoutes(app);
+app.use('/', indexRouter)
+app.use('/categories', catRouter)
+app.use('/lists', listRouter)
+app.use('/users', userRouter)
+app.use('/profile', profilRouter)
+app.use('/products', prodRouter)
+app.use('/graphs', graphRouter)
+
 
 server.listen(PORT);
 

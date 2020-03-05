@@ -70,7 +70,7 @@ class Product {
 
     static async findAll(){
         return new Promise( ( resolve, reject ) => {
-            co.query('SELECT * FROM products ORDER BY cat_product,name_product', ( err, rows ) => {
+            co.query('SELECT * FROM products INNER JOIN categories ON products.cat_product = categories.id_categorie ORDER BY cat_product,name_product', ( err, rows ) => {
                 if ( err )
                     return reject( err );
                 resolve( rows );

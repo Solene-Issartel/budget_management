@@ -1,6 +1,16 @@
-<canvas id="myChart" style="max-width: 70%; margin-top:100px;"></canvas>
-<input type="hidden" name="_csrf" value="{{csrfToken}}">
+<section class="topMargin">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="text-uppercase section-heading">suivi de vos dépenses</h2>
+                <h3 class="text-muted section-subheading">Accédez à votre graphique de suivi de vos budgets. Vos dépenses sont triées par mois et pour l'année courante.</h3>
+            </div>
+        </div>
 
+        <canvas id="myChart" style="width: 80%; margin-top:30px;"></canvas>
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+    </div>
+</section>
 <script>
  $(document).ready(function(){
     $.ajax({
@@ -10,13 +20,47 @@
         dataType: 'json'
     })
     .done(function(results){
-        const datas = results.map(x => x.total_price_list)
-        const dates = results.map(x => x.date_list)
+        const datas = results.map(x => Math.round(1000*x[0].total_price)/1000) //arrondi au centième
+        let i =0;
+        let dates = [];
+        for(i=1;i<=results.length;i++){
+            dates.push(enumMonth(i));
+        }
         makeBarChart(datas,dates)
     })
     .fail(function(XMLHttpRequest, textStatus, errorThrown) { 
     console.log("Status: " + textStatus); console.log("Error: " + errorThrown);
     }) 
+
+    function enumMonth(month){
+        const year = new Date().getFullYear();
+        switch(month){
+            case 1:
+                return "Janvier "+year   
+            case 2:
+                return "Fevrier "+year
+            case 3:
+                return "Mars "+year
+            case 4:
+                return "Avril "+year
+            case 5:
+                return "Mai "+year
+            case 6:
+                return "Juin "+year
+            case 7:
+                return "Juillet "+year
+            case 8:
+                return "Aout "+year
+            case 9:
+                return "Septembre "+year
+            case 10:
+                return "Octobre "+year
+            case 11:
+                return "Novembre "+year
+            case 12:
+                return "Decembre "+year
+        }  
+    }
 })
 
 function makeBarChart(datas,dates){
@@ -29,20 +73,32 @@ function makeBarChart(datas,dates){
                 label: 'Evolution de vos budgets',
                 data: datas,
                 backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)'
+                'rgba( 255, 121, 93 , 0.2)',
+                'rgba( 135, 135, 135 , 0.2)',
+                'rgba( 255, 121, 93 , 0.2)',
+                'rgba( 135, 135, 135 , 0.2)',
+                'rgba( 255, 121, 93 , 0.2)',
+                'rgba( 135, 135, 135 , 0.2)',
+                'rgba( 255, 121, 93 , 0.2)',
+                'rgba( 135, 135, 135 , 0.2)',
+                'rgba( 255, 121, 93 , 0.2)',
+                'rgba( 135, 135, 135 , 0.2)',
+                'rgba( 255, 121, 93 , 0.2)',
+                'rgba( 135, 135, 135 , 0.2)'
                 ],
                 borderColor: [
-                'rgba(255,99,132,1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
+                'rgba( 196, 91, 8 ,1)',
+                'rgba(86, 86, 86, 1)',
+                'rgba( 196, 91, 8 , 1)',
+                'rgba(86, 86, 86, 1)',
+                'rgba( 196, 91, 8 , 1)',
+                'rgba(86, 86, 86, 1)',
+                'rgba( 196, 91, 8 ,1)',
+                'rgba(86, 86, 86, 1)',
+                'rgba( 196, 91, 8 , 1)',
+                'rgba(86, 86, 86, 1)',
+                'rgba( 196, 91, 8 , 1)',
+                'rgba(86, 86, 86, 1)',
                 ],
                 borderWidth: 1
             }]

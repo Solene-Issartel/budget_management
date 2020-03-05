@@ -1,56 +1,44 @@
 let register = require('../controllers/auth/register');
 let login = require('../controllers/auth/login');
-let jwt = require('jsonwebtoken');
-let express = require('express');
-let usersRoutes = require('./users');
-let productsRoutes = require('./products');
-let listsRoutes = require('./lists');
-let categoriesRoutes = require('./categorie');
-
-module.exports.makeRoutes = function (app){
+const express = require('express');
+let router = express.Router();
 
   /**
    * WELCOME PAGE ROUTE
    */
-  app.get('/', (req, res) => {
-    res.render('index', { title : 'Accueil', layout: 'layhome'});
+  router.get('/', (req, res) => {
+    let token = req.cookies.token;
+    if(token){
+      res.render('index', { title : 'Accueil'});
+    } else {
+      res.render('index', { title : 'Accueil', layout: 'layhome'});
+    }
+    
   })
 
    /**
    * HOME PAGE ROUTE
    */
-  app.get('/home', login.verifyToken, login.home);
+  router.get('/home', login.verifyToken, login.home);
 
   /**
    * REGISTER ROUTES
    */
-  app.get('/register', register.get);
-  app.post("/register", register.post);
+  router.get('/register', register.get);
+  router.post("/register", register.post);
 
   /**
    * LOGIN ROUTES
    */
-  app.get('/login', login.get);
-  app.post('/login', login.post);
+  router.get('/login', login.get);
+  router.post('/login', login.post);
 
   /**
    * This route will "logout" the user (impossible with jsonwebtoken because it's stateless)
    */
-  app.get('/logout', (req, res) => {
+  router.get('/logout', (req, res) => {
       res.cookie('token', '', { maxAge: 0, httpOnly: true })
       res.redirect("/login");
   });
 
-  /**
-   * Call other methods to get all the routes
-   */
-  usersRoutes.usersRoutes(app);
-
-  productsRoutes.productsRoutes(app);
-
-  listsRoutes.listsRoutes(app);
-
-  categoriesRoutes.categoriesRoutes(app);
-
-  return app;
-}
+  module.exports = router;

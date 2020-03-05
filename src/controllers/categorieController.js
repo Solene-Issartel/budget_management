@@ -6,10 +6,25 @@ async function get(req, res) {
     let isAdmin = req.user.isAdmin;
     if(isAdmin){
         try {
+            const col_1=[];
+            const col_2=[];
+            const col_3=[];
             const categories = await models.Categorie.findAll();
+            let size = categories.length;
+            let i = 0;
+            for(i=0;i<categories.length;i++){
+                if (i%3 == 0){
+                    col_1.push(categories[i]);
+                } else if(i%3 == 1){
+                    col_2.push(categories[i]);
+                } else {
+                    col_3.push(categories[i]);
+                }
+            }
+
             const flash = models.getFlash(req);
             models.destroyFlash(res);
-            res.render("categories/categories_list", {categories: categories, errors: flash, userAdmin:req.user.isAdmin == 1? true : false, csrfToken: req.csrfToken()});
+            res.render("categories/categories_list", {col_1: col_1,col_2: col_2,col_3: col_3, errors: flash, userAdmin:req.user.isAdmin == 1? true : false, csrfToken: req.csrfToken()});
 
         } catch (e){
             const flash = {
@@ -140,6 +155,7 @@ async function update_get(id_req,req, res) {
             id_cat: cat[0].id_categorie,
             name: cat[0].name_categorie,
             errors:flash,
+            userAdmin:req.user.isAdmin == 1? true : false,
             csrfToken: req.csrfToken()
         });
     } else {

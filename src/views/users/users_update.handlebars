@@ -1,7 +1,7 @@
 <div class="register-photo">
     <div class="form-container">
-        <form action='/profile/update?_method=PUT' method="post">
-            <h2 class="text-center">Modifier le profil.</h2>
+        <form id="upUser" action='/profile/update?_method=PUT' method="post">
+            <h2 class="text-center">Modifier votre profil.</h2>
             {{#if errors}}
                 <div class="alert {{errors.alert}}">
                     {{errors.msg}}

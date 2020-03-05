@@ -5,12 +5,27 @@ let services = require('../services');
 async function get(req, res) {
     let isAdmin = req.user.isAdmin;
     if(isAdmin){
-        try {
+        // try {
 
             const products = await models.Product.findAll();
+            let i =0;
+            let prodByCat = [];
+            let last_index = 0;
+            for(i=0;i<products.length;i++){
+                if(products[i+1]){
+                    if(products[i].cat_product!=products[i+1].cat_product){
+                        prodByCat.push(products.slice(last_index,i+1));
+                        last_index=i+1;
+                    }
+                } else {
+                    prodByCat.push(products.slice(last_index,i+1));
+                }
+            }
+
+            console.log(prodByCat.length)
             const flash = models.getFlash(req);
             models.destroyFlash(res);
-            res.render("products/products_list", {products: products, layout: "layapp",errors: flash,csrfToken: req.csrfToken(), userAdmin:req.user.isAdmin == 1? true : false});
+            res.render("products/products_list", {products: prodByCat, layout: "layapp",errors: flash,csrfToken: req.csrfToken(), userAdmin:req.user.isAdmin == 1? true : false});
             
 
             // const categories = await models.Categorie.findAll();
@@ -39,15 +54,16 @@ async function get(req, res) {
 
             // });
 
-        } catch (e){
-            const flash = {
-                msg: e,
-                //type : alert-danger {errors}, alert-succes {{success}}
-                alert:"alert-danger"
-            };
-            models.setFlash(flash, res);
-            res.redirect('/home');
-        }
+        // } catch (e){
+        //     console.log("dfgh")
+        //     const flash = {
+        //         msg: e,
+        //         //type : alert-danger {errors}, alert-succes {{success}}
+        //         alert:"alert-danger"
+        //     };
+        //     models.setFlash(flash, res);
+        //     res.redirect('/home');
+        // }
         
     } else {
         const flash = {
@@ -171,6 +187,7 @@ async function update_get(id_req,req, res) {
             id_cat: product[0].cat_product,
             categories:categories,
             errors:flash,
+            userAdmin:req.user.isAdmin == 1? true : false,
             csrfToken: req.csrfToken(),
         });
     } else {

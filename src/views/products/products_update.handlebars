@@ -1,7 +1,7 @@
-<div class="register-photo">
+<div class="custom_form">
     <div class="form-container">
-        <form action='/products/update/{{id}}?_method=PUT' method="post">
-            <h2 class="text-center">Modifier le produit.</h2>
+        <form class ="upForm" action='/products/update/{{id}}?_method=PUT' method="post">
+            <h2 class="title_form text-center">Modifier le produit.</h2>
             {{#if errors}}
                 <div class="alert {{errors.alert}}">
                     {{errors.msg}}
@@ -28,7 +28,7 @@
             
             <div class="d-flex">
                 <div class="mr-auto p-2"></div>
-                <div class="p-2 form-group"><button class="btn btn-danger btn-block" type="button" data-toggle="modal" data-target="#exampleModal">Supprimer Ze produit</button></div>
+                <div class="p-2 form-group"><button class="btn btn-danger btn-block" type="button" data-toggle="modal" data-target="#exampleModal">Supprimer ce produit</button></div>
             </div>
             <input type="hidden" name="_csrf" value="{{csrfToken}}">
         </form>

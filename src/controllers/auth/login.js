@@ -5,7 +5,6 @@ let models = require('../../models');
 let bcrypt = require ('bcrypt'); 
 
 function home(req, res) {
-    let token = req.cookies.token;
     const flash = models.getFlash(req);
     models.destroyFlash(res);
     res.render('home', {

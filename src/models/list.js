@@ -55,7 +55,7 @@ class List {
 
     static async findByUser(id_user){
         return new Promise( ( resolve, reject ) => {
-            co.query('SELECT * FROM lists WHERE id_user = ?', [id_user], ( err, rows ) => {
+            co.query('SELECT * FROM lists WHERE id_user = ? ORDER BY date_list DESC', [id_user], ( err, rows ) => {
                 if ( err )
                     return reject( err );
                 resolve( rows );
@@ -65,7 +65,7 @@ class List {
 
     static async findBudgetByUser(id_user){
         return new Promise( ( resolve, reject ) => {
-            co.query('SELECT total_price_list FROM lists WHERE id_user = ?', [id_user], ( err, rows ) => {
+            co.query('SELECT total_price_list,date_list FROM lists WHERE id_user = ?', [id_user], ( err, rows ) => {
                 if ( err )
                     return reject( err );
                 resolve( rows );
@@ -73,12 +73,28 @@ class List {
         } );
     }
 
-    static findPricesByMonth(month,id_user,cb){ //month is an int (1:january, 2:feb etc.)
-        co.query('SELECT * FROM lists WHERE id_user = ? AND MONTH(date_list) = ?', [id_user,month], (err,result) => {
-            if(err) throw err;
-            cb(result);
-        });
+    static findPricesByMonth(month,id_user){ //month is an int (1:january, 2:feb etc.)
+        return new Promise( ( resolve, reject ) => {
+            let year = new Date().getFullYear();
+            co.query('SELECT SUM(total_price_list) AS total_price FROM lists WHERE id_user = ? AND MONTH(date_list) = ? AND YEAR(date_list) = ?', [id_user,month,year], ( err, rows ) => {
+                if ( err )
+                    return reject( err );
+                resolve( rows );
+            } );
+        } );
     }
+
+    static getLastMonthList(id_user){ //month is an int (1:january, 2:feb etc.)
+        return new Promise( ( resolve, reject ) => {
+            let year = new Date().getFullYear();
+            co.query('SELECT MAX(MONTH(date_list)) as last_month FROM lists WHERE id_user = ? AND YEAR(date_list) = ?', [id_user,year], ( err, rows ) => {
+                if ( err )
+                    return reject( err );
+                resolve( rows );
+            } );
+        } );
+    }
+
 }
 
 // List.init({

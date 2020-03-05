@@ -1,38 +1,37 @@
 let productController = require('../controllers/productController');
 let login = require('../controllers/auth/login');
-
-module.exports.productsRoutes = function (app){
+const express = require('express');
+let router = express.Router();
 
   /**
    * PRODUCTS LIST (only for Admin)
    */
-  app.get("/products", login.verifyToken, productController.get);
+  router.get("/", login.verifyToken, productController.get);
 
     /**
    * CREATE PRODUCT (only for Admin)
    */
-  app.get("/products/create", login.verifyToken, productController.create_get);
-  app.post("/products/create", login.verifyToken, productController.create_post);
+  router.get("/create", login.verifyToken, productController.create_get);
+  router.post("/create", login.verifyToken, productController.create_post);
 
    /**
    * PRODUCT SUPPRESSION (only for Admin)
    */
-  app.delete("/products/delete/:id", login.verifyToken, (req, res) => {
+  router.delete("/delete/:id", login.verifyToken, (req, res) => {
     let id = req.params.id;
     productController.delete_post(id,req,res);
   });
 
-  app.get("/products/update/:id", login.verifyToken, (req, res) => {
+  router.get("/update/:id", login.verifyToken, (req, res) => {
     let id = req.params.id;
     productController.update_get(id,req,res);
   });
-  app.put("/products/update/:id", login.verifyToken, (req, res) => {
+  router.put("/update/:id", login.verifyToken, (req, res) => {
     let id = req.params.id;
     productController.update_post(id,req,res);
   });
 
-  app.get('/products/all',productController.get_all)
-  app.post('/products/all',productController.get_all)
+  router.get('/all',productController.get_all)
+  router.post('/all',productController.get_all)
 
-  return app;
-}
+module.exports = router;

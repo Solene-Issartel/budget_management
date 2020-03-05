@@ -4,16 +4,44 @@ let models = require('../models');
 function get(req, res) {
     let id_user = req.user.id;
     models.List.findByUser(id_user).then(li => {
+        const col_1=[];
+        const col_2=[];
+        const col_3=[];
         const lists = li.map(x => {
             return {
                 id_list : x.id_list,
-                date_list: x.date_list.getDate()+"/"+(x.date_list.getMonth()+1)+"/"+x.date_list.getFullYear()
+                date_list: changeDate(x.date_list),
             }
         })
+        let size = lists.length;
+        let i = 0;
+        for(i=0;i<lists.length;i++){
+            if (i%3 == 0){
+                col_1.push(lists[i]);
+            } else if(i%3 == 1){
+                col_2.push(lists[i]);
+            } else {
+                col_3.push(lists[i]);
+            }
+        }
         const flash = models.getFlash(req);
         models.destroyFlash(res);
-        res.render("lists/lists_list", {lists: lists, errors:flash, userAdmin:req.user.isAdmin == 1? true : false, csrfToken: req.csrfToken()});
+        res.render("lists/lists_list", {col_1: col_1,col_2: col_2,col_3: col_3, errors:flash, userAdmin:req.user.isAdmin == 1? true : false, csrfToken: req.csrfToken()});
     })
+}
+
+function changeDate(date){
+    let day = date.getDate();
+    let month=date.getMonth()+1;
+    
+    if(day<10){
+        day = "0" + day;
+    } 
+    if(month<10){
+        month = "0" + month;
+    }
+    d = day+"/"+month+"/"+date.getFullYear();
+    return d;
 }
 
 function list_info_get(req, res) {
@@ -38,7 +66,9 @@ async function create_get(req, res){
         });
 
         Promise.all(promises).then(() => {
-            res.render("lists/lists_create", {prod_list: prod_list,products:products, userAdmin:req.user.isAdmin == 1? true : false,csrfToken: req.csrfToken()});
+            const flash = models.getFlash(req);
+            models.destroyFlash(res);
+            res.render("lists/lists_create", {prod_list: prod_list,products:products, errors:flash,userAdmin:req.user.isAdmin == 1? true : false,csrfToken: req.csrfToken()});
 
         });
         
@@ -50,22 +80,46 @@ async function create_post(req, res){
     let q = req.body;
     let i=0;
     let total=0;
-    console.log(q.prices)
-    for(i=0;i<q.prices.length;i++){
-        total+=parseFloat(q.prices[i]);
-    }
-    const newList = await models.List.create(total,id_user);
-    for(i=0;i<q.prices.length;i++){
-        await models.Contain.create(newList.insertId,parseInt(q.ids[i]),parseFloat(q.prices[i]))
-    }
+    if(q.prices){
+        if(q.prices.length == 1) {
+        total = ""+parseFloat(q.prices[i])+"";
+        } else {
+            for(i=0;i<q.prices.length;i++){
+                total+=parseFloat(q.prices[i]);
+            }
+        }
 
-    const flash = {
-        msg:"Vous avez créé la liste avec succès",
-        //type : alert-danger {errors}, alert-success {{success}}
-        alert:"alert-success"
-    };
-    models.setFlash(flash, res);
-    res.redirect("/lists");
+        if(isNaN(total)){
+            const flash = {
+                msg:"Tous les champs prix doivent être renseignés",
+                //type : alert-danger {errors}, alert-success {{success}}
+                alert:"alert-danger"
+            };
+            models.setFlash(flash, res);
+            res.redirect("/lists/create");
+        } else {
+            const newList = await models.List.create(total,id_user);
+            for(i=0;i<q.prices.length;i++){
+                await models.Contain.create(newList.insertId,parseInt(q.ids[i]),parseFloat(q.prices[i]))
+            }
+
+            const flash = {
+                msg:"Vous avez créé la liste avec succès",
+                //type : alert-danger {errors}, alert-success {{success}}
+                alert:"alert-success"
+            };
+            models.setFlash(flash, res);
+            res.redirect("/lists");
+        }
+    }else{
+        const flash = {
+            msg:"Vous devez entrer au moins un produit",
+            //type : alert-danger {errors}, alert-success {{success}}
+            alert:"alert-danger"
+        };
+        models.setFlash(flash, res);
+        res.redirect("/lists/create");
+    }
     
 }
 
@@ -148,30 +202,54 @@ function update_post(id_req,req, res) {
             let q = req.body;
             let i=0;
             let total=0;
-            console.log(q.prices)
-            for(i=0;i<q.prices.length;i++){
-                total+=parseFloat(q.prices[i]);
-            }
-            const newList = await models.List.update(id_req,total,list[0].date_list,id_user);
-            for(i=0;i<q.prices.length;i++){
-                let c = await models.Contain.findOne(id_req,parseInt(q.ids[i]));
-                if(c.length > 0){
-                    await models.Contain.update(id_req,parseInt(q.ids[i]),parseFloat(q.prices[i]))
+            if(q.prices){
+                if(q.prices.length == 1) {
+                total = ""+(q.prices[i])+"";
+                } else {
+                    for(i=0;i<q.prices.length;i++){
+                        total+=parseFloat(q.prices[i]);
+                    }
                 }
-                else {
-                    await models.Contain.create(id_req,parseInt(q.ids[i]),parseFloat(q.prices[i]))
-                }
-                
-            }
 
-            const flash = {
-                msg:"Vous avez modifié la liste avec succès",
-                //type : alert-danger {errors}, alert-success {{success}}
-                alert:"alert-success"
-            };
-            models.setFlash(flash, res);
-            res.redirect("/lists");
-    
+                if(isNaN(total)){
+                    const flash = {
+                        msg:"Tous les champs prix doivent être renseignés",
+                        //type : alert-danger {errors}, alert-success {{success}}
+                        alert:"alert-danger"
+                    };
+                    models.setFlash(flash, res);
+                    res.redirect("/lists/create");
+                } else {
+                    const newList = await models.List.update(id_req,total,list[0].date_list,id_user);
+                    for(i=0;i<q.prices.length;i++){
+                        let c = await models.Contain.findOne(id_req,parseInt(q.ids[i]));
+                        if(c.length > 0){
+                            await models.Contain.update(id_req,parseInt(q.ids[i]),parseFloat(q.prices[i]))
+                        }
+                        else {
+                            await models.Contain.create(id_req,parseInt(q.ids[i]),parseFloat(q.prices[i]))
+                        }
+                        
+                    }
+
+                    const flash = {
+                        msg:"Vous avez modifié la liste avec succès",
+                        //type : alert-danger {errors}, alert-success {{success}}
+                        alert:"alert-success"
+                    };
+                    models.setFlash(flash, res);
+                    res.redirect("/lists");
+                }
+            }else{
+                const flash = {
+                    msg:"Vous devez entrer au moins un produit",
+                    //type : alert-danger {errors}, alert-success {{success}}
+                    alert:"alert-danger"
+                };
+                models.setFlash(flash, res);
+                res.redirect("/lists/create");
+            }
+               
         } else {
             const flash = {
                 msg:"Vous n'avez pas les droits pour effectuer cette action.",
@@ -190,7 +268,14 @@ async function graphs_get(req,res){
 }
 
 async function get_budgets(req,res){
-    let budgets = await models.List.findBudgetByUser(id_user);
+    let id_user = req.user.id;
+    let last_month = await models.List.getLastMonthList(id_user);
+    let i = 0;
+    let budgets = [];
+    for (i = 1;i<=last_month[0].last_month;i++){
+        budgets.push(await models.List.findPricesByMonth(i,id_user));
+    }
+    
     res.send(budgets);
 }
 

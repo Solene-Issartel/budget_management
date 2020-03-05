@@ -4,6 +4,11 @@
             <div class="col-md-6"><input class="myAutocomplete" id="tags"><button onclick="addFromAutocomplete()"type="button">Ajouter</button>
                 <input type="hidden" id="tagsID">
                 <div class="msg"></div>
+                {{#if errors}}
+                    <div class="alert {{errors.alert}}">
+                        {{errors.msg}}
+                    </div>
+                {{/if}}
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Sélection de vos derniers produits</h4>
@@ -45,7 +50,6 @@
         })
         .done(function(data){
             let prodTags = data.map(func)
-            console.log(prodTags)
             $(".myAutocomplete").autocomplete({
                 source: prodTags,
                 select: function (event, ui) {
@@ -91,16 +95,27 @@
                 $('#tags').val('');
                 $(html).appendTo( ".msg" );
             }
-            
+            this.updatePrice();
         }
     }
 
     function removeProduct(id){
         $("ul.prodlist li[id_prod="+id+"]").remove();
+        this.updatePrice();
     }
 
-    $('.price_prod').focusout(function(){
+    $('input.price_prod').on("focusout",function(){
         console.log('nbgvf')
     })
+
+    function updatePrice(){
+        let total = 0;
+        $('input.price_prod').each(function(){
+            if(!$(this).val().isEmpty()){
+                total += parseFloat($(this).val());
+            }
+        })
+        $("#total").text(total)
+    }
 
 </script>
