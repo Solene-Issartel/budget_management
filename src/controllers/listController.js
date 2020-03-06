@@ -13,9 +13,9 @@ function get(req, res) {
                 date_list: changeDate(x.date_list),
             }
         })
-        let size = lists.length;
+
         let i = 0;
-        for(i=0;i<lists.length;i++){
+        for(i;i<lists.length;i++){
             if (i%3 == 0){
                 col_1.push(lists[i]);
             } else if(i%3 == 1){
@@ -41,7 +41,7 @@ function changeDate(date){
     if(month<10){
         month = "0" + month;
     }
-    d = day+"/"+month+"/"+date.getFullYear();
+    const d = day+"/"+month+"/"+date.getFullYear();
     return d;
 }
 
@@ -60,8 +60,8 @@ async function create_get(req, res){
     const promises = prod_list.map((prod) => {
     
         return models.Product.findById(prod.id_product).then((prods) => {
-            prods.forEach(prod => {
-                products.push(prod);
+            prods.forEach(p => {
+                products.push(p);
             });
             return Promise.resolve();
             });
@@ -92,7 +92,7 @@ async function create_post(req, res){
         if(typeof q.prices === 'string') {
             total = parseFloat(q.prices);
         } else {
-            for(i=0;i<q.prices.length;i++){
+            for(i;i<q.prices.length;i++){
                 total+=parseFloat(q.prices[i]);
             }
         }
@@ -182,8 +182,8 @@ async function update_get(id_req,req, res) {
             const promises = prod_list.map((prod) => {
             
                 return models.Product.findById(prod.id_product).then((prods) => {
-                    prods.forEach(prod => {
-                        products.push(prod);
+                    prods.forEach(p => {
+                        products.push(p);
                     });
                     return Promise.resolve();
                 });
@@ -229,7 +229,7 @@ async function update_post(id_req,req, res) {
                     idP.splice(idP.indexOf(parseInt(q.ids)),1)
                 }
             } else {
-                for(i=0;i<q.ids.length;i++){
+                for(i;i<q.ids.length;i++){
                     if(idP.includes(q.ids[i])){
                         idP.splice(idP.indexOf(q.ids[i]),1)
                     }
@@ -264,7 +264,7 @@ async function update_post(id_req,req, res) {
                     res.redirect("/lists/create");
                     return;
                 } else {
-                    const newList = await models.List.update(id_req,total,list[0].date_list,id_user);
+                    await models.List.update(id_req,total,list[0].date_list,id_user);
                     if (typeof q.prices === 'string') {
                         let c = await models.Contain.findOne(id_req,parseInt(q.ids));
                             if(c.length > 0){

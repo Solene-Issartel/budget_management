@@ -159,7 +159,7 @@ function update_post(req, res) {
                 res.redirect("/profile/update");
                 return;
         } else {    
-                bcrypt.genSalt(10, (err, salt) => {
+                bcrypt.genSalt(10, (error, salt) => {
                     bcrypt.hash(q.password, salt, (err, hash) => {
                         if (err) throw err;
                         q.password = hash;

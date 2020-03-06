@@ -10,7 +10,7 @@ async function get(req, res) {
             const col_2=[];
             const col_3=[];
             const categories = await models.Categorie.findAll();
-            let size = categories.length;
+         
             let i = 0;
             for(i=0;i<categories.length;i++){
                 if (i%3 == 0){

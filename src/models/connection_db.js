@@ -2,11 +2,11 @@ const mysql = require('mysql');
 
 if(process.env.NODE_ENV == "production"){
   const connection = mysql.createPool(process.env.CLEARDB_DATABASE_URL);
-  connection.getConnection((err, connection) => {
+  connection.getConnection((err, connect) => {
     if(err) 
         console.error("Unable to connect to the database:", err)    
-    if(connection)
-        connection.release()
+    if(connect)
+        connect.release()
     return;
   }); 
   module.exports = connection;

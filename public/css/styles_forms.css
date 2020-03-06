@@ -36,7 +36,7 @@
 }
 
 #changePass{
-  font-size: 15px;;
+  font-size: 15px;
 }
 
 .form_login {
@@ -200,7 +200,7 @@ section#contact .form-group #message {
 }
 
 .cardList{
-  margin-top: 3%;;
+  margin-top: 3%;
 }
 
 .text-muted.sub_cat{
@@ -224,7 +224,7 @@ section#contact .form-group #message {
 
 .custom_form form {
   margin: 0 auto;
-  background-color: #e1cebe;;
+  background-color: #e1cebe;
   padding: 40px;
   border-radius: 4px;
   color: #505e6c;

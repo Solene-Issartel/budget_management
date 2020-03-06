@@ -40,11 +40,11 @@ function post(req, res) {
                     return;
               } else {     
                 bcrypt.genSalt(10, (err, salt) => {
-                  bcrypt.hash(q.password, salt, (err, hash) => {
+                  bcrypt.hash(q.password, salt, (error, hash) => {
                     if (err) throw err;
                     q.password = hash;
                     console.log(q)
-                    models.User.create(q.firstname, q.lastname, q.email, q.password, false).then(function(err,result){
+                    models.User.create(q.firstname, q.lastname, q.email, q.password, false).then(function(errors,result){
                             const flash = {
                                 msg:"Compte créé avec succès. Vous pouvez désormais vous connecter.",
                                 //type : alert-danger {errors}, alert-succes {{success}}
@@ -54,8 +54,8 @@ function post(req, res) {
                             res.redirect("/login");
                             return;
                         
-                    }).catch(err => {
-                        console.error(err);
+                    }).catch(e => {
+                        console.error(e);
                     });
                 });
               });

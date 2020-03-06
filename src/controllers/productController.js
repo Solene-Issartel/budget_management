@@ -11,7 +11,7 @@ async function get(req, res) {
             let i =0;
             let prodByCat = [];
             let last_index = 0;
-            for(i=0;i<products.length;i++){
+            for(i;i<products.length;i++){
                 if(products[i+1]){
                     if(products[i].cat_product!=products[i+1].cat_product){
                         prodByCat.push(products.slice(last_index,i+1));
