@@ -3,16 +3,7 @@ let bcrypt = require('bcrypt');
 const saltRounds = 10; //means cost factor => controls how much time is needed to calculate a single BCrypt hash
 
 class User{
-    constructor(){
-        this.id_user;
-        this.firstname;
-        this.lastname;
-        this.password;
-        this.email;
-        this.monthly_budget;
-        this.old_budget;
-        this.isAdmin;
-    }
+    constructor(){}
 
     static create(firstname, lastname, email, password, isAdmin) {
         return new Promise( ( resolve, reject ) => {

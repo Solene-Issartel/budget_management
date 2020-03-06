@@ -84,20 +84,20 @@ async function create_post(req, res){
     let id_user = req.user.id;
     
     let q = req.body;
-    console.log(q.prices)
+    //console.log(q.prices)
     let i=0;
     let total=0;
     if(q.prices){
-        console.log(q.prices.length)
-        if(isFloat(parseFloat(q.prices))||Number.isInteger(parseInt(q.prices))) {
+        //console.log(q.prices)
+        if(typeof q.prices === 'string') {
             total = parseFloat(q.prices);
-            console.log(total)
         } else {
             for(i=0;i<q.prices.length;i++){
                 total+=parseFloat(q.prices[i]);
             }
         }
 
+        total=parseFloat(total)
         if(isNaN(total)){
             const flash = {
                 msg:"Tous les champs prix doivent être renseignés",
@@ -109,9 +109,14 @@ async function create_post(req, res){
             return;
         } else {
             const newList = await models.List.create(total,id_user);
-            for(i=0;i<q.prices.length;i++){
-                await models.Contain.create(newList.insertId,parseInt(q.ids[i]),parseFloat(q.prices[i]))
+            if (typeof q.prices === 'string') {
+                await models.Contain.create(newList.insertId,parseInt(q.ids),parseFloat(q.prices))
+            } else {
+                for(i=0;i<q.prices.length;i++){
+                    await models.Contain.create(newList.insertId,parseInt(q.ids[i]),parseFloat(q.prices[i]))
+                }
             }
+            
 
             const flash = {
                 msg:"Vous avez créé la liste avec succès",
@@ -206,23 +211,49 @@ async function update_get(id_req,req, res) {
 /**
  * UPDATE modify profile in database (admin cannot update users)
  */
-function update_post(id_req,req, res) {
+async function update_post(id_req,req, res) {
     let id_user = req.user.id; //recover id from token
-    
+        
     models.List.findById(id_req).then(async (list)=>{
         if(id_user==list[0].id_user){ 
+            let allContain= await models.Contain.findByIdList(id_req);
+            let idP = allContain.map(x=>x.id_product);
+            
             let q = req.body;
             let i=0;
+            /**
+             * Delete products remove from the list in the database
+             */
+            if(typeof q.ids === 'string') {
+                if(idP.includes(parseInt(q.ids))){
+                    idP.splice(idP.indexOf(parseInt(q.ids)),1)
+                }
+            } else {
+                for(i=0;i<q.ids.length;i++){
+                    if(idP.includes(q.ids[i])){
+                        idP.splice(idP.indexOf(q.ids[i]),1)
+                    }
+                }
+            }
+
+            idP.forEach(async id => await models.Contain.delete(id_req,id))
+            
+            /**
+             * Calcul of the total list price
+             */
             let total=0;
             if(q.prices){
-                if(q.prices.length == 1) {
-                total = ""+(q.prices[i])+"";
+                if(typeof q.prices === 'string') {
+                    total = parseFloat(q.prices);
                 } else {
                     for(i=0;i<q.prices.length;i++){
                         total+=parseFloat(q.prices[i]);
                     }
                 }
 
+                /**
+                 * Update or create the containers of the list
+                 */
                 if(isNaN(total)){
                     const flash = {
                         msg:"Tous les champs prix doivent être renseignés",
@@ -234,16 +265,26 @@ function update_post(id_req,req, res) {
                     return;
                 } else {
                     const newList = await models.List.update(id_req,total,list[0].date_list,id_user);
-                    for(i=0;i<q.prices.length;i++){
-                        let c = await models.Contain.findOne(id_req,parseInt(q.ids[i]));
-                        if(c.length > 0){
-                            await models.Contain.update(id_req,parseInt(q.ids[i]),parseFloat(q.prices[i]))
+                    if (typeof q.prices === 'string') {
+                        let c = await models.Contain.findOne(id_req,parseInt(q.ids));
+                            if(c.length > 0){
+                                await models.Contain.update(id_req,parseInt(q.ids),parseFloat(q.prices))
+                            }
+                            else {
+                                await models.Contain.create(id_req,parseInt(q.ids),parseFloat(q.prices))
+                            } 
+                    } else {
+                        for(i=0;i<q.prices.length;i++){
+                            let c = await models.Contain.findOne(id_req,parseInt(q.ids[i]));
+                            if(c.length > 0){
+                                await models.Contain.update(id_req,parseInt(q.ids[i]),parseFloat(q.prices[i]))
+                            }
+                            else {
+                                await models.Contain.create(id_req,parseInt(q.ids[i]),parseFloat(q.prices[i]))
+                            } 
                         }
-                        else {
-                            await models.Contain.create(id_req,parseInt(q.ids[i]),parseFloat(q.prices[i]))
-                        }
-                        
                     }
+                    
 
                     const flash = {
                         msg:"Vous avez modifié la liste avec succès",

@@ -2,11 +2,7 @@ let co = require('./connection_db');
 
 class Product {
 
-    constructor(){
-        this.id_product;
-        this.name_product;
-        this.cat_product;
-    }
+    constructor(){}
 
     static async create(name,id_cat) {
         return new Promise( ( resolve, reject ) => {

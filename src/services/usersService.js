@@ -53,7 +53,7 @@ function sendMail(req,res){
             alert:"alert-warning"
         };
         models.setFlash(flash, res);
-        res.redirect('/home');
+        res.redirect('/home#contact');
         return
     } else {
         let transporter = nodemailer.createTransport({
@@ -81,7 +81,7 @@ function sendMail(req,res){
                     alert:"alert-danger"
                 };
                 models.setFlash(flash, res);
-                res.redirect('/home');
+                res.redirect('/home#contact');
                 return
             } else {
                 const flash = {
@@ -90,7 +90,7 @@ function sendMail(req,res){
                     alert:"alert-success"
                 };
                 models.setFlash(flash, res);
-                res.redirect('/home');
+                res.redirect('/home#contact');
                 return
             }
         })

@@ -113,7 +113,7 @@
 }
 
 .navbar-brand {
-  font-family: 'Kaushan Script';
+  font-family: 'Kaushan Script', sans-serif;
   display: inline-block;
   padding-top: 0.3125rem;
   padding-bottom: 0.3125rem;
@@ -123,7 +123,7 @@
   white-space: nowrap; }
 
   .nav-link {
-    font-family: 'Montserrat';
+    font-family: 'Montserrat', sans-serif;
     font-size: 13px;
     color: white;
   }
@@ -145,7 +145,7 @@
     font-style: italic;
     margin-bottom: 60px;
     text-transform: none;
-    font-family: "Droid Serif";
+    font-family: "Droid Serif", sans-serif;
   }
 
   .intro-text .intro-lead-in {
@@ -153,7 +153,7 @@
     font-size: 30px;
     font-style: italic;
     line-height: 40px;
-    font-family: "Droid Serif";
+    font-family: "Droid Serif", sans-serif;
 }
 
 .intro-text .intro-heading {
@@ -161,19 +161,19 @@
   font-size: 60px;
   font-weight: 700;
   line-height: 75px;
-  font-family: "Montserrat";
+  font-family: "Montserrat", sans-serif;
 }
 
 #contact{
   margin-top: 8%;
   margin-bottom: 8%;
-  font-family: "Droid Serif";
+  font-family: "Droid Serif", sans-serif;
 }
 
 #services {
   margin-top: 5%;
   margin-bottom: 8%;
-  font-family: "Droid Serif";
+  font-family: "Droid Serif", sans-serif;
 }
 
 section#contact .form-group input, 
@@ -207,7 +207,7 @@ section#contact .form-group #message {
   font-size: 12px;
   font-style: italic;
   text-transform: none;
-  font-family: "Droid Serif";
+  font-family: "Droid Serif", sans-serif;
 }
 
 .card_products{

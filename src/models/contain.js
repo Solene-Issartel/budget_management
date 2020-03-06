@@ -2,11 +2,7 @@ let co = require('./connection_db');
 
 class Contain {
 
-    constructor(){
-        this.id_list;
-        this.id_product;
-        this.price_product;
-    }
+    constructor(){}
 
     static async create(id_l,id_p,price) {
         return new Promise( ( resolve, reject ) => {
@@ -18,11 +14,14 @@ class Contain {
         } );
     }
 
-    static delete(id_l,id_p,cb){
-        co.query('DELETE FROM contains WHERE id_list = ? AND id_product = ?', [id_l,id_p], (err,result) => {
-            if (err) throw err;
-            cb(result) //cb is callback function
-        })
+    static async delete(id_l,id_p){
+        return new Promise( ( resolve, reject ) => {
+            co.query('DELETE FROM contains WHERE id_list = ? AND id_product = ?', [id_l,id_p], ( err, result ) => {
+                if ( err )
+                    return reject( err );
+                resolve( result );
+            } );
+        } );
     }
 
     static async update(id_l,id_p,price){

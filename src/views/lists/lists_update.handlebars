@@ -29,8 +29,8 @@
                         {{#each up_prod as | up |}}
                             <li id_prod="{{up.id_product}}" class='list-group-item'>
                                 <span>{{up.name_product}}</span>
-                                <div class="price_prod">
-                                    <input name='prices' onfocusout='updatePrice()' type='number' step='0.01' min='0' value="{{up.price_product}}" required/>
+                                <div class="row align-items-center price_prod" class='position: absolute;'>
+                                    <input class="price_prod" name='prices' type='number' step='0.01' min='0' value="{{up.price_product}}" required/>
                                     <p>€</p>
                                 </div>
                                 <div>
@@ -75,6 +75,10 @@
         .fail(function(XMLHttpRequest, textStatus, errorThrown) { 
         console.log("Status: " + textStatus); console.log("Error: " + errorThrown);
         }) 
+
+        $(".price_prod").bind('keyup mouseup', function () {
+            updatePrice();            
+        });
     })
     function func (x){
         return {
@@ -90,6 +94,10 @@
         
     }
 
+    $(".price_prod").bind('keyup mouseup', function () {
+            updatePrice();            
+        });
+        
     function addProduct(name_p,id_p){
         if(name_p != undefined && id_p != undefined){
             let alreadyIn = false;
@@ -100,7 +108,7 @@
             })
             if(!alreadyIn){
                 $( ".msg div" ).remove();
-                let html ="<li id_prod='"+id_p+"'class='list-group-item'><span>"+name_p+"</span><div><input class='price_prod' name='prices' onfocusout='updatePrice()' type='number' step='0.01' min='0' required/><p>€</p></div><div id='cross"+id_p+"'><i onclick='removeProduct("+id_p+")' class='fa fa-times'></i></div><input type='hidden' name='ids' value='"+id_p+"'></li>"
+                let html ="<li id_prod='"+id_p+"'class='list-group-item'><span>"+name_p+"</span><div class='row align-items-center price_prod' class='position: absolute;'><input class='price_prod' name='prices' type='number' step='0.01' min='0' required/><p>€</p></div><div id='cross"+id_p+"'><i onclick='removeProduct("+id_p+")' class='fa fa-times'></i></div><input type='hidden' name='ids' value='"+id_p+"'></li>"
                 $(html).appendTo( ".prodlist" );
                 $('#tags').val('');
             } else {
@@ -109,16 +117,21 @@
                 $('#tags').val('');
                 $(html).appendTo( ".msg" );
             }
+            
+            $(".price_prod").bind('keyup mouseup', function () {
+                updatePrice();            
+            });
         }
     }
 
-    function updatePrice(){
+   function updatePrice(){
         let total = 0;
         $('input.price_prod').each(function(){
             if(!$(this).val()==""){
                 total += parseFloat($(this).val());
             }
         })
+        total = Math.round(100*total)/100;
         $("#total").text(total)
     }
 

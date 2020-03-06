@@ -3,8 +3,6 @@ let co = require('./connection_db');
 class Categorie {
 
     constructor(){
-        this.id_categorie;
-        this.name_categorie;
     }
 
     static async create(name_cat) {
