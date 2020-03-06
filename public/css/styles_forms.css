@@ -269,7 +269,7 @@ section#contact .form-group #message {
 }
 
 .custom_title{
-  font-family: 'Lato';
+  font-family: 'Lato', sans-serif;
 }
 
 #upUser{
