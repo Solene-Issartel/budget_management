@@ -61,11 +61,13 @@ function sendMail(req,res){
         return
     } else {
         let transporter;
+        let webEmail;
         if(process.env.NODE_ENV == "production"){
+            webEmail = process.env.GMAIL_USER_EMAIL;
             transporter = nodemailer.createTransport({
                 service: 'gmail',
                 auth: {
-                    user : process.env.GMAIL_USER_EMAIL,
+                    user : webEmail,
                     pass : process.env.GMAIL_USER_PASSWORD, 
                 },
                 tls: {
@@ -73,10 +75,11 @@ function sendMail(req,res){
                 }
             })
         } else {
+            webEmail = env.GMAIL_USER_EMAIL;
             transporter = nodemailer.createTransport({
                 service: 'gmail',
                 auth: {
-                    user : env.GMAIL_USER_EMAIL,
+                    user : webEmail,
                     pass : env.GMAIL_USER_PASSWORD,
                 },
                 tls: {
@@ -86,7 +89,7 @@ function sendMail(req,res){
         }
 
         let mailOptions = {
-            to: env.GMAIL_USER_EMAIL,
+            to: webEmail,
             subject: "BUDMAN : Nouvelle demande d'un utilisateur",
             html: "<b>Expéditeur : <a href='mailto:"+email+"'>"+email+"</a></b><p>"+text+"</p>"
         }
