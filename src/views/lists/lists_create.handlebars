@@ -1,7 +1,7 @@
 <section style="margin-top:250px">
     <div class="container">
         <div class="row">
-            <div class="col-md-6"><input class="myAutocomplete" id="tags"><button onclick="addFromAutocomplete()"type="button">Ajouter</button>
+            <div class="col-md-6"><input class="myAutocomplete" id="tags"><button class="btn btn-primary" onclick="addFromAutocomplete()"type="button">Ajouter</button>
                 <input type="hidden" id="tagsID">
                 <div class="msg"></div>
                 {{#if errors}}
@@ -17,7 +17,7 @@
                             {{#each products as | prod |}}
                                 <li id="{{prod.id_product}}"class="ols_prod list-group-item"><span id="tags2">{{prod.name_product}}</span>
                                 <input type="hidden" id="tagsID2" id_prod="{{prod.id_product}}">
-                                <div onclick='addProduct("{{prod.name_product}}",{{prod.id_product}})'><i class="fa fa-plus"></i></div></li>
+                                <div onclick='addProduct("{{prod.name_product}}",{{prod.id_product}})'><i class="icon-list fa fa-plus"></i></div></li>
                             {{/each}}
                         </ul>
                     </div>
@@ -31,7 +31,7 @@
 
                     <p>Total : </p><p id="total"></p><p>€</p>
 
-                    <button type="submit">Sauvegarder</button>
+                    <button class="btn btn-primary" type="submit">Sauvegarder</button>
                     <input type="hidden" name="_csrf" value="{{csrfToken}}">
                 </form>
             </div>
@@ -86,7 +86,7 @@
             })
             if(!alreadyIn){
                 $( ".msg div" ).remove();
-                let html ="<li id_prod='"+id_p+"'class='list-group-item'><span>"+name_p+"</span><input class='price_prod' name='prices' type='number' step='0.01' min='0' required/><div id='cross"+id_p+"'><i onclick='removeProduct("+id_p+")' class='fa fa-times'></i></div><input type='hidden' name='ids' value='"+id_p+"'></li>"
+                let html ="<li id_prod='"+id_p+"'class='list-group-item'><span>"+name_p+"</span><div><input class='price_prod' name='prices' onfocusout='updatePrice()' type='number' step='0.01' min='0' required/><div id='cross"+id_p+"'><p>€</p></div><i onclick='removeProduct("+id_p+")' class='icon-list fa fa-times'></i></div><input type='hidden' name='ids' value='"+id_p+"'></li>"
                 $(html).appendTo( ".prodlist" );
                 $('#tags').val('');
             } else {
@@ -95,23 +95,18 @@
                 $('#tags').val('');
                 $(html).appendTo( ".msg" );
             }
-            this.updatePrice();
         }
     }
 
     function removeProduct(id){
         $("ul.prodlist li[id_prod="+id+"]").remove();
-        this.updatePrice();
+        updatePrice();
     }
-
-    $('input.price_prod').on("focusout",function(){
-        console.log('nbgvf')
-    })
 
     function updatePrice(){
         let total = 0;
         $('input.price_prod').each(function(){
-            if(!$(this).val().isEmpty()){
+            if(!$(this).val()==""){
                 total += parseFloat($(this).val());
             }
         })

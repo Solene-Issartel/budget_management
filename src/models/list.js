@@ -12,7 +12,7 @@ class List {
     static async create(price,id_user) {
         return new Promise( ( resolve, reject ) => {
             let d=new Date();
-            console.log(price,d,id_user)
+            price =parseFloat(price)
 
             co.query('INSERT INTO lists (total_price_list,date_list,id_user) VALUES (?,?,?)', [price,d,id_user], ( err, result ) => {
                 console.log(result)

@@ -42,7 +42,7 @@
 .form_login {
   display: table;
   max-width: 900px;
-  width: 40%;
+  width: 65%;
   margin: 0 auto;
   box-shadow: 1px 1px 5px rgba(0,0,0,0.1);
 }
@@ -260,13 +260,6 @@ section#contact .form-group #message {
   font-size: 13px;
 }
 
-.custom_btn:hover{
-  background-color:
-  #c08b19;
-  border-color:
-  #b15e0c;
-}
-
 .custom_btn{
   margin-top: 12%;
 }
@@ -287,3 +280,55 @@ section#contact .form-group #message {
   margin-bottom: 10%;
 }
 
+.myAutocomplete {
+  border: solid 0.5px #c1c1c1;
+  height: 12%;
+  width: 65%;
+  margin: 7% 4%;
+  border-radius: 8px;
+  padding: 2%;
+}
+
+.icon-list {
+  float: right;
+  vertical-align:middle; 
+}
+
+li.old_prod span{
+  float: left;
+  margin-left: 6%;
+}
+
+.price_prod input{
+  border: solid 0.5px #dedede;
+  border-radius: 4px;
+  width: 30%;
+  padding: 2%;
+}
+
+.price_prod{
+  display: inline-flex;
+  width: 70%;
+  float: right;
+  left: 65%;
+}
+
+.total-price p{
+  display: inline;
+}
+
+.subList{
+  width:100%;
+}
+
+.total-price{
+  float: right;
+  font-size: 18px;
+  font-weight: bold;
+  margin: 5%;
+}
+
+.prodlist{
+  border: solid 1px darkgray;
+  border-radius: 8px;
+}

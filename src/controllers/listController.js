@@ -27,6 +27,7 @@ function get(req, res) {
         const flash = models.getFlash(req);
         models.destroyFlash(res);
         res.render("lists/lists_list", {col_1: col_1,col_2: col_2,col_3: col_3, errors:flash, userAdmin:req.user.isAdmin == 1? true : false, csrfToken: req.csrfToken()});
+        return;
     })
 }
 
@@ -48,6 +49,7 @@ function list_info_get(req, res) {
     let id_user = req.user.id;
     models.List.findByUser(id_user).then(lists => {
         res.render("lists/lists_list", {lists: lists, userAdmin:req.user.isAdmin == 1? true : false,csrfToken: req.csrfToken()});
+        return;
     })
 }
 
@@ -69,20 +71,27 @@ async function create_get(req, res){
             const flash = models.getFlash(req);
             models.destroyFlash(res);
             res.render("lists/lists_create", {prod_list: prod_list,products:products, errors:flash,userAdmin:req.user.isAdmin == 1? true : false,csrfToken: req.csrfToken()});
-
+            return;
         });
         
+}
+
+function isFloat(n){
+    return Number(n) === n && n % 1 !== 0;
 }
 
 async function create_post(req, res){
     let id_user = req.user.id;
     
     let q = req.body;
+    console.log(q.prices)
     let i=0;
     let total=0;
     if(q.prices){
-        if(q.prices.length == 1) {
-        total = ""+parseFloat(q.prices[i])+"";
+        console.log(q.prices.length)
+        if(isFloat(parseFloat(q.prices))||Number.isInteger(parseInt(q.prices))) {
+            total = parseFloat(q.prices);
+            console.log(total)
         } else {
             for(i=0;i<q.prices.length;i++){
                 total+=parseFloat(q.prices[i]);
@@ -97,6 +106,7 @@ async function create_post(req, res){
             };
             models.setFlash(flash, res);
             res.redirect("/lists/create");
+            return;
         } else {
             const newList = await models.List.create(total,id_user);
             for(i=0;i<q.prices.length;i++){
@@ -110,6 +120,7 @@ async function create_post(req, res){
             };
             models.setFlash(flash, res);
             res.redirect("/lists");
+            return;
         }
     }else{
         const flash = {
@@ -119,6 +130,7 @@ async function create_post(req, res){
         };
         models.setFlash(flash, res);
         res.redirect("/lists/create");
+        return;
     }
     
 }
@@ -136,6 +148,7 @@ function delete_post(id_req,req, res){
                 };
                 models.setFlash(flash, res);
                 res.redirect("/lists");
+                return;
             })
         } else {
             const flash = {
@@ -173,9 +186,8 @@ async function update_get(id_req,req, res) {
             
 
             Promise.all(promises).then(() => {
-                console.log(total)
                 res.render("lists/lists_update", {old_prod: products, total :total[0].total_price_list,id_list:id_req, up_prod:up_prod, userAdmin:req.user.isAdmin == 1? true : false,csrfToken: req.csrfToken()});
-
+                return;
             });
     
         } else {
@@ -219,6 +231,7 @@ function update_post(id_req,req, res) {
                     };
                     models.setFlash(flash, res);
                     res.redirect("/lists/create");
+                    return;
                 } else {
                     const newList = await models.List.update(id_req,total,list[0].date_list,id_user);
                     for(i=0;i<q.prices.length;i++){
@@ -239,6 +252,7 @@ function update_post(id_req,req, res) {
                     };
                     models.setFlash(flash, res);
                     res.redirect("/lists");
+                    return;
                 }
             }else{
                 const flash = {
@@ -248,6 +262,7 @@ function update_post(id_req,req, res) {
                 };
                 models.setFlash(flash, res);
                 res.redirect("/lists/create");
+                return;
             }
                
         } else {
@@ -265,6 +280,7 @@ function update_post(id_req,req, res) {
 
 async function graphs_get(req,res){
     res.render('graphs/graphs_list', {userAdmin:req.user.isAdmin == 1? true : false,csrfToken: req.csrfToken()})
+    return;
 }
 
 async function get_budgets(req,res){
@@ -277,6 +293,7 @@ async function get_budgets(req,res){
     }
     
     res.send(budgets);
+    return;
 }
 
 module.exports = {get, list_info_get, create_get, create_post, delete_post, update_get, update_post,graphs_get,get_budgets};

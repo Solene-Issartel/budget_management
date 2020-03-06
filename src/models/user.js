@@ -2,11 +2,6 @@ let co = require('./connection_db');
 let bcrypt = require('bcrypt');
 const saltRounds = 10; //means cost factor => controls how much time is needed to calculate a single BCrypt hash
 
-function hashPassword(password) {
-    let hash = bcrypt.hashSync(password, saltRounds);
-    return hash;
-}
-
 class User{
     constructor(){
         this.id_user;
@@ -19,76 +14,96 @@ class User{
         this.isAdmin;
     }
 
-    static create(firstname, lastname, email, password, isAdmin,cb) {
-        isAdmin = isAdmin ? true : false;
-        co.query('INSERT INTO users SET firstname = ?, lastname = ?, email = ?, password = ?, isAdmin = ?', [firstname,lastname,email,password,isAdmin], (err,result) => {
-            if (err) throw err;
-            cb(result) //cb is callback function
-        })
+    static create(firstname, lastname, email, password, isAdmin) {
+        return new Promise( ( resolve, reject ) => {
+            isAdmin = isAdmin ? true : false;
+            co.query('INSERT INTO users SET firstname = ?, lastname = ?, email = ?, password = ?, isAdmin = ?', [firstname,lastname,email,password,isAdmin], (err,result) => {
+                if ( err )
+                    return reject( err );
+                resolve( result );
+            } );
+        } );
     }
 
-    static delete(id,cb){
-        co.query('DELETE FROM users WHERE id_user = ?', [id], (err,result) => {
-            if (err) throw err;
-            cb(result) //cb is callback function
-        })
+    static delete(id){
+        return new Promise( ( resolve, reject ) => {
+            co.query('DELETE FROM users WHERE id_user = ?', [id], (err,result) => {
+                if ( err )
+                    return reject( err );
+                resolve( result );
+            } );
+        } );
     }
 
-    static update(id,firstname,lastname,email,cb){
-        co.query('UPDATE users SET firstname = ?, lastname = ?, email = ? WHERE id_user = ?', [firstname,lastname,email,id], (err,result) => {
-            if (err) throw err;
-            cb(result) //cb is callback function
-        })
+    static update(id,firstname,lastname,email){
+        return new Promise( ( resolve, reject ) => {
+            co.query('UPDATE users SET firstname = ?, lastname = ?, email = ? WHERE id_user = ?', [firstname,lastname,email,id], (err,result) => {
+                if ( err )
+                    return reject( err );
+                resolve( result );
+            } );
+        } );
     }
 
-    static updateWithPassword(id,firstname,lastname,email,password,cb){
-        co.query('UPDATE users SET firstname = ?, lastname = ?, email = ?, password = ? WHERE id_user = ?', [firstname,lastname,email,password,id], (err,result) => {
-            if (err) throw err;
-            cb(result) //cb is callback function
-        })
+    static updateWithPassword(id,firstname,lastname,email,password){
+        return new Promise( ( resolve, reject ) => {
+            co.query('UPDATE users SET firstname = ?, lastname = ?, email = ?, password = ? WHERE id_user = ?', [firstname,lastname,email,password,id], (err,result) => {
+                if ( err )
+                    return reject( err );
+                resolve( result );
+            } );
+        } );
     }
 
-    static updateIsAdmin(isAdmin,id,cb){
-        co.query('UPDATE users SET isAdmin = ? WHERE id_user = ?', [isAdmin,id], (err,result) => {
-            if (err) throw err;
-            cb(result) //cb is callback function
-        })
+    static updateIsAdmin(isAdmin,id){
+        return new Promise( ( resolve, reject ) => {
+            co.query('UPDATE users SET isAdmin = ? WHERE id_user = ?', [isAdmin,id], (err,result) => {
+                if ( err )
+                    return reject( err );
+                resolve( result );
+            } );
+        } );
     }
 
-    //trigger before update, insert dans old_budget
-    static updateBudget(budget,id,cb){
-        co.query('UPDATE users SET monthly_budget = ? WHERE id_user = ?', [budget,id], (err,result) => {
-            if (err) throw err;
-            cb(result) //cb is callback function
-        })
+    static findOne(email){
+        return new Promise( ( resolve, reject ) => {
+            co.query('SELECT * FROM users WHERE email = ?', [email], (err,rows) => {
+                if ( err )
+                    return reject( err );
+                resolve( rows );
+            } );
+        } );
     }
 
-    static findOne(email,cb){
-        co.query('SELECT * FROM users WHERE email = ?', [email], (err, rows, fields) => {
-            if(err) throw err;
-            cb(rows);
-        });
+    static findAll(){
+        return new Promise( ( resolve, reject ) => {
+            co.query('SELECT * FROM users ORDER BY lastname', (err,result) => {
+                if ( err )
+                    return reject( err );
+                resolve( result );
+            } );
+        } );
     }
 
-    static findAll(cb){
-        co.query('SELECT * FROM users ORDER BY lastname',(err, rows, fields) => {
-            if(err) throw err;
-            cb(rows);
-        });
+    static findById(id){
+        return new Promise( ( resolve, reject ) => {
+            co.query('SELECT * FROM users WHERE id_user = ?', [id], (err,rows) => {
+                if ( err )
+                    return reject( err );
+                resolve( rows );
+            } );
+        } );
     }
 
-    static findById(id,cb){
-        co.query('SELECT * FROM users WHERE id_user = ?', [id], (err, rows, fields) => {
-            if(err) throw err;
-            cb(rows);
-        });
-    }
-
-    static isAdmin(id,cb){
-        co.query('SELECT isAdmin FROM users WHERE id_user = ?', [id], (err,result) => {
-            if(err) throw err;
-            cb(result);
-        });
+    static isAdmin(id){
+        return new Promise( ( resolve, reject ) => {
+            co.query('SELECT isAdmin FROM users WHERE id_user = ?', [id], (err,result) => {
+                if ( err )
+                    return reject( err );
+                resolve( result );
+            } );
+        } );
+        
     } 
 
 }

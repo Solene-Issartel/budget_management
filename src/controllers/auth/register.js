@@ -4,7 +4,6 @@ let services = require('../../services');
 
 function post(req, res) {
     let q = req.body;
-    console.log(req.body);
     /**
      * Check if all required attributes are entered
      */
@@ -29,7 +28,7 @@ function post(req, res) {
             });
             return;
         } else {
-            models.User.findOne(q.email, function(user){
+            models.User.findOne(q.email).then(function(user){
                 if (user.length != 0){
                     const flash = {
                         msg:"Cet email est déjà utilisé.",
@@ -38,19 +37,25 @@ function post(req, res) {
                     };
                     models.setFlash(flash, res);
                     res.redirect('/register'); 
+                    return;
               } else {     
                 bcrypt.genSalt(10, (err, salt) => {
                   bcrypt.hash(q.password, salt, (err, hash) => {
                     if (err) throw err;
                     q.password = hash;
-                    models.User.create(q.firstname, q.lastname, q.email, q.password, false, function(err,result){
-                        const flash = {
-                            msg:"Compte créé avec succès. Vous pouvez désormais vous connecter.",
-                            //type : alert-danger {errors}, alert-succes {{success}}
-                            alert:"alert-success"
-                        };
-                        models.setFlash(flash, res);
-                        res.redirect("/login");
+                    console.log(q)
+                    models.User.create(q.firstname, q.lastname, q.email, q.password, false).then(function(err,result){
+                            const flash = {
+                                msg:"Compte créé avec succès. Vous pouvez désormais vous connecter.",
+                                //type : alert-danger {errors}, alert-succes {{success}}
+                                alert:"alert-success"
+                            };
+                            models.setFlash(flash, res);
+                            res.redirect("/login");
+                            return;
+                        
+                    }).catch(err => {
+                        console.error(err);
                     });
                 });
               });
@@ -65,6 +70,7 @@ function get(req, res) {
     models.destroyFlash(res);
     console.log(flash)
     res.render('auth/register', {layout: 'layhome',errors: flash,csrfToken: req.csrfToken() });
+    return;
 }
 
 module.exports = {post, get};
