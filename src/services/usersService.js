@@ -1,5 +1,7 @@
 
 let models = require('../models');
+let nodemailer = require('nodemailer');
+let env = require('../env')
 
 function sortUsersByLetter(users,req,res){
     
@@ -31,4 +33,83 @@ function sortUsersByLetter(users,req,res){
     return results;
 }
 
-module.exports = {sortUsersByLetter};
+
+function sendMail(req,res){
+    let email=req.body.email;
+    let text=req.body.text;
+    if(checkMailRegex(email)!=undefined){
+        const flash = {
+            msg:checkMailRegex(email),
+            //type : alert-danger {errors}, alert-success {{success}}
+            alert:"alert-warning"
+        };
+        models.setFlash(flash, res);
+        res.redirect('/home');
+        return;
+    } else if (text.length==0){
+        const flash = {
+            msg:"Votre message ne peut pas être vide.",
+            //type : alert-danger {errors}, alert-success {{success}}
+            alert:"alert-warning"
+        };
+        models.setFlash(flash, res);
+        res.redirect('/home');
+        return
+    } else {
+        let transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user : env.GMAIL_USER_EMAIL,
+                pass : env.GMAIL_USER_PASSWORD,
+            },
+            tls: {
+                rejectUnautorized: false
+            }
+        })
+
+        let mailOptions = {
+            to: env.GMAIL_USER_EMAIL,
+            subject: "BUDMAN : Nouvelle demande d'un utilisateur",
+            html: "<b>Expéditeur : <a href='mailto:"+email+"'>"+email+"</a></b><p>"+text+"</p>"
+        }
+    
+        transporter.sendMail(mailOptions, function(err,info){
+            if(err){
+                const flash = {
+                    msg:"Un problème est survenu. Veuillez rééssayer ultérieurement.",
+                    //type : alert-danger {errors}, alert-success {{success}}
+                    alert:"alert-danger"
+                };
+                models.setFlash(flash, res);
+                res.redirect('/home');
+                return
+            } else {
+                const flash = {
+                    msg:"Votre message a été transmis avec succès.",
+                    //type : alert-danger {errors}, alert-success {{success}}
+                    alert:"alert-success"
+                };
+                models.setFlash(flash, res);
+                res.redirect('/home');
+                return
+            }
+        })
+    }
+}
+
+/**
+ * Checks if email input is valid
+ * 
+ *  */
+function checkMailRegex(email) {
+    let regexMail = /^[a-zA-Z0-9._-]+@[a-zA-Z\.]+\.[a-z]{1,5}$/;
+    
+    /**
+     * Check if firstname and username are defined 
+     */
+    if (email.length == 0 || !regexMail.test(email)) {
+        return "Mail invalide (pas de caractères spéciaux).";
+    } 
+}
+
+module.exports = {sortUsersByLetter,sendMail,checkMailRegex};

@@ -3,15 +3,10 @@ let product = require('./productService')
 let users = require('./usersService')
 
 async function init() {
-    if(process.env.NODE_ENV != "production") {
-        await co.drop();
-    }
 
-    await co.sync();
-
-    if(process.env.NODE_ENV != "production") {
+    if(process.env.NODE_ENV == "production") {
         try {
-           // await User.create("Admin", "Master", "admin", "admin@yopmail.com", true);
+           await User.create("Admin", "Master", "admin", "budman.assist@gmail.com", true);
         } catch {
             process.exit(1);
         }
