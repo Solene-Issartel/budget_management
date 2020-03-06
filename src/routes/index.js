@@ -1,6 +1,5 @@
 let register = require('../controllers/auth/register');
 let login = require('../controllers/auth/login');
-let services = require('../services');
 const express = require('express');
 let router = express.Router();
 
@@ -21,8 +20,6 @@ let router = express.Router();
    * HOME PAGE ROUTE
    */
   router.get('/home', login.verifyToken, login.home);
-
-  router.post("/sendMail", login.verifyToken, services.users.sendMail);
 
   /**
    * REGISTER ROUTES

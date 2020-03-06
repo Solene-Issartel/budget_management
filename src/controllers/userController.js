@@ -1,19 +1,17 @@
 let models = require('../models');
 let services = require('../services');
 let bcrypt = require('bcrypt');
-let nodemailer = require('nodemailer');
 
 
 function get(req, res) {
     let isAdmin = req.user.isAdmin;
     if(isAdmin){
-        models.User.findAll().then((users)=>{
+        models.User.findAll((users)=>{
             let results = services.users.sortUsersByLetter(users,req,res);
             console.log(results);
             const flash = models.getFlash(req);
             models.destroyFlash(res);
             res.render("users/users_list", {letters: results.letters, persons: results.persons, errors: flash, userAdmin: req.user.isAdmin == 1? true : false,csrfToken: req.csrfToken()});
-            return;
         });
         
     } else {
@@ -33,13 +31,11 @@ function user_info_get(id_req,req, res) {
     let id_user = req.user.id; //recover id from token
     if(id_user){
         if(req.user.isAdmin){
-            models.User.findById(id_req).then((user) => {
-                console.log(user)
+            models.User.findById(id_req,(user) => {
                 const flash = models.getFlash(req);
                 models.destroyFlash(res);
                 let isAdmin = user[0].isAdmin==1 ? true : false; //true if the user that we are looking for is an admin
                 res.render('users/users_info', {id: id_req,firstname : user[0].firstname, lastname : user[0].lastname, email: user[0].email, isAdmin: isAdmin, errors: flash, userAdmin: req.user.isAdmin == 1? true : false,csrfToken: req.csrfToken()});
-                return;
             })
         } else {
             const flash = {
@@ -49,7 +45,6 @@ function user_info_get(id_req,req, res) {
             };
             models.setFlash(flash, res);
             res.redirect('/home',403);
-            return;
         }
     } else {
         const flash = {
@@ -59,7 +54,6 @@ function user_info_get(id_req,req, res) {
         };
         models.setFlash(flash, res);
         res.redirect(401,'/login');
-        return;
     }
 }
 
@@ -68,7 +62,7 @@ function user_info_post(id_req,req, res) {
     let id_user = req.user.id; //recover id from token
     if(id_user){
         if(req.user.isAdmin){
-            models.User.updateIsAdmin(isAd,id_req).then((user) => {
+            models.User.updateIsAdmin(isAd,id_req,(user) => {
                 const flash = {
                     msg:"Vous avez bien modifié les droits",
                     //type : alert-danger {errors}, alert-success {{success}}
@@ -76,7 +70,6 @@ function user_info_post(id_req,req, res) {
                 };
                 models.setFlash(flash, res);
                 res.redirect('/users');
-                return;
             })
         } else {
             const flash = {
@@ -86,7 +79,6 @@ function user_info_post(id_req,req, res) {
             };
             models.setFlash(flash, res);
             res.redirect(403,'/home');
-            return;
         }
     } else {
         const flash = {
@@ -96,7 +88,6 @@ function user_info_post(id_req,req, res) {
         };
         models.setFlash(flash, res);
         res.redirect(401,'/login');
-        return;
     }
 }
 
@@ -106,7 +97,7 @@ function user_info_post(id_req,req, res) {
 function update_get(req, res) {
     let id = req.user.id; //recover id from token
     if(id){
-        models.User.findById(id).then((user) => {
+        models.User.findById(id,(user) => {
             const flash = models.getFlash(req);
             models.destroyFlash(res);
             res.render('users/users_update', 
@@ -119,7 +110,6 @@ function update_get(req, res) {
                 errors : flash,
                 csrfToken: req.csrfToken()
             });
-            return;
         })
     } else {
         const flash = {
@@ -129,7 +119,6 @@ function update_get(req, res) {
         };
         models.setFlash(flash, res);
         res.redirect(403,'/home');
-        return;
     }
     
 }
@@ -141,6 +130,7 @@ function update_post(req, res) {
     let id = req.user.id; //recover id from token
     if(id){
         let q = req.body;
+        var errors = [];
         
         //the user want to change his password
         if(q.password){
@@ -149,21 +139,24 @@ function update_post(req, res) {
              * Check if password count 8 characters and verify that password and passwordConfirm are the same
              * 
              */
-            if (q.password.length < 8 || q.password != q.passwordConfirm) {
-                const flash = {
-                    msg:"Le mot de passe n'est pas conforme (taille insuffisante ou les mots de passes ne correspondent pas).",
-                    //type : alert-danger {errors}, alert-succes {{success}}
-                    alert:"alert-danger"
-                };
-                models.setFlash(flash, res);
-                res.redirect("/profile/update");
+            if (q.password.length < 8) {
+                errors.push("Le mot de passe doit faire au moins 8 caractères.");
+            } else if (q.password != q.passwordConfirm) {
+                errors.push("Les deux mots de passes ne sont pas identiques.");
+            }
+
+            /**
+             * Errors management
+             */
+            if (errors.length > 0) {
+                res.render("users/users_update", {errors: errors, userAdmin: req.user.isAdmin == 1? true : false,csrfToken: req.csrfToken() });
                 return;
-        } else {    
+            } else {    
                 bcrypt.genSalt(10, (err, salt) => {
                     bcrypt.hash(q.password, salt, (err, hash) => {
                         if (err) throw err;
                         q.password = hash;
-                        models.User.updateWithPassword(id,q.firstname,q.lastname,q.email,q.password).then((user) => {
+                        models.User.updateWithPassword(id,q.firstname,q.lastname,q.email,q.password,(user) => {
                             req.user.firstname=q.firstname;
                             const flash = {
                                 msg:"Vous avez modifié votre profil avec succès.",
@@ -172,14 +165,13 @@ function update_post(req, res) {
                             };
                             models.setFlash(flash, res);
                             res.redirect('/profile/update');
-                            return;
                         })
                     });
                 });
             }
         //the user doesn't want to change his password
         } else {
-            models.User.update(id,q.firstname,q.lastname,q.email).then((user) => {
+            models.User.update(id,q.firstname,q.lastname,q.email,(user) => {
                 req.user.firstname=q.firstname; //marche pas ne met pas a jour le nv nom
                 const flash = {
                     msg:"Vous avez modifié votre profil avec succès.",
@@ -188,7 +180,6 @@ function update_post(req, res) {
                 };
                 models.setFlash(flash, res);
                 res.redirect('/profile/update');
-                return;
             })
         }
 
@@ -213,7 +204,7 @@ function delete_account(id_req,from,req, res) {
     console.log(from)
     if(id_user){
         if(id_user == id_req || req.user.isAdmin){
-            models.User.delete(id_req).then((user) => {
+            models.User.delete(id_req,(user) => {
                 if(req.user.isAdmin){
                     if(from){
                         const flash = {
@@ -224,7 +215,6 @@ function delete_account(id_req,from,req, res) {
                         models.setFlash(flash, res);
                         res.cookie('token', '', { maxAge: 0, httpOnly: true })
                         res.redirect('/login');
-                        return;
                     } else {
                         const flash = {
                             msg:"Compte supprimé avec succès",
@@ -233,7 +223,6 @@ function delete_account(id_req,from,req, res) {
                         };
                         models.setFlash(flash, res);
                         res.redirect('/users');
-                        return;
                     }
                 } else {
                     const flash = {
@@ -244,7 +233,6 @@ function delete_account(id_req,from,req, res) {
                     models.setFlash(flash, res);
                     res.cookie('token', '', { maxAge: 0, httpOnly: true })
                     res.redirect('/login');
-                    return;
                 }
             })
         } else {
@@ -269,48 +257,8 @@ function delete_account(id_req,from,req, res) {
     }
 }
 
-async function sendMail(){
-    let email=req.body.email;
-    let text=req.body.text;
-    let transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user : process.env.GMAIL_USER_EMAIL,
-            pass : process.env.GMAIL_USER_PASSWORD,
-        },
-        tls: {
-            rejectUnautorized: false
-        }
-    })
+function sendMail(){
 
-    let mailOptions = {
-        from: email,
-        to: process.env.GMAIL_USER_EMAIL,
-        subject: "BUDMAN : Nouvelle demande d'un utilisateur",
-        text: "<p>"+text+"</p>",
-    }
-
-    transporter.sendMail(mailOptions, function(err,info){
-        if(err){
-            const flash = {
-                msg:"Un problème est survenu. Veuillez rééssayer ultérieurement.",
-                //type : alert-danger {errors}, alert-success {{success}}
-                alert:"alert-danger"
-            };
-            models.setFlash(flash, res);
-        } else {
-            const flash = {
-                msg:"Votre message a été transmis avec succès.",
-                //type : alert-danger {errors}, alert-success {{success}}
-                alert:"alert-success"
-            };
-            models.setFlash(flash, res);
-        }
-
-        res.redirect('/home');
-        return;
-        
-    })
 }
 
 module.exports = {get, user_info_post, user_info_get, update_get, update_post, delete_account,sendMail};

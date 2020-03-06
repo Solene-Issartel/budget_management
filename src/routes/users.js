@@ -20,7 +20,13 @@ let router = express.Router();
     var id = req.params.id;
     userController.user_info_post(id,req,res);
 });
- 
+  
+  /**
+   * MODIFY USER (his account)
+   */
+  router.get("/profile/update", login.verifyToken, userController.update_get);
+  router.put("/profile/update", login.verifyToken, userController.update_post);
+
   /**
    * DELETE USER (only admin)
    */
@@ -31,8 +37,12 @@ let router = express.Router();
   });
 
   /**
-   * USer send a mail to the admin
+   * DELETE MY ACCOUNT
    */
-  router.post('/sendMail', login.verifyToken, userController.sendMail);
+  router.delete("/profile/delete/:id", login.verifyToken, (req, res) => {
+      let id = req.params.id;
+      let from = true; //var to know if the delete form is from the user and not an admin 
+      userController.delete_account(id,from,req,res);
+  });
 
 module.exports = router;

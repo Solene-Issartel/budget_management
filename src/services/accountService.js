@@ -5,7 +5,7 @@
 function checkRegisterRegex(req,res) {
     let q = req.body;
     var errors = [];
-    let regexMail = /^[a-zA-Z0-9._-]+@[a-zA-Z\.]+\.[a-z]{1,5}$/;
+    let regexMail = /[a-zA-Z0-9._-]+@[a-zA-Z\.]+\.[a-z]{1,5}$/;
     let regexPrenomNom = /^[a-zA-Z0-9áàâäçéèêëîïöùûü._\s-]+$/;
 
     /**

@@ -13,14 +13,12 @@ function home(req, res) {
         userAdmin: req.user.isAdmin == 1? true : false,
         csrfToken: req.csrfToken()
     });
-    return
 }
 
 function get(req, res) {
     const flash = models.getFlash(req);
     models.destroyFlash(res);
     res.render('auth/login',{layout: 'layhome',errors : flash,csrfToken: req.csrfToken()})
-    return
 }
 
 // Login
@@ -30,7 +28,7 @@ function post(req, res, next) {
     let email = q.email;
     let password = q.password;
 
-    models.User.findOne(email).then(function(user){
+    models.User.findOne(email, function(user){
         
         if (user.length != 0){
             bcrypt.compare(password, user[0].password, function(err, result) {
@@ -44,7 +42,6 @@ function post(req, res, next) {
                     });
                     res.cookie('token', token, { maxAge: (jwtExpirySeconds*2)*1000});
                     res.redirect("/home");
-                    return
                 } else {
                     const flash = {
                         msg:"Mauvais email ou mot de passe.",
@@ -53,7 +50,6 @@ function post(req, res, next) {
                     };
                     models.setFlash(flash, res);
                     res.redirect('/login');
-                    return
                 }
             });
             return;
@@ -65,11 +61,9 @@ function post(req, res, next) {
             };
             models.setFlash(flash, res);
             res.redirect('/login');   
-            return
         }
     })
 }
-
 
 //Verify token
 function verifyToken(req, res, next){

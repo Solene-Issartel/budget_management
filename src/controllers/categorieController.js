@@ -25,7 +25,7 @@ async function get(req, res) {
             const flash = models.getFlash(req);
             models.destroyFlash(res);
             res.render("categories/categories_list", {col_1: col_1,col_2: col_2,col_3: col_3, errors: flash, userAdmin:req.user.isAdmin == 1? true : false, csrfToken: req.csrfToken()});
-            return;
+
         } catch (e){
             const flash = {
                 msg: e,
@@ -34,7 +34,6 @@ async function get(req, res) {
             };
             models.setFlash(flash, res);
             res.redirect('/home');
-            return;
         }
         
     } else {
@@ -55,7 +54,6 @@ async function create_get(req, res){
         const flash = models.getFlash(req);
         models.destroyFlash(res);
         res.render("categories/categories_create",{ userAdmin:req.user.isAdmin == 1? true : false, csrfToken: req.csrfToken(), errors: flash});
-        return;
     } else {
         const flash = {
             msg:"Vous n'avez pas les droits pour effectuer cette action.",
@@ -82,7 +80,6 @@ async function create_post(req, res){
             };
             models.setFlash(flash, res);
             res.redirect('/categories/create');
-            return;
         } else {
             let errors = services.product.checkNameRegex(q.name_categorie);
             if (errors.length > 0){
@@ -93,7 +90,6 @@ async function create_post(req, res){
                 };
                 models.setFlash(flash, res);
                 res.redirect('/categories/create');
-                return;
             } else { 
                 models.Categorie.create(q.name_categorie).then((product) => {
                     const flash = {
@@ -103,7 +99,6 @@ async function create_post(req, res){
                     };
                     models.setFlash(flash, res);
                     res.redirect('/categories');
-                    return;
                 })
             }
         }
@@ -130,7 +125,6 @@ function delete_post(id_req,req, res) {
             };
             models.setFlash(flash, res);
             res.redirect('/categories');
-            return;
     
         })
     } else {
@@ -164,7 +158,6 @@ async function update_get(id_req,req, res) {
             userAdmin:req.user.isAdmin == 1? true : false,
             csrfToken: req.csrfToken()
         });
-        return;
     } else {
         const flash = {
             msg:"Vous n'avez pas les droits pour effectuer cette action.",
@@ -196,7 +189,7 @@ function update_post(id_req,req, res) {
                 };
                 models.setFlash(flash, res);
                 res.redirect('/categories/update/'+id_req);
-                return;
+
             } else {
                 models.Categorie.update(id_req,q.name_categorie).then((cat) => {
                     const flash = {
@@ -206,7 +199,6 @@ function update_post(id_req,req, res) {
                     };
                     models.setFlash(flash, res);
                     res.redirect('/categories');
-                    return;
                 })
             }
         } else {
@@ -217,7 +209,6 @@ function update_post(id_req,req, res) {
             };
             models.setFlash(flash, res);
             res.redirect('/home',403)
-            return;
         }
     } else {
         return res.status(403).json(err.toString());

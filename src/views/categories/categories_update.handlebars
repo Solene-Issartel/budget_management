@@ -1,7 +1,7 @@
 <div class="custom_form">
     <div class="form-container">
         <form class="upForm" action='/categories/update/{{id_cat}}?_method=PUT' method="post">
-            <h2 class="title_form text-center">Modifier la catégorie.</h2>
+            <h2 class="title_form text-center">Modifier le produit.</h2>
             {{#if errors}}
                 <div class="alert {{errors.alert}}">
                     {{errors.msg}}
@@ -36,7 +36,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                Cette action est irréversible. Voulez-vous vraiment supprimer cette catégorie ?
+                Cette action est irréversible. Voulez-vous vraiment supprimer ce produit ?
             </div>
             <div class="modal-footer">
                 <form id="deleteForm" method="post" action="/categories/delete/{{id_cat}}?_method=DELETE">

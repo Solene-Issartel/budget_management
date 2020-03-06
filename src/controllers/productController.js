@@ -190,7 +190,6 @@ async function update_get(id_req,req, res) {
             userAdmin:req.user.isAdmin == 1? true : false,
             csrfToken: req.csrfToken(),
         });
-        return;
     } else {
         const flash = {
             msg:"Vous n'avez pas les droits pour effectuer cette action.",
@@ -221,7 +220,6 @@ function update_post(id_req,req, res) {
                 };
                 models.setFlash(flash, res);
                 res.redirect('/products/update/'+id_req);
-                return;
             } else {
                 models.Product.update(id_req,q.name_product,q.cat_product).then((product) => {
                     const flash = {
@@ -231,7 +229,6 @@ function update_post(id_req,req, res) {
                     };
                     models.setFlash(flash, res);
                     res.redirect('/products');
-                    return;
                 })
 
             }
@@ -243,8 +240,7 @@ function update_post(id_req,req, res) {
                 alert:"alert-danger"
             };
             models.setFlash(flash, res);
-            res.redirect('/home',403);
-            return;
+            res.redirect('/home',403)
         }
     } else {
         return res.status(403).json(err.toString());
@@ -254,7 +250,6 @@ function update_post(id_req,req, res) {
 async function get_all(req,res){
     let prod = await models.Product.findAll();
     res.send(prod);
-    return;
 }
 
 module.exports = {get, get_all,delete_post, create_get,create_post,update_get, update_post};
