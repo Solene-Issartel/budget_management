@@ -66,7 +66,7 @@ function sendMail(req,res){
                 service: 'gmail',
                 auth: {
                     user : process.env.GMAIL_USER_EMAIL,
-                    pass : prcess.env.GMAIL_USER_PASSWORD, 
+                    pass : process.env.GMAIL_USER_PASSWORD, 
                 },
                 tls: {
                     rejectUnautorized: false
