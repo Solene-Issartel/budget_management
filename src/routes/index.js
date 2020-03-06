@@ -40,7 +40,7 @@ let router = express.Router();
    * This route will "logout" the user (impossible with jsonwebtoken because it's stateless)
    */
   router.get('/logout', (req, res) => {
-      res.cookie('token', '', { maxAge: 0, httpOnly: true })
+      res.cookie('token', '', { maxAge: 0, httpOnly: true, secure:true })
       res.redirect("/login");
   });
 

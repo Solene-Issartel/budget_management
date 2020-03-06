@@ -1,7 +1,8 @@
 
 let models = require('../models');
 let nodemailer = require('nodemailer');
-let env = require('../env')
+let env = require('../env');
+let safe = require('safe-regex');
 
 function sortUsersByLetter(users,req,res){
     
@@ -37,14 +38,14 @@ function sortUsersByLetter(users,req,res){
 function sendMail(req,res){
     let email=req.body.email;
     let text=req.body.text;
-    if(checkMailRegex(email)!=undefined){
+    if(checkMailRegex(email,req,res)!=undefined){
         const flash = {
             msg:checkMailRegex(email),
             //type : alert-danger {errors}, alert-success {{success}}
             alert:"alert-warning"
         };
         models.setFlash(flash, res);
-        res.redirect('/home');
+        res.redirect('/home#contact');
         return;
     } else if (text.length==0){
         const flash = {
@@ -101,15 +102,26 @@ function sendMail(req,res){
  * Checks if email input is valid
  * 
  *  */
-function checkMailRegex(email) {
+function checkMailRegex(email,req,res) {
     let regexMail = /^[a-zA-Z0-9._-]+@[a-zA-Z\.]+\.[a-z]{1,5}$/;
     
-    /**
-     * Check if firstname and username are defined 
-     */
-    if (email.length == 0 || !regexMail.test(email)) {
-        return "Mail invalide (pas de caractères spéciaux).";
-    } 
+    if(!safe(regexMail)){
+        const flash = {
+            msg:"Alerte sécurité sur le site. Veuillez contacter un administrateur",
+            //type : alert-danger {errors}, alert-succes {{success}}
+            alert:"alert-danger"
+        };
+        models.setFlash(flash, res);
+        res.redirect('/logout');
+        return;
+    }else {
+        /**
+         * Check if firstname and username are defined 
+         */
+        if (email.length == 0 || !regexMail.test(email)) {
+            return "Mail invalide (pas de caractères spéciaux).";
+        }
+    }
 }
 
 module.exports = {sortUsersByLetter,sendMail,checkMailRegex};
