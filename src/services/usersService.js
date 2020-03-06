@@ -57,16 +57,30 @@ function sendMail(req,res){
         res.redirect('/home#contact');
         return
     } else {
-        let transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-                user : env.GMAIL_USER_EMAIL,
-                pass : env.GMAIL_USER_PASSWORD,
-            },
-            tls: {
-                rejectUnautorized: false
-            }
-        })
+        let transporter;
+        if(process.env.NODE_ENV == "production"){
+            transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                    user : process.env.GMAIL_USER_EMAIL,
+                    pass : prcess.env.GMAIL_USER_PASSWORD, 
+                },
+                tls: {
+                    rejectUnautorized: false
+                }
+            })
+        } else {
+            transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                    user : env.GMAIL_USER_EMAIL,
+                    pass : env.GMAIL_USER_PASSWORD,
+                },
+                tls: {
+                    rejectUnautorized: false
+                }
+            })
+        }
 
         let mailOptions = {
             to: env.GMAIL_USER_EMAIL,

@@ -42,7 +42,7 @@ function post(req, res, next) {
                     const token = jwt.sign({id,firstname,email,isAdmin},SECRET_KEY, {
                         algorithm: 'HS256',
                     });
-                    res.cookie('token', token, { maxAge: (jwtExpirySeconds*2)*1000});
+                    res.cookie('token', token, { maxAge: (jwtExpirySeconds*2)*1000, httpOnly : true, secure:true});
                     res.redirect("/home");
                     return
                 } else {
