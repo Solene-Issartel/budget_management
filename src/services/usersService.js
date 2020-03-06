@@ -1,8 +1,11 @@
 
 let models = require('../models');
 let nodemailer = require('nodemailer');
-let env = require('../env');
 let safe = require('safe-regex');
+
+if(process.env.NODE_ENV != "production"){
+    let env = require('../env');
+}
 
 function sortUsersByLetter(users,req,res){
     
