@@ -44,7 +44,7 @@ function post(req, res) {
                     if (err) throw err;
                     q.password = hash;
                     console.log(q)
-                    models.User.create(q.firstname, q.lastname, q.email, q.password, false).then(function(err,result){
+                    models.User.create(q.firstname, q.lastname, q.email, q.password, false).then(function(e,result){
                             const flash = {
                                 msg:"Compte créé avec succès. Vous pouvez désormais vous connecter.",
                                 //type : alert-danger {errors}, alert-succes {{success}}
