@@ -1,3 +1,17 @@
+body,html{
+  height: 100%;
+}
+
+footer{
+  position: absolute;
+  width: 100%;
+  bottom: auto;
+}
+
+div.container{
+  position: relative;
+}
+
 .register-photo {
   padding: 80px 0;
 }
@@ -201,6 +215,8 @@ section#contact .form-group #message {
 
 .cardList{
   margin-top: 3%;
+  border: solid 1px rgb(240, 146, 59);
+  border-radius: 8px;
 }
 
 .text-muted.sub_cat{
@@ -265,7 +281,17 @@ section#contact .form-group #message {
 }
 
 .topMargin {
-  margin-top:150px
+  margin-top:100px;
+  display: flex;
+	flex-direction: column;
+	min-height: 90%;
+}
+
+.topUser{
+  margin-top:80px;
+  display: flex;
+	flex-direction: column;
+	min-height: 90%;
 }
 
 .custom_title{
@@ -331,4 +357,23 @@ li.old_prod span{
 .prodlist{
   border: solid 1px darkgray;
   border-radius: 8px;
+}
+
+.userCard{
+  color: #f7d074;
+  font-family: 'Lato', sans-serif;
+}
+
+.userCard:hover{
+  color: #eb993c;
+}
+
+.delBut {
+  color: #d8300e;
+  cursor: pointer;
+}
+
+.delBut:hover {
+  color: #791e0b;
+  cursor: pointer;
 }

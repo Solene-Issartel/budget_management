@@ -1,41 +1,42 @@
 <section>
-    <div class="container"></div>
-</section>
-<div class="register-photo">
-    <div class="form-container">
-        <div class="image-holder"></div>
+    <div class="topUser container">
+        <div class="register-photo">
+            <div class="form-container">
+                <div class="image-holder"></div>
 
-        <form action="/register" method="post">
-            <h2 class="text-center">Créer un compte.</h2>
-            {{#each errors as | error |}}
-                <div class="alert alert-danger">
-                    {{error}}
-                </div>
-            {{/each}}
-            <div class="form-group">
-                <input id="firstname_input" class="form-control" type="text" name="firstname" placeholder="Prénom" required>
+                <form action="/register" method="post">
+                    <h2 class="text-center">Créer un compte.</h2>
+                    {{#each errors as | error |}}
+                        <div class="alert alert-danger">
+                            {{error}}
+                        </div>
+                    {{/each}}
+                    <div class="form-group">
+                        <input id="firstname_input" class="form-control" type="text" name="firstname" placeholder="Prénom" required>
+                    </div>
+                    <div class="form-group">
+                        <input id="lastname_input" class="form-control" type="text" name="lastname" placeholder="Nom" required>
+                    </div>
+                    <div class="form-group">
+                        <input id="email_input" class="form-control" type="email" name="email" placeholder="Email" required>
+                    </div>
+                    <div class="form-group">
+                        <input id="password_input" class="form-control" type="password" name="password" placeholder="Mot de passe" required>
+                        <small id="password_msg" class="form-text text-danger"></small>
+                    </div>
+                    <div class="form-group">
+                        <input id="password_confirm_input" class="form-control" type="password" name="passwordConfirm" placeholder="Confirmer le mot de passe" required>
+                        <small id="password_confirm_msg" class="form-text"></small>
+                    </div>
+                    
+                    <div class="form-group"><button id="submit_btn" class="btn btn-primary btn-block" type="submit"disabled>S'inscrire</button></div><a class="already" href="/login">Vous avez déjà un compte ? Connectez vous ici.</a>
+                    
+                    <input type="hidden" name="_csrf" value="{{csrfToken}}">
+                </form>    
             </div>
-            <div class="form-group">
-                <input id="lastname_input" class="form-control" type="text" name="lastname" placeholder="Nom" required>
-            </div>
-            <div class="form-group">
-                <input id="email_input" class="form-control" type="email" name="email" placeholder="Email" required>
-            </div>
-            <div class="form-group">
-                <input id="password_input" class="form-control" type="password" name="password" placeholder="Mot de passe" required>
-                <small id="password_msg" class="form-text text-danger"></small>
-            </div>
-            <div class="form-group">
-                <input id="password_confirm_input" class="form-control" type="password" name="passwordConfirm" placeholder="Confirmer le mot de passe" required>
-                <small id="password_confirm_msg" class="form-text"></small>
-            </div>
-            
-            <div class="form-group"><button id="submit_btn" class="btn btn-primary btn-block" type="submit"disabled>S'inscrire</button></div><a class="already" href="/login">Vous avez déjà un compte ? Connectez vous ici.</a>
-            
-            <input type="hidden" name="_csrf" value="{{csrfToken}}">
-        </form>    
+        </div>
     </div>
-</div>
+</section>
 <script>
 // Password validation
 var password_input = document.getElementById("password_input");

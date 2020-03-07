@@ -1,21 +1,98 @@
 <section class="topMargin">
     <div class="container">
-        <h2 style="margin-top:100px">Liste des utilisateurs.</h2>
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="text-uppercase section-heading">listes des utilisateurs</h2>
+                <h3 class="text-muted section-subheading">Gérez les utilisateurs : vous pouvez les modifier de leurs droits, les supprimer.</h3>
+            </div>
+        </div>
+        {{#if errors}}
+            <div class="alert {{errors.alert}}">
+                {{errors.msg}}
+            </div>
+        {{/if}}
+        <div class="row text-center">
+            <div class=" col-md-4">
+                {{#each col_1 as | list |}}
+
+                    <div class="cardList card">
+                        <div class="card-body">
+                            <h4 class="card-title"><a class="userCard card-link" href="/users/{{id}}">{{list.lastname}} {{list.firstname}}</a></h4>
+                        </div>
+                        
+                    </div>
+                {{/each}}
+                
+            </div>
+            <div class="col-md-4">
+                {{#each col_2 as | list |}}
+
+                    <div class="cardList card">
+                        <div class="card-body">
+                            <h4 class="card-title"><a class="userCard card-link" href="/users/{{id}}">{{list.lastname}} {{list.firstname}}</a></h4>
+                        </div>
+                    </div>
+                {{/each}}
+            </div>
+            <div class="col-md-4">
+                {{#each col_3 as | list |}}
+
+                    <div class="cardList card">
+                        <div class="card-body">
+                            <h4 class="card-title"><a class="userCard card-link" href="/users/{{id}}">{{list.lastname}} {{list.firstname}}</a></h4>
+                        </div>
+                        
+                    </div>
+                {{/each}}
+            </div>
+        </div>
+    </div>
+</section>
+
+{{!-- 
+<section class="topMargin">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="text-uppercase section-heading">Liste des utilisateurs</h2>
+                <h3 class="text-muted section-subheading">Gérez les utilisateurs : vous pouvez modifier leur droit, les supprimer.</h3>
+            </div>
+        </div>
         {{#if errors}}
             <div class="alert {{errors.alert}}">
                 {{errors.msg}}
             </div>
         {{/if}}
         <div class="row" style="margin-top:80px;margin-bottom:100px">
-            <ul class="list-group" style="width : 100%">
-                {{#each persons as | person |}}
-    
-                    <li class="lgi list-group-item" style="border-radius:10px;margin-top: 10px;padding-left: 70px;border : 1px solid orange;color: orange;">
-                        <a href="/users/{{id}}" style="color: rgb(255,165,0);">{{person.lastname}} {{firstname}}</a>
-                    </li>
-                
-                {{/each}}
-            </ul>
+            <div class="row text-center">
+                <div class=" col-md-4">
+                    {{#each list_1 as | list |}}
+                        <div class="cardList card">
+                            <div class="card-body">
+                                <a class="card-link" href="/users/{{id}}">{{list.lastname}} {{list.firstname}}</a>
+                            </div>
+                        </div>
+                    {{/each}}
+                </div>
+                <div class=" col-md-4">
+                    {{#each list_2 as | list |}}
+                        <div class="cardList card">
+                            <div class="card-body">
+                                <a class="card-link" href="/users/{{id}}">{{list.lastname}} {{list.firstname}}</a>
+                            </div>
+                        </div>
+                    {{/each}}
+                </div>
+                <div class=" col-md-4">
+                    {{#each list_3 as | list |}}
+                        <div class="cardList card">
+                            <div class="card-body">
+                                <a class="card-link" href="/users/{{id}}">{{list.lastname}} {{list.firstname}}</a>
+                            </div>
+                        </div>
+                    {{/each}}
+                </div>
+            </div>
         </div>
     </div>
-</section>
+</section> --}}

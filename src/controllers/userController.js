@@ -9,10 +9,22 @@ function get(req, res) {
     if(isAdmin){
         models.User.findAll().then((users)=>{
             let results = services.users.sortUsersByLetter(users,req,res);
-            console.log(results);
+            let i=0;
+            let list_1=[];
+            let list_2=[];
+            let list_3=[];
+            for(i;i<results.persons.length;i++){
+                if(i%3==0){
+                    list_1.push(results.persons[i]);
+                } else if(i%3==1){
+                    list_2.push(results.persons[i]);
+                } else {
+                    list_3.push(results.persons[i]);
+                }
+            }
             const flash = models.getFlash(req);
             models.destroyFlash(res);
-            res.render("users/users_list", {letters: results.letters, persons: results.persons, errors: flash, userAdmin: req.user.isAdmin == 1? true : false,csrfToken: req.csrfToken()});
+            res.render("users/users_list", {letters: results.letters, col_1 : list_1,col_2:list_2,col_3:list_3, errors: flash, userAdmin: req.user.isAdmin == 1? true : false,csrfToken: req.csrfToken()});
             return;
         });
         

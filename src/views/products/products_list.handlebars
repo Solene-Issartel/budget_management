@@ -12,18 +12,6 @@
             </div>
         {{/if}}
         <div class="row text-center">
-            {{!-- <div class=" col-md-4">
-                {{#each col_1 as | cat |}}
-
-                    <div class="cardList card">
-                        <div class="card-body">
-                            <h4 class="card-title">{{cat.name_categorie}}</h4><a class="card-link"href="/products/update/{{id_categorie}}">Modifier</a><a class="card-link" onclick="changeUrl({{id_categorie}})" data-toggle="modal" data-target="#DelProdModal">Supprimer</a>
-                        </div>
-                        
-                    </div>
-                {{/each}}
-                
-            </div> --}}
             
                 {{#each products}}
                     <div class="col-md-4 card_products">
@@ -32,24 +20,13 @@
                                 <div class="card-body">
                                     <h4 class="card-title">{{this.name_product}}</h4>
                                     <h3 class="text-muted sub_cat">Catégorie : {{this.name_categorie}}</h3>
-                                    <a class="card-link"href="/products/update/{{this.id_product}}">Modifier</a><a class="card-link" onclick="changeUrl({{this.id_product}})" data-toggle="modal" data-target="#DelProdModal">Supprimer</a>
+                                    <a class="card-link"href="/products/update/{{this.id_product}}">Modifier</a><a class="card-link delBut" onclick="changeUrl({{this.id_product}})" data-toggle="modal" data-target="#DelProdModal">Supprimer</a>
                                 </div>
                                 
                             </div>
                         {{/each}}
                     </div>
                 {{/each}}
-            {{!-- <div class="col-md-4">
-                {{#each col_3 as | cat |}}
-
-                    <div class="cardList card">
-                        <div class="card-body">
-                            <h4 class="card-title">{{cat.name_categorie}}</h4><a class="card-link"href="/products/update/{{id_categorie}}">Modifier</a><a class="card-link" onclick="changeUrl({{id_categorie}})" data-toggle="modal" data-target="#DelProdModal">Supprimer</a>
-                        </div>
-                        
-                    </div>
-                {{/each}}
-            </div> --}}
         </div>
     </div>
     <!-- Modal -->
