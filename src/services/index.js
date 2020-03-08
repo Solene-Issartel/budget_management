@@ -7,7 +7,7 @@ async function init() {
 
     if(process.env.NODE_ENV == "production") {
         try {
-            password="adminBudman";
+            password=env.process.SUPER_USER_PASSWORD;
             bcrypt.genSalt(10, (err, salt) => {
                 bcrypt.hash(password, salt, async (error, hash) => {
                     await User.createSuperUser("Admin", "Master", hash, "budman.assist@gmail.com", true);

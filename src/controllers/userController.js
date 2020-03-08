@@ -47,7 +47,6 @@ function get(req, res) {
  * Returns the page of the given user's information (only for admins)
  */
 function user_info_get(id_req,req, res) {
-    let id_user = req.user.id; //recover id from token
     if(req.user.isAdmin){
             models.User.findById(id_req).then((user) => {
                 console.log(user)
