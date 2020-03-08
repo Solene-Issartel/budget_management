@@ -1,7 +1,9 @@
 let models = require('../models');
 let services = require('../services');
 
-//GESTION 403 SI EST CONNECTE OU PAS 
+/**
+ * Give the product list (only for admins)
+ */ 
 async function get(req, res) {
     let isAdmin = req.user.isAdmin;
     if(isAdmin){
@@ -25,45 +27,7 @@ async function get(req, res) {
             console.log(prodByCat.length)
             const flash = models.getFlash(req);
             models.destroyFlash(res);
-            res.render("products/products_list", {products: prodByCat, layout: "layapp",errors: flash,csrfToken: req.csrfToken(), userAdmin:req.user.isAdmin == 1? true : false});
-            
-
-            // const categories = await models.Categorie.findAll();
-            // const promises = categories.map((cat) => {
-            //     ctgs.push(cat);
-            //     id_cat = cat.id_categorie;
-
-            //     return models.Product.findByCategorie(id_cat).then((prods) => {
-            //         prods.forEach(prod => {
-            //             product = {
-            //                 id: prod.id_product,
-            //                 name: prod.name_product,
-            //                 cat: prod.cat_product
-            //             }
-            //             products.push(product);
-            //         });
-            //         return Promise.resolve();
-            //     });
-            // });
-
-            // Promise.all(promises).then(() => {
-                
-            //     console.log(products)
-            //     console.log(categories)
-            //     res.render("products/products_list", {categories: ctgs, products: products, userAdmin:req.user.isAdmin == 1? true : false});
-
-            // });
-
-        // } catch (e){
-        //     console.log("dfgh")
-        //     const flash = {
-        //         msg: e,
-        //         //type : alert-danger {errors}, alert-succes {{success}}
-        //         alert:"alert-danger"
-        //     };
-        //     models.setFlash(flash, res);
-        //     res.redirect('/home');
-        // }
+            res.render("products/products_list", {products: prodByCat, layout: "layapp",errors: flash,csrfToken: req.csrfToken(), userAdmin:req.user.isAdmin == 1? true : false, title : "Tous les produits"});
         
     } else {
         const flash = {
@@ -77,13 +41,16 @@ async function get(req, res) {
     }
 }
 
+/**
+ * Returns the page for create a new product
+ */
 async function create_get(req, res){
     let isAdmin = req.user.isAdmin;
     if(isAdmin){
         let categories = await services.product.setOptionsSelect();
         const flash = models.getFlash(req);
         models.destroyFlash(res);
-        res.render("products/products_create",{ userAdmin:req.user.isAdmin == 1? true : false, errors: flash, categories: categories,csrfToken: req.csrfToken()});
+        res.render("products/products_create",{ userAdmin:req.user.isAdmin == 1? true : false, errors: flash, categories: categories,csrfToken: req.csrfToken(),title : "Créer un produit"});
     } else {
         const flash = {
             msg:"Vous n'avez pas les droits pour effectuer cette action.",
@@ -96,6 +63,9 @@ async function create_get(req, res){
     }
 }
 
+/**
+ * CREATE a new product (only for admins)
+ */
 async function create_post(req, res){
     let isAdmin = req.user.isAdmin;
     if(isAdmin){
@@ -143,6 +113,9 @@ async function create_post(req, res){
     }
 }
 
+/**
+ * DELETE the given product (only for admins)
+ */
 function delete_post(id_req,req, res) {
     let isAdmin = req.user.isAdmin;
     if(isAdmin){
@@ -170,7 +143,7 @@ function delete_post(id_req,req, res) {
 }
 
 /**
- * UPDATE product (admin)
+ * UPDATE product (only for admins)
  */
 async function update_get(id_req,req, res) {
     let id = req.user.id; //recover id from token
@@ -189,6 +162,7 @@ async function update_get(id_req,req, res) {
             errors:flash,
             userAdmin:req.user.isAdmin == 1? true : false,
             csrfToken: req.csrfToken(),
+            title : "Modifier un produit"
         });
         return;
     } else {
@@ -205,7 +179,7 @@ async function update_get(id_req,req, res) {
 }
 
 /**
- * UPDATE modify profile in database (admin cannot update users)
+ * UPDATE the given product (only for admins)
  */
 function update_post(id_req,req, res) {
     let id = req.user.id; //recover id from token
@@ -251,6 +225,9 @@ function update_post(id_req,req, res) {
     }
 }
 
+/**
+ * Send all the products from the database
+ */
 async function get_all(req,res){
     let prod = await models.Product.findAll();
     res.send(prod);

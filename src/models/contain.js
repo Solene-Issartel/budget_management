@@ -6,7 +6,7 @@ class Contain {
 
     static async create(id_l,id_p,price) {
         return new Promise( ( resolve, reject ) => {
-            co.query('INSERT INTO contains SET id_list = ?, id_product = ?, price_product = ?', [id_l,id_p,price], ( err, result ) => {
+            co.query('INSERT INTO contains (id_list,id_product,price_product) VALUES (?,?,?)', [id_l,id_p,price], ( err, result ) => {
                 if ( err )
                     return reject( err );
                 resolve( result );

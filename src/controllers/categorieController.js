@@ -1,7 +1,9 @@
 let models = require('../models');
 let services = require('../services');
 
-//GESTION 403 SI EST CONNECTE OU PAS 
+/**
+ * Returns the lists of all the categories from the database
+ */ 
 async function get(req, res) {
     let isAdmin = req.user.isAdmin;
     if(isAdmin){
@@ -24,7 +26,7 @@ async function get(req, res) {
 
             const flash = models.getFlash(req);
             models.destroyFlash(res);
-            res.render("categories/categories_list", {col_1: col_1,col_2: col_2,col_3: col_3, errors: flash, userAdmin:req.user.isAdmin == 1? true : false, csrfToken: req.csrfToken()});
+            res.render("categories/categories_list", {col_1: col_1,col_2: col_2,col_3: col_3, errors: flash, userAdmin:req.user.isAdmin == 1? true : false, csrfToken: req.csrfToken(),title : "Toutes les catégories"});
             return;
         } catch (e){
             const flash = {
@@ -49,12 +51,15 @@ async function get(req, res) {
     }
 }
 
+/**
+ * Returns the page to create a new categorie
+ */
 async function create_get(req, res){
     let isAdmin = req.user.isAdmin;
     if(isAdmin){
         const flash = models.getFlash(req);
         models.destroyFlash(res);
-        res.render("categories/categories_create",{ userAdmin:req.user.isAdmin == 1? true : false, csrfToken: req.csrfToken(), errors: flash});
+        res.render("categories/categories_create",{ userAdmin:req.user.isAdmin == 1? true : false, csrfToken: req.csrfToken(), errors: flash,title : "Créer une catégorie"});
         return;
     } else {
         const flash = {
@@ -68,6 +73,9 @@ async function create_get(req, res){
     }
 }
 
+/**
+ * CREATE a new categorie (only for admins)
+ */
 async function create_post(req, res){
     let isAdmin = req.user.isAdmin;
     let q = req.body;
@@ -119,6 +127,9 @@ async function create_post(req, res){
     }
 }
 
+/**
+ * DELETE the given categorie (only for admins)
+ */
 function delete_post(id_req,req, res) {
     let isAdmin = req.user.isAdmin;
     if(isAdmin){
@@ -147,7 +158,7 @@ function delete_post(id_req,req, res) {
 }
 
 /**
- * UPDATE product (admin)
+ * Returns the page to update the given categorie
  */
 async function update_get(id_req,req, res) {
     let id = req.user.id; //recover id from token
@@ -162,7 +173,8 @@ async function update_get(id_req,req, res) {
             name: cat[0].name_categorie,
             errors:flash,
             userAdmin:req.user.isAdmin == 1? true : false,
-            csrfToken: req.csrfToken()
+            csrfToken: req.csrfToken(),
+            title : "Midifier une catégorie"
         });
         return;
     } else {
@@ -179,7 +191,7 @@ async function update_get(id_req,req, res) {
 }
 
 /**
- * UPDATE modify profile in database (admin cannot update users)
+ * UPDATE the given categorie (only for admins)
  */
 function update_post(id_req,req, res) {
     let id = req.user.id; //recover id from token

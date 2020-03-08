@@ -2,6 +2,9 @@ var models = require('../../models');
 var bcrypt = require('bcrypt');
 let services = require('../../services');
 
+/**
+ * Save the new user from his registration
+ */
 function post(req, res) {
     let q = req.body;
     /**
@@ -24,7 +27,8 @@ function post(req, res) {
             res.render("auth/register", {
                 errors: errors,
                 layout: 'layhome',
-                csrfToken: req.csrfToken() 
+                csrfToken: req.csrfToken(),
+                title : "Inscription" 
             });
             return;
         } else {
@@ -65,11 +69,14 @@ function post(req, res) {
     }
 }
 
+/**
+ * Return the registration page
+ */
 function get(req, res) {
     const flash = models.getFlash(req);
     models.destroyFlash(res);
     console.log(flash)
-    res.render('auth/register', {layout: 'layhome',errors: flash,csrfToken: req.csrfToken() });
+    res.render('auth/register', {layout: 'layhome',errors: flash,csrfToken: req.csrfToken(),title : "Inscription"  });
     return;
 }
 

@@ -1,6 +1,7 @@
 let userController = require('../controllers/userController');
 let login = require('../controllers/auth/login');
 const express = require('express');
+const services = require('../services')
 let router = express.Router();
 
   /**
@@ -33,6 +34,6 @@ let router = express.Router();
   /**
    * USer send a mail to the admin
    */
-  router.post('/sendMail', login.verifyToken, userController.sendMail);
+  router.post('/sendMail', login.verifyToken, services.users.sendMail);
 
 module.exports = router;

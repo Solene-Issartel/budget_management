@@ -3,7 +3,9 @@ let services = require('../services');
 let bcrypt = require('bcrypt');
 let nodemailer = require('nodemailer');
 
-
+/**
+ * Give the page to show allthe users (only for admins)
+ */
 function get(req, res) {
     let isAdmin = req.user.isAdmin;
     if(isAdmin){
@@ -24,7 +26,7 @@ function get(req, res) {
             }
             const flash = models.getFlash(req);
             models.destroyFlash(res);
-            res.render("users/users_list", {letters: results.letters, col_1 : list_1,col_2:list_2,col_3:list_3, errors: flash, userAdmin: req.user.isAdmin == 1? true : false,csrfToken: req.csrfToken()});
+            res.render("users/users_list", {letters: results.letters, col_1 : list_1,col_2:list_2,col_3:list_3, errors: flash, userAdmin: req.user.isAdmin == 1? true : false,csrfToken: req.csrfToken(),title : "Tous les utilisateurs"});
             return;
         });
         
@@ -41,16 +43,18 @@ function get(req, res) {
     
 }
 
+/**
+ * Returns the page of the given user's information (only for admins)
+ */
 function user_info_get(id_req,req, res) {
     let id_user = req.user.id; //recover id from token
-    if(id_user){
-        if(req.user.isAdmin){
+    if(req.user.isAdmin){
             models.User.findById(id_req).then((user) => {
                 console.log(user)
                 const flash = models.getFlash(req);
                 models.destroyFlash(res);
                 let isAdmin = user[0].isAdmin==1 ? true : false; //true if the user that we are looking for is an admin
-                res.render('users/users_info', {id: id_req,firstname : user[0].firstname, lastname : user[0].lastname, email: user[0].email, isAdmin: isAdmin, errors: flash, userAdmin: req.user.isAdmin == 1? true : false,csrfToken: req.csrfToken()});
+                res.render('users/users_info', {id: id_req,firstname : user[0].firstname, lastname : user[0].lastname, email: user[0].email, isAdmin: isAdmin, errors: flash, userAdmin: req.user.isAdmin == 1? true : false,csrfToken: req.csrfToken(),title : "Informations sur l'utilisateur"});
                 return;
             })
         } else {
@@ -63,18 +67,11 @@ function user_info_get(id_req,req, res) {
             res.redirect('/home',403);
             return;
         }
-    } else {
-        const flash = {
-            msg:"Vous devez vous identifer pour faire cette action.",
-            //type : alert-danger {errors}, alert-succes {{success}}
-            alert:"alert-danger"
-        };
-        models.setFlash(flash, res);
-        res.redirect(401,'/login');
-        return;
-    }
 }
 
+/**
+ * Set the rights of the given users
+ */
 function user_info_post(id_req,req, res) {
     let isAd = req.body.admin == undefined ? 0 : 1;
     let id_user = req.user.id; //recover id from token
@@ -113,11 +110,10 @@ function user_info_post(id_req,req, res) {
 }
 
 /**
- * UPDATE user profile (admin cannot update users)
+ * Returns user profile page
  */
 function update_get(req, res) {
     let id = req.user.id; //recover id from token
-    if(id){
         models.User.findById(id).then((user) => {
             const flash = models.getFlash(req);
             models.destroyFlash(res);
@@ -129,25 +125,16 @@ function update_get(req, res) {
                 email: user[0].email,
                 userAdmin: req.user.isAdmin == 1? true : false,
                 errors : flash,
-                csrfToken: req.csrfToken()
+                csrfToken: req.csrfToken(),
+                title : "Votre profil"
             });
             return;
         })
-    } else {
-        const flash = {
-            msg:"Vous n'avez pas les droits pour effectuer cette action.",
-            //type : alert-danger {errors}, alert-succes {{success}}
-            alert:"alert-danger"
-        };
-        models.setFlash(flash, res);
-        res.redirect(403,'/home');
-        return;
-    }
-    
+   
 }
 
 /**
- * UPDATE modify profile in database (admin cannot update users)
+ * UPDATE profile
  */
 function update_post(req, res) {
     let id = req.user.id; //recover id from token
@@ -217,8 +204,8 @@ function update_post(req, res) {
 }
 
 /**
- * UPDATE user profile (admin cannot update users)
- * from : var to know if the form is from the user (from = true) or delete by an admin (from = undefined)
+ * DELETE user profile
+ * Variable from : it's a var to know if the form is from the user = he decides to delete his account (from = true) or delete by an admin (from = false)
  */
 function delete_account(id_req,from,req, res) {
     let id_user = req.user.id; //recover id from token
@@ -281,48 +268,5 @@ function delete_account(id_req,from,req, res) {
     }
 }
 
-async function sendMail(){
-    let email=req.body.email;
-    let text=req.body.text;
-    let transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user : process.env.GMAIL_USER_EMAIL,
-            pass : process.env.GMAIL_USER_PASSWORD,
-        },
-        tls: {
-            rejectUnautorized: false
-        }
-    })
 
-    let mailOptions = {
-        from: email,
-        to: process.env.GMAIL_USER_EMAIL,
-        subject: "BUDMAN : Nouvelle demande d'un utilisateur",
-        text: "<p>"+text+"</p>",
-    }
-
-    transporter.sendMail(mailOptions, function(err,info){
-        if(err){
-            const flash = {
-                msg:"Un problème est survenu. Veuillez rééssayer ultérieurement.",
-                //type : alert-danger {errors}, alert-success {{success}}
-                alert:"alert-danger"
-            };
-            models.setFlash(flash, res);
-        } else {
-            const flash = {
-                msg:"Votre message a été transmis avec succès.",
-                //type : alert-danger {errors}, alert-success {{success}}
-                alert:"alert-success"
-            };
-            models.setFlash(flash, res);
-        }
-
-        res.redirect('/home');
-        return;
-        
-    })
-}
-
-module.exports = {get, user_info_post, user_info_get, update_get, update_post, delete_account,sendMail};
+module.exports = {get, user_info_post, user_info_get, update_get, update_post, delete_account};

@@ -2,9 +2,9 @@
 let models = require('../models');
 let nodemailer = require('nodemailer');
 let safe = require('safe-regex');
-
+let env;
 if(process.env.NODE_ENV != "production"){
-    let env = require('../env');
+    env = require('../env');
 }
 
 function sortUsersByLetter(users,req,res){

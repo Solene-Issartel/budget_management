@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-lg-12 text-center">
                 <h2 class="text-uppercase section-heading">listes des categories</h2>
-                <h3 class="text-muted section-subheading">Gérez les catégories : vous pouvez les modifier, les supprimer, <a href="/categories/create">en ajouter</a>.</h3>
+                <h3 class="text-muted section-subheading">Gérez les catégories : vous pouvez les modifier, les supprimer, <a class="addLink" href="/categories/create">en ajouter</a>.</h3>
             </div>
         </div>
         {{#if errors}}
@@ -29,7 +29,7 @@
 
                     <div class="cardList card">
                         <div class="card-body">
-                            <h4 class="card-title">{{cat.name_categorie}}</h4><a class="card-link"href="/categories/update/{{id_categorie}}">Modifier</a><a class="card-link" onclick="changeUrl({{id_categorie}})" data-toggle="modal" data-target="#DelCatModal">Supprimer</a>
+                            <h4 class="card-title">{{cat.name_categorie}}</h4><a class="card-link"href="/categories/update/{{id_categorie}}">Modifier</a><a class="card-link delBut" onclick="changeUrl({{id_categorie}})" data-toggle="modal" data-target="#DelCatModal">Supprimer</a>
                         </div>
                         
                     </div>
@@ -40,7 +40,7 @@
 
                     <div class="cardList card">
                         <div class="card-body">
-                            <h4 class="card-title">{{cat.name_categorie}}</h4><a class="card-link"href="/categories/update/{{id_categorie}}">Modifier</a><a class="card-link" onclick="changeUrl({{id_categorie}})" data-toggle="modal" data-target="#DelCatModal">Supprimer</a>
+                            <h4 class="card-title">{{cat.name_categorie}}</h4><a class="card-link"href="/categories/update/{{id_categorie}}">Modifier</a><a class="card-link delBut" onclick="changeUrl({{id_categorie}})" data-toggle="modal" data-target="#DelCatModal">Supprimer</a>
                         </div>
                         
                     </div>

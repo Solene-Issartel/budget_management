@@ -7,7 +7,7 @@ class Categorie {
 
     static async create(name_cat) {
         return new Promise( ( resolve, reject ) => {
-            co.query('INSERT INTO categories SET name_categorie = ?', [name_cat], ( err, result ) => {
+            co.query('INSERT INTO categories (name_categorie) VALUES (?)', [name_cat], ( err, result ) => {
                 if ( err )
                     return reject( err );
                 resolve( result );

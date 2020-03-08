@@ -15,7 +15,7 @@
                         <h6 class="text-muted card-subtitle mb-2">Ces produits sont ceux que vous avez choisis plusieurs fois durant les 3 derniers mois</h6>
                         <ul class="list-group">
                             {{#each products as | prod |}}
-                                <li id="{{prod.id_product}}"class="ols_prod list-group-item"><span id="tags2">{{prod.name_product}}</span>
+                                <li id="{{prod.id_product}}"class="old_prod list-group-item"><span id="tags2">{{prod.name_product}}</span>
                                 <input type="hidden" id="tagsID2" id_prod="{{prod.id_product}}">
                                 <div onclick='addProduct("{{prod.name_product}}",{{prod.id_product}})'><i class="icon-list fa fa-plus"></i></div></li>
                             {{/each}}

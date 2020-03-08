@@ -1,9 +1,18 @@
 let jwt = require('jsonwebtoken');
-let SECRET_KEY="aNdRgUjX"; //random key
+let JWT_SECRET_KEY="";
+if(process.env.NODE_ENV == "production"){
+    JWT_SECRET_KEY=process.env.JWT_SECRET_KEY
+} else {
+    let env= require('../../env');
+    JWT_SECRET_KEY=env.JWT_SECRET_KEY 
+}
 let jwtExpirySeconds = 3600;
 let models = require('../../models');
 let bcrypt = require ('bcrypt'); 
 
+/**
+ * Returns the connected users home page
+ */
 function home(req, res) {
     const flash = models.getFlash(req);
     models.destroyFlash(res);
@@ -11,19 +20,23 @@ function home(req, res) {
         firstname: req.user.firstname,
         errors: flash,
         userAdmin: req.user.isAdmin == 1? true : false,
-        csrfToken: req.csrfToken()
+        csrfToken: req.csrfToken(),
+        title : "Page d'accueil"
     });
     return
 }
 
+/**
+ * Returns the login page
+ */
 function get(req, res) {
     const flash = models.getFlash(req);
     models.destroyFlash(res);
-    res.render('auth/login',{layout: 'layhome',errors : flash,csrfToken: req.csrfToken()})
+    res.render('auth/login',{layout: 'layhome',errors : flash,csrfToken: req.csrfToken(),title : "Connexion"})
     return
 }
 
-// Login
+// Login user
 function post(req, res, next) {
     let q = req.body;
 
@@ -39,10 +52,10 @@ function post(req, res, next) {
                     let firstname = user[0].firstname;
                     let isAdmin = user[0].isAdmin == 1 ? true : false;
                     
-                    const token = jwt.sign({id,firstname,email,isAdmin},SECRET_KEY, {
+                    const token = jwt.sign({id,firstname,email,isAdmin},JWT_SECRET_KEY, {
                         algorithm: 'HS256',
                     });
-                    res.cookie('token', token, { maxAge: (jwtExpirySeconds*2)*1000, httpOnly : true, secure:true});
+                    res.cookie('token', token, { maxAge: (jwtExpirySeconds*2)*1000, httpOnly : true, secure : true});
                     res.redirect("/home");
                     return
                 } else {
@@ -85,7 +98,7 @@ function verifyToken(req, res, next){
             models.setFlash(flash, res);
             res.redirect('/login',401);   
         }
-        const decrypt = jwt.verify(token, SECRET_KEY);
+        const decrypt = jwt.verify(token, JWT_SECRET_KEY);
         req.user = {
             id: decrypt.id,
             firstname: decrypt.firstname,
@@ -99,4 +112,4 @@ function verifyToken(req, res, next){
     }
 }
 
-module.exports = {home,post, get, verifyToken, SECRET_KEY};
+module.exports = {home,post, get, verifyToken};

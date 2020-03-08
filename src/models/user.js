@@ -8,7 +8,18 @@ class User{
     static create(firstname, lastname, email, password, isAdmin) {
         return new Promise( ( resolve, reject ) => {
             isAdmin = isAdmin ? true : false;
-            co.query('INSERT INTO users SET firstname = ?, lastname = ?, email = ?, password = ?, isAdmin = ?', [firstname,lastname,email,password,isAdmin], (err,result) => {
+            co.query('INSERT INTO users (firstname,lastname,email,password,isAdmin) VALUES (?,?,?,?,?)', [firstname,lastname,email,password,isAdmin], (err,result) => {
+                if ( err )
+                    return reject( err );
+                resolve( result );
+            } );
+        } );
+    }
+
+    static createSuperUser(firstname, lastname, email, password, isAdmin) {
+        return new Promise( ( resolve, reject ) => {
+            isAdmin = isAdmin ? true : false;
+            co.query("INSERT INTO users (firstname,lastname,email,password,isAdmin) SELECT ?,?,?,?,? FROM users WHERE NOT EXISTS ( SELECT 0 FROM users WHERE email=?) LIMIT 1 ", [firstname,lastname,email,password,isAdmin,email], (err,result) => {
                 if ( err )
                     return reject( err );
                 resolve( result );

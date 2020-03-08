@@ -8,6 +8,10 @@ footer{
   bottom: auto;
 }
 
+header.masthead {
+  background-image:url('/img/gb_1.jpg');
+}
+
 div.container{
   position: relative;
 }
@@ -127,6 +131,7 @@ div.container{
 }
 
 .navbar-brand {
+  color:#f5c248 !important;
   font-family: 'Kaushan Script', sans-serif;
   display: inline-block;
   padding-top: 0.3125rem;
@@ -139,19 +144,25 @@ div.container{
   .nav-link {
     font-family: 'Montserrat', sans-serif;
     font-size: 13px;
-    color: white;
+    color: white !important;
+  }
+
+  .nav-link:hover{
+    color:hsla(0,0%,100%,.75) !important;
   }
 
   .nav-link#highlight {
-    color: #ee7f09;
+    color: #ee7f09 !important;
   }
 
   .nav-link#highlight:hover {
-    color: #ca6901;
+    color: #ca6901 !important;
   }
 
   .navbar-brand:hover, .navbar-brand:focus {
-    text-decoration: none; }
+    text-decoration: none;
+    color:#f5c248 !important;
+  }
 
     h3.section-subheading{
     font-size: 15px;
@@ -369,11 +380,27 @@ li.old_prod span{
 }
 
 .delBut {
-  color: #d8300e;
+  color: #d8300e !important;
   cursor: pointer;
 }
 
 .delBut:hover {
-  color: #791e0b;
+  color: #791e0b !important;
   cursor: pointer;
+}
+
+a {
+  color: rgb(155, 129, 113) !important;
+}
+
+a:hover {
+  color: #a06d44 !important;
+}
+
+.addLink{
+  color:rgb(252, 42, 88) !important;
+}
+
+.addLink:hover{
+  color:rgb(209, 2, 47) !important;
 }
