@@ -3,6 +3,9 @@ let product = require('./productService')
 let users = require('./usersService')
 let bcrypt = require('bcrypt')
 
+/**
+ * Create the super user of the web site the first time the production version is launched
+ */
 async function init() {
 
     if(process.env.NODE_ENV == "production") {

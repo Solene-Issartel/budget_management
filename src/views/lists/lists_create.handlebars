@@ -1,5 +1,11 @@
-<section style="margin-top:250px">
+<section class='topMargin' style="margin-top:250px">
     <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="text-uppercase section-heading">Créez votre liste personnalisée</h2>
+                <h3 class="text-muted section-subheading">Veuillez choisir des types de produits dans le bandeau de recherche, puis cliquez sur valider. Si le produit se trouve déjà dans le bandeau de gauche, alors cliquez sur le + pour l'ajouter. Si vous désirez supprimer un produit de votre liste, veuillez cliquer sur la croix.</h3>
+            </div>
+        </div>
         <div class="row align-items-center">
             <div class="col-md-6"><input class="myAutocomplete" id="tags"><button class="btn btn-primary" onclick="addFromAutocomplete()"type="button">Ajouter</button>
                 <input type="hidden" id="tagsID">
@@ -59,7 +65,7 @@
             });
         })
         .fail(function(XMLHttpRequest, textStatus, errorThrown) { 
-        console.log("Status: " + textStatus); console.log("Error: " + errorThrown);
+        console.log("Status: " + textStatus); console.error("Error: " + errorThrown);
         }) 
 
         

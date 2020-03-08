@@ -24,7 +24,6 @@ async function get(req, res) {
                 }
             }
 
-            console.log(prodByCat.length)
             const flash = models.getFlash(req);
             models.destroyFlash(res);
             res.render("products/products_list", {products: prodByCat, layout: "layapp",errors: flash,csrfToken: req.csrfToken(), userAdmin:req.user.isAdmin == 1? true : false, title : "Tous les produits"});

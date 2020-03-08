@@ -329,6 +329,7 @@ section#contact .form-group #message {
 .icon-list {
   float: right;
   vertical-align:middle; 
+  margin-left: 50%;
 }
 
 li.old_prod span{
@@ -371,12 +372,12 @@ li.old_prod span{
 }
 
 .userCard{
-  color: #f7d074;
+  color: #f7d074 !important;
   font-family: 'Lato', sans-serif;
 }
 
 .userCard:hover{
-  color: #eb993c;
+  color: #eb993c !important;
 }
 
 .delBut {
@@ -403,4 +404,20 @@ a:hover {
 
 .addLink:hover{
   color:rgb(209, 2, 47) !important;
+}
+
+.ui-helper-hidden-accessible, #ui-id-1 { 
+  display:none; 
+}
+
+.ui-autocomplete {
+  background: #ffffff;
+  text-decoration: none;
+  width: 35%;
+  border-radius: 5px;
+  border: solid 0.5px black;
+}
+
+.ui-menu .ui-menu-item div{
+  list-style: none;
 }

@@ -1,13 +1,18 @@
 <section class="topMargin">
     <div class="container">
         <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="text-uppercase section-heading">Modifiez votre liste personnalisée</h2>
+                <h3 class="text-muted section-subheading">Veuillez choisir des types de produits dans le bandeau de recherche, puis cliquez sur valider. Si le produit se trouve déjà dans le bandeau de gauche, alors cliquez sur le + pour l'ajouter. Si vous désirez supprimer un produit de votre liste, veuillez cliquer sur la croix.</h3>
+            </div>
+        </div>
+        <div class="row align-items-center">
             <div class="col-md-6">
-                <div class="row align-items-center">
                     <input class="myAutocomplete" id="tags">
                     <button class="btn btn-primary" onclick="addFromAutocomplete()"type="button">Ajouter</button>
                     <input type="hidden" id="tagsID">
                     <div class="msg"></div>
-                </div>
+                
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Sélection de vos derniers produits</h4>
@@ -30,7 +35,7 @@
                             <li id_prod='{{up.id_product}}'class='list-group-item'>
                                 <span>{{up.name_product}}</span>
                                 <div class='row align-items-center price_prod' class='position: absolute;'>
-                                    <input class='price_prod' name='prices' type='number' step='0.01' min='0' required/>
+                                    <input class='price_prod' name='prices' type='number' step='0.01' min='0' value="{{up.price_product}}" required/>
                                     <div id='cross"+id_p+"'><p>€</p></div><i onclick='removeProduct({{up.id_product}})' class='icon-list fa fa-times'></i>
                                 </div>
                                 <input type='hidden' name='ids' value='{{up.id_product}}'>
@@ -60,7 +65,6 @@
         })
         .done(function(data){
             let prodTags = data.map(func)
-            console.log(prodTags)
             $(".myAutocomplete").autocomplete({
                 source: prodTags,
                 select: function (event, ui) {
@@ -70,7 +74,7 @@
             });
         })
         .fail(function(XMLHttpRequest, textStatus, errorThrown) { 
-        console.log("Status: " + textStatus); console.log("Error: " + errorThrown);
+        console.log("Status: " + textStatus); console.error("Error: " + errorThrown);
         }) 
 
         $(".price_prod").bind('keyup mouseup', function () {

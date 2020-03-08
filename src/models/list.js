@@ -7,10 +7,8 @@ class List {
         return new Promise( ( resolve, reject ) => {
             let d=new Date();
             price =parseFloat(price)
-            console.log(price)
 
             co.query('INSERT INTO lists (total_price_list,date_list,id_user) VALUES (?,?,?)', [price,d,id_user], ( err, result ) => {
-                console.log(result)
                 if ( err )
                     return reject( err );
                 resolve( result );

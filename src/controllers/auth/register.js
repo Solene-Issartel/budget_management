@@ -47,7 +47,6 @@ function post(req, res) {
                   bcrypt.hash(q.password, salt, (error, hash) => {
                     if (err) throw err;
                     q.password = hash;
-                    console.log(q)
                     models.User.create(q.firstname, q.lastname, q.email, q.password, false).then(function(e,result){
                             const flash = {
                                 msg:"Compte créé avec succès. Vous pouvez désormais vous connecter.",
@@ -75,7 +74,6 @@ function post(req, res) {
 function get(req, res) {
     const flash = models.getFlash(req);
     models.destroyFlash(res);
-    console.log(flash)
     res.render('auth/register', {layout: 'layhome',errors: flash,csrfToken: req.csrfToken(),title : "Inscription"  });
     return;
 }

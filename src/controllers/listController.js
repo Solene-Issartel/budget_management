@@ -83,11 +83,9 @@ async function create_post(req, res){
     let id_user = req.user.id;
     
     let q = req.body;
-    //console.log(q.prices)
     let i=0;
     let total=0;
     if(q.prices){
-        //console.log(q.prices)
         if(typeof q.prices === 'string') {
             total = parseFloat(q.prices);
         } else {
@@ -145,7 +143,6 @@ async function create_post(req, res){
 function delete_post(id_req,req, res){
     let id_user = req.user.id;
     models.List.findById(id_req).then((list)=>{
-        console.log(list)
         if(id_user==list[0].id_user){ 
             models.List.delete(id_req).then(()=>{
                 const flash = {

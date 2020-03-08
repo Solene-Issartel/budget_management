@@ -79,7 +79,6 @@ async function create_get(req, res){
 async function create_post(req, res){
     let isAdmin = req.user.isAdmin;
     let q = req.body;
-    console.log(q)
     if(isAdmin){
         let cat = await models.Categorie.findOne(q.name_categorie);
         if(cat.length > 0){

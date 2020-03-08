@@ -49,7 +49,6 @@ function get(req, res) {
 function user_info_get(id_req,req, res) {
     if(req.user.isAdmin){
             models.User.findById(id_req).then((user) => {
-                console.log(user)
                 const flash = models.getFlash(req);
                 models.destroyFlash(res);
                 let isAdmin = user[0].isAdmin==1 ? true : false; //true if the user that we are looking for is an admin
@@ -208,7 +207,6 @@ function update_post(req, res) {
  */
 function delete_account(id_req,from,req, res) {
     let id_user = req.user.id; //recover id from token
-    console.log(from)
     if(id_user){
         if(id_user == id_req || req.user.isAdmin){
             models.User.delete(id_req).then((user) => {
